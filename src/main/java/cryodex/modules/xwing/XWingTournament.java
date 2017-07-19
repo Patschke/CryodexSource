@@ -786,7 +786,10 @@ public class XWingTournament implements XMLObject, Tournament {
 
         if (getPoints() != null && getPoints().isEmpty() == false) {
 
+            try{
             tournamentPoints = getPoints().size() >= roundNumber ? getPoints().get(roundNumber - 1) : getPoints().get(getPoints().size() - 1);
+            } catch(Exception e){
+            }
         }
 
         return tournamentPoints;

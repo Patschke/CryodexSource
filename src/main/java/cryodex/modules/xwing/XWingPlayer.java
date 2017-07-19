@@ -74,10 +74,6 @@ public class XWingPlayer implements Comparable<ModulePlayer>, XMLObject, ModuleP
         this.firstRoundBye = firstRoundBye;
     }
 
-    public int getFirstRoundByeMOV(XWingTournament t) {
-        return t.getRoundPoints(0) + (t.getRoundPoints(0) / 2);
-    }
-
     public String getSquadId() {
         return squadId;
     }
@@ -289,10 +285,7 @@ public class XWingPlayer implements Comparable<ModulePlayer>, XMLObject, ModuleP
 
             Integer tournamentPoints = t.getRoundPoints(roundNumber);
 
-            if (isFirstRoundBye() && match == getMatches(t).get(0)) {
-                movPoints += getFirstRoundByeMOV(t);
-                continue;
-            } else if (match.isBye()) {
+            if (match.isBye()) {
                 movPoints += tournamentPoints + (tournamentPoints / 2);
                 continue;
             } else if (match.getWinner() == null) {
