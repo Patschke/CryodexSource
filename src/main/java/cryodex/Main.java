@@ -11,7 +11,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import cryodex.server.WebServer;
 import cryodex.widget.RegisterPanel;
 import cryodex.widget.SplashPanel;
 import cryodex.widget.TournamentTabbedPane;
@@ -173,9 +172,6 @@ public class Main extends JFrame {
 
 	public static void main(String[] args) {
 		new SplashPanel();
-		
-      WebServer webServer = WebServer.getInstance();
-      webServer.start();
 
 		Main.getInstance().setVisible(true);
 		Main.getInstance().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
