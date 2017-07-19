@@ -789,6 +789,7 @@ public class XWingTournament implements XMLObject, Tournament {
             try{
             tournamentPoints = getPoints().size() >= roundNumber ? getPoints().get(roundNumber - 1) : getPoints().get(getPoints().size() - 1);
             } catch(Exception e){
+                System.out.println("An error happened, just go with 100.");
             }
         }
 
