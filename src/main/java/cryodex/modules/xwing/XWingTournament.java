@@ -473,6 +473,7 @@ public class XWingTournament implements XMLObject, Tournament {
             String biggestGroup = "";
             int playersInGroup = -1;
 
+            //find biggest group
             for (Map.Entry<String, List<XWingPlayer>> entry : playerMap.entrySet()) {
                 if (entry.getValue().size() > playersInGroup || biggestGroup.equals("")) {
                     biggestGroup = entry.getKey();
@@ -480,18 +481,23 @@ public class XWingTournament implements XMLObject, Tournament {
                 }
             }
 
+            //ready player one
             p1 = playerMap.get(biggestGroup).get(0);
             playerMap.get(biggestGroup).remove(p1);
             if (playerMap.get(biggestGroup).isEmpty()) {
                 playerMap.remove(biggestGroup);
             }
 
-            for (Map.Entry<String, List<XWingPlayer>> entry : playerMap.entrySet()) {
-                if (biggestGroup.equals("") || (!biggestGroup.equals(entry.getKey()))) {
-                    p2 = entry.getValue().get(0);
+            //ready player two
+            List<String> keys = new ArrayList<>(playerMap.keySet());
+            Collections.shuffle(keys);
+            for (String key : keys) {
+                if (biggestGroup.equals("") || (!biggestGroup.equals(key))) {
+                    p2 = playerMap.get(key).get(0);
                 }
             }
 
+            //can't find a player 2, take one from own team
             if (p2 == null) {
                 for (Map.Entry<String, List<XWingPlayer>> entry : playerMap.entrySet()) {
                     p2 = entry.getValue().get(0);
@@ -505,6 +511,7 @@ public class XWingTournament implements XMLObject, Tournament {
                     playerMap.remove(groupName);
                 }
             }
+
             matches.add(new XWingMatch(p1, p2));
             p2 = null;
         }
