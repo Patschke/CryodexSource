@@ -1,37 +1,38 @@
 package cryodex.modules.runewars;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import cryodex.CryodexController.Modules;
 import cryodex.Player;
+import cryodex.modules.Match;
 import cryodex.modules.ModulePlayer;
+import cryodex.modules.Round;
+import cryodex.modules.Tournament;
 import cryodex.xml.XMLObject;
 import cryodex.xml.XMLUtils;
 import cryodex.xml.XMLUtils.Element;
 
 public class RunewarsPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePlayer {
 
-	public static final int BYE_MOV = 100;
+	public static final int BYE_MOV = 70;
 	public static final int MAX_MOV = 200;
-	public static final int CONCEDE_MOV = 200;
-	public static final int CONCEDE_WIN_SCORE = 1;
+	public static final int CONCEDE_MOV = 70;
+	public static final int CONCEDE_WIN_SCORE = 8;
 	public static final int CONCEDE_LOSE_SCORE = 0;
-
-        public static enum Faction {
-                DAQAN, WAIQAR;
-        }
-
-        private Faction faction;
 
 	/**
 	 * This enum represents the table of match score to tournament points
 	 */
 	public enum ScoreTableEnum {
-                THRESHOLD_0(0,0,0,0), THRESHOLD_1(0,600,1,0);
-/*		THRESHOLD_6(0, 59, 6, 5), THRESHOLD_7(60, 139, 7, 4), THRESHOLD_8(140, 219, 8, 3), THRESHOLD_9(220, 299, 9,
-				2), THRESHOLD_10(300, 400, 10, 1); */
+		THRESHOLD_6(0, 29, 6, 5), 
+		THRESHOLD_7(30, 69, 7, 4), 
+		THRESHOLD_8(70, 109, 8, 3), 
+		THRESHOLD_9(110, 149, 9, 2), 
+		THRESHOLD_10(150, 200, 10, 1);
 
 		private int lowerLimit;
 		private int upperLimit;
@@ -62,13 +63,9 @@ public class RunewarsPlayer implements Comparable<ModulePlayer>, XMLObject, Modu
 		}
 
 		private static ScoreTableEnum getResultByMOV(int mov) {
-			ScoreTableEnum result = ScoreTableEnum.THRESHOLD_1;
+			ScoreTableEnum result = ScoreTableEnum.THRESHOLD_6;
 
-                        if (mov < 0) {
-                               result = ScoreTableEnum.THRESHOLD_0; 
-                        }
-
-/*			if (mov >= ScoreTableEnum.THRESHOLD_6.getLowerLimit()
+			if (mov >= ScoreTableEnum.THRESHOLD_6.getLowerLimit()
 					&& mov <= ScoreTableEnum.THRESHOLD_6.getUpperLimit()) {
 				result = ScoreTableEnum.THRESHOLD_6;
 
@@ -86,7 +83,7 @@ public class RunewarsPlayer implements Comparable<ModulePlayer>, XMLObject, Modu
 
 			} else if (mov >= ScoreTableEnum.THRESHOLD_10.getLowerLimit()) {
 				result = ScoreTableEnum.THRESHOLD_10;
-			} */
+			}
 
 			return result;
 		}
@@ -99,129 +96,89 @@ public class RunewarsPlayer implements Comparable<ModulePlayer>, XMLObject, Modu
 			return getResultByMOV(mov).getLoseScore();
 		}
 	}
+	
+    public static enum Faction {
+        IMPERIAL, REBEL;
+    }
 
-	private Player player;
-	private String seedValue;
-	private boolean firstRoundBye = false;
-	private String squadId;
+    private Player player;
+    private String seedValue;
+    private String squadId;
+    private Faction faction;
 
-	public RunewarsPlayer(Player p) {
-		player = p;
-		seedValue = String.valueOf(Math.random());
-	}
+    public RunewarsPlayer(Player p) {
+        player = p;
+        seedValue = String.valueOf(Math.random());
+    }
 
-	public RunewarsPlayer(Player p, Element e) {
-		this.player = p;
-		this.seedValue = e.getStringFromChild("SEEDVALUE");
-		this.firstRoundBye = e.getBooleanFromChild("FIRSTROUNDBYE");
-		this.squadId = e.getStringFromChild("SQUADID");
-	}
+    public RunewarsPlayer(Player p, Element e) {
+        this.player = p;
+        this.seedValue = e.getStringFromChild("SEEDVALUE");
+        this.squadId = e.getStringFromChild("SQUADID");
+        String factionString = e.getStringFromChild("FACTION");
 
-	@Override
-	public Player getPlayer() {
-		return player;
-	}
-
-	@Override
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
-
-	public String getSeedValue() {
-		return seedValue;
-	}
-
-	public void setSeedValue(String seedValue) {
-		this.seedValue = seedValue;
-	}
-
-	public boolean isFirstRoundBye() {
-		return firstRoundBye;
-	}
-
-	public void setFirstRoundBye(boolean firstRoundBye) {
-		this.firstRoundBye = firstRoundBye;
-	}
-
-	public String getSquadId() {
-		return squadId;
-	}
-
-	public void setSquadId(String squadId) {
-		this.squadId = squadId;
-	}
-
-        public Faction getFaction() {
-		return faction;
-	}
-
-        public void setFaction(Faction faction) {
-                this.faction = faction;
+        if (factionString != null && factionString.isEmpty() == false) {
+            faction = Faction.valueOf(factionString);
+        } else {
+            faction = Faction.IMPERIAL;
         }
+    }
 
-	public List<RunewarsMatch> getMatches(RunewarsTournament t) {
+    @Override
+    public Player getPlayer() {
+        return player;
+    }
 
-		List<RunewarsMatch> matches = new ArrayList<RunewarsMatch>();
+    @Override
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 
-		if (t != null) {
+    public String getSeedValue() {
+        return seedValue;
+    }
 
-			rounds: for (RunewarsRound r : t.getAllRounds()) {
-				if (r.isSingleElimination()) {
-					continue;
-				}
-				for (RunewarsMatch m : r.getMatches()) {
-					if (m.getPlayer1() == this || (m.getPlayer2() != null && m.getPlayer2() == this)) {
-						matches.add(m);
-						continue rounds;
-					}
-				}
-			}
-		}
-		return matches;
-	}
+    public void setSeedValue(String seedValue) {
+        this.seedValue = seedValue;
+    }
 
-	@Override
-	public String toString() {
-		return getPlayer().getName();
-	}
+    public String getSquadId() {
+        return squadId;
+    }
 
-	public int getScore(RunewarsTournament t) {
+    public void setSquadId(String squadId) {
+        this.squadId = squadId;
+    }
+
+    public Faction getFaction() {
+        return faction;
+    }
+
+    public void setFaction(Faction faction) {
+        this.faction = faction;
+    }
+
+    @Override
+    public String toString() {
+        return getPlayer().getName();
+    }
+
+    public int getScore(Tournament t) {
 		int score = 0;
-		for (RunewarsMatch match : getMatches(t)) {
+		for (Match match : getPlayer().getMatches(t)) {
 			if (match.isBye()) {
-				score += 1;
+				score += 8;
 			} else {
 
 				if (match.getWinner() == null) {
 					continue;
 				}
 
-				int mov = 0;
-
-				try {
-
-					int player1Score = match.getPlayer1Score() == null ? 0 : match.getPlayer1Score();
-					int player2Score = match.getPlayer2Score() == null ? 0 : match.getPlayer2Score();
-
-					if (match.getPlayer1() == match.getWinner()) {
-						mov = player1Score - player2Score;
-					} else {
-						mov = player2Score - player1Score;
-					}
-				} catch (Exception e) {
-				}
-
-				// Check to see if MOV is outside the min/max
-				mov = mov < 0 ? 0 : mov;
-				mov = mov > MAX_MOV ? MAX_MOV : mov;
+				int mov = getWinnerMOV(match);
 
 				int matchScore = 0;
-				if (match.getWinner() == this) {
-					if(match.isConcede()){
-						matchScore = CONCEDE_WIN_SCORE;
-					} else {
-						matchScore = ScoreTableEnum.getWinScore(mov);	
-					}
+				if (match.getWinner() == this.getPlayer()) {
+						matchScore = ScoreTableEnum.getWinScore(mov);
 				} else {
 					if(match.isConcede()){
 						matchScore = CONCEDE_LOSE_SCORE;
@@ -236,234 +193,235 @@ public class RunewarsPlayer implements Comparable<ModulePlayer>, XMLObject, Modu
 		return score;
 	}
 
-	public double getAverageScore(RunewarsTournament t) {
-		return getScore(t) * 1.0 / getMatches(t).size();
-	}
+    public double getAverageScore(Tournament t) {
 
-	public double getAverageSoS(RunewarsTournament t) {
-		double sos = 0.0;
-		List<RunewarsMatch> matches = getMatches(t);
+        int score = getScore(t);
+        int matchCount = getPlayer().getMatches(t).size();
 
-		for (RunewarsMatch m : matches) {
-			if (m.isBye() == false && (m.getWinner() != null)) {
-				if (m.getPlayer1() == this) {
-					sos += m.getPlayer2().getAverageScore(t);
-				} else {
-					sos += m.getPlayer1().getAverageScore(t);
-				}
-			}
-		}
+        return score * 1.0 / matchCount;
+    }
 
-		return sos / matches.size();
-	}
+    public double getAverageSoS(Tournament t) {
+        double sos = 0.0;
+        List<Match> matches = getPlayer().getMatches(t);
 
-	public int getWins(RunewarsTournament t) {
-		int score = 0;
-		for (RunewarsMatch match : getMatches(t)) {
-			if (match.getWinner() == this || match.isBye()) {
-				score++;
-			}
-		}
-		return score;
-	}
+        int numOpponents = 0;
+        for (Match m : matches) {
+            if (m.isBye() == false && m.getWinner() != null) {
+                if (m.getPlayer1() == this.getPlayer()) {
+                    sos += ((RunewarsPlayer) m.getPlayer2().getModuleInfoByModule(t.getModule())).getAverageScore(t);
+                    numOpponents++;
+                } else {
+                    sos += ((RunewarsPlayer) m.getPlayer1().getModuleInfoByModule(t.getModule())).getAverageScore(t);
+                    numOpponents++;
+                }
+            }
+        }
 
-	public int getLosses(RunewarsTournament t) {
-		int score = 0;
-		for (RunewarsMatch match : getMatches(t)) {
-			if (match.getWinner() != null && match.getWinner() != this) {
-				score++;
-			}
-		}
-		return score;
-	}
+		// if they don't have any opponents recorded yet, don't divide by 0
+        double averageSos = numOpponents>0 ? sos / numOpponents : 0;
+        if (Double.isNaN(averageSos) != true) {
+            BigDecimal bd = new BigDecimal(averageSos);
+            bd = bd.setScale(2, RoundingMode.HALF_UP);
+            return bd.doubleValue();
+        }
+        return averageSos;
+    }
 
-	public int getByes(RunewarsTournament t) {
-		int byes = 0;
-		for (RunewarsMatch match : getMatches(t)) {
-			if (match.isBye()) {
-				byes++;
-			}
-		}
-		return byes;
-	}
+    public int getWins(Tournament t) {
+        int score = 0;
+        for (Match match : getPlayer().getMatches(t)) {
+            if (match.getWinner() == this.getPlayer() || match.isBye()) {
+                score++;
+            }
+        }
+        return score;
+    }
 
-	public int getRank(RunewarsTournament t) {
-		List<RunewarsPlayer> players = new ArrayList<RunewarsPlayer>();
-		players.addAll(t.getRunewarsPlayers());
-		Collections.sort(players, new RunewarsComparator(t, RunewarsComparator.rankingCompare));
+    public int getLosses(Tournament t) {
+        int score = 0;
+        for (Match match : getPlayer().getMatches(t)) {
+            if (match.getWinner() != null && match.getWinner() != this.getPlayer()) {
+                score++;
+            }
+        }
+        return score;
+    }
 
-		for (int i = 0; i < players.size(); i++) {
-			if (players.get(i) == this) {
-				return i + 1;
-			}
-		}
+    public int getRank(Tournament t) {
+        List<Player> players = new ArrayList<Player>();
+        players.addAll(t.getPlayers());
+        Collections.sort(players, new RunewarsComparator(t, RunewarsComparator.rankingCompare));
 
-		return 0;
-	}
+        for (int i = 0; i < players.size(); i++) {
+            if (((RunewarsTournament) t).getRunewarsPlayer(players.get(i)) == this) {
+                return i + 1;
+            }
+        }
 
-	public int getEliminationRank(RunewarsTournament t) {
+        return 0;
+    }
 
-		int rank = 0;
+    public int getEliminationRank(Tournament t) {
 
-		for (RunewarsRound r : t.getAllRounds()) {
-			if (r.isSingleElimination()) {
-				for (RunewarsMatch m : r.getMatches()) {
-					if ((m.getPlayer1() == this || m.getPlayer2() == this)
-							&& (m.getWinner() != null && m.getWinner() != this)) {
-						return r.getMatches().size() * 2;
-					}
+        int rank = 0;
 
-					if (r.getMatches().size() == 1 && m.getWinner() != null && m.getWinner() == this) {
-						return 1;
-					}
-				}
-			}
-		}
+        for (Round r : t.getAllRounds()) {
+            if (r.isSingleElimination()) {
+                for (Match m : r.getMatches()) {
+                    if ((m.getPlayer1() == this.getPlayer() || m.getPlayer2() == this.getPlayer()) && (m.getWinner() != null && m.getWinner() != this.getPlayer())) {
+                        return r.getMatches().size() * 2;
+                    }
 
-		return rank;
-	}
+                    if (r.getMatches().size() == 1 && m.getWinner() != null && m.getWinner() == this.getPlayer()) {
+                        return 1;
+                    }
+                }
+            }
+        }
 
-	public int getMarginOfVictory(RunewarsTournament t) {
+        return rank;
+    }
 
-		int roundNumber = 0;
+    public int getMarginOfVictory(Tournament t) {
 
 		Integer totalMov = 0;
 
-		for (RunewarsMatch match : getMatches(t)) {
-
-			roundNumber++;
-
-			Integer tournamentPoints = t.getPoints();
-			if (tournamentPoints == null && t.getEscalationPoints() != null
-					&& t.getEscalationPoints().isEmpty() == false) {
-
-				tournamentPoints = t.getEscalationPoints().size() >= roundNumber
-						? t.getEscalationPoints().get(roundNumber - 1)
-						: t.getEscalationPoints().get(t.getEscalationPoints().size() - 1);
-			}
-
-			if (match.isBye()) {
-				totalMov += BYE_MOV;
-
-				continue;
-			} else if (match.getWinner() == null) {
-				continue;
-			}
-
-			if (match.getWinner() == this) {
-				int mov = 0;
-				try {
-
-					int player1Score = match.getPlayer1Score() == null ? 0 : match.getPlayer1Score();
-					int player2Score = match.getPlayer2Score() == null ? 0 : match.getPlayer2Score();
-
-					if (match.getPlayer1() == this) {
-						mov = player1Score - player2Score;
-					} else {
-						mov = player2Score - player1Score;
-					}
-				} catch (Exception e) {
-				}
-
-				if (match.isConcede()) {
-					mov = CONCEDE_MOV;
-				}
-
-				// Check to see if MOV is outside the min/max
-				mov = mov < 0 ? 0 : mov;
-				mov = mov > MAX_MOV ? MAX_MOV : mov;
-
-				totalMov += mov;
-			} else {
-				totalMov += 0;
-			}
+		for (Match match : getPlayer().getMatches(t)) {
+			totalMov += getMatchMOV(match);
 		}
 		return totalMov;
 	}
+    
+    public int getMatchMOV(Match match){
+        if (match.isBye()) {
+            return BYE_MOV;
+         
+        } else if (match.getWinner() == null) {
+        	return 0;
+        }
 
-	public boolean isHeadToHeadWinner(RunewarsTournament t) {
-
-		if (t != null) {
-			int score = getScore(t);
-			List<RunewarsPlayer> players = new ArrayList<RunewarsPlayer>();
-			for (RunewarsPlayer p : t.getRunewarsPlayers()) {
-				if (p != this && p.getScore(t) == score) {
-					players.add(p);
-				}
-			}
-
-			if (players.isEmpty()) {
-				return false;
-			}
-
-			playerLoop: for (RunewarsPlayer p : players) {
-				for (RunewarsMatch m : p.getMatches(t)) {
-					if (m.getPlayer1() == p && m.getPlayer2() == this && m.getWinner() == this) {
-						continue playerLoop;
-					} else if (m.getPlayer2() == p && m.getPlayer1() == this && m.getWinner() == p) {
-						continue playerLoop;
-					}
-				}
-				return false;
-			}
+		if (match.getWinner() == this.getPlayer()) {
+			return getWinnerMOV(match);
 		}
-
-		return true;
-	}
-
-	public int getRoundDropped(RunewarsTournament t) {
-		for (int i = t.getAllRounds().size(); i > 0; i--) {
-
-			boolean found = false;
-			RunewarsRound r = t.getAllRounds().get(i - 1);
-			for (RunewarsMatch m : r.getMatches()) {
-				if (m.getPlayer1() == this) {
-					found = true;
-					break;
-				} else if (m.isBye() == false && m.getPlayer2() == this) {
-					found = true;
-					break;
-				}
-			}
-
-			if (found) {
-				return i + 1;
-			}
-		}
-
+		
 		return 0;
+    }
+    
+    public int getWinnerMOV(Match match){
+		int mov = 0;
+		try {
+
+			int player1Score = match.getPlayer1Points() == null ? 0 : match.getPlayer1Points();
+			int player2Score = match.getPlayer2Points() == null ? 0 : match.getPlayer2Points();
+
+			if (match.getPlayer1() == match.getWinner()) {
+				mov = player1Score - player2Score;
+			} else {
+				mov = player2Score - player1Score;
+			}
+		} catch (Exception e) {
+		}
+
+		if (match.isConcede() && mov < CONCEDE_MOV) {
+			mov = CONCEDE_MOV;
+		}
+
+		// Check to see if MOV is outside the min/max
+		mov = mov < 0 ? 0 : mov;
+		mov = mov > MAX_MOV ? MAX_MOV : mov;
+		
+		return mov;
 	}
 
-	public String getName() {
-		return getPlayer().getName();
-	}
+    /**
+     * Returns true if the player has defeated every other person in their score group.
+     * 
+     * @param t
+     * @return
+     */
+    public boolean isHeadToHeadWinner(Tournament t) {
 
-	@Override
-	public String getModuleName() {
-		return Modules.RUNEWARS.getName();
-	}
+        if (t != null) {
+            int score = getScore(t);
+            List<RunewarsPlayer> players = new ArrayList<RunewarsPlayer>();
+            for (Player p : t.getPlayers()) {
+                RunewarsPlayer xp = ((RunewarsTournament) t).getRunewarsPlayer(p);
+                if (xp != this && xp.getScore(t) == score) {
+                    players.add(xp);
+                }
+            }
 
-	public String toXML() {
-		StringBuilder sb = new StringBuilder();
+            if (players.isEmpty()) {
+                return false;
+            }
 
-		appendXML(sb);
+            playerLoop: for (RunewarsPlayer p : players) {
+                for (Match m : p.getPlayer().getMatches(t)) {
+                    if (m.getWinner() != null && m.getWinner() == this.getPlayer()) {
+                        continue playerLoop;
+                    }
+                }
+                return false;
+            }
+        }
 
-		return sb.toString();
-	}
+        return true;
+    }
 
-	@Override
-	public StringBuilder appendXML(StringBuilder sb) {
+    public int getRoundDropped(Tournament t) {
+        for (int i = t.getAllRounds().size(); i > 0; i--) {
 
-		XMLUtils.appendObject(sb, "MODULE", Modules.RUNEWARS.getName());
-		XMLUtils.appendObject(sb, "SEEDVALUE", getSeedValue());
-		XMLUtils.appendObject(sb, "FIRSTROUNDBYE", isFirstRoundBye());
-		XMLUtils.appendObject(sb, "SQUADID", getSquadId());
+            boolean found = false;
+            Round r = t.getAllRounds().get(i - 1);
+            for (Match m : r.getMatches()) {
+                if (m.getPlayer1() == this.getPlayer()) {
+                    found = true;
+                    break;
+                } else if (m.isBye() == false && m.getPlayer2() == this.getPlayer()) {
+                    found = true;
+                    break;
+                }
+            }
 
-		return sb;
-	}
+            if (found) {
+                return i + 1;
+            }
+        }
 
-	@Override
-	public int compareTo(ModulePlayer arg0) {
-		return this.getPlayer().getName().toUpperCase().compareTo(arg0.getPlayer().getName().toUpperCase());
-	}
+        return 0;
+    }
+
+    public String getName() {
+        return getPlayer().getName();
+    }
+
+    @Override
+    public String getModuleName() {
+        return Modules.RUNEWARS.getName();
+    }
+
+    public String toXML() {
+        StringBuilder sb = new StringBuilder();
+
+        appendXML(sb);
+
+        return sb.toString();
+    }
+
+    @Override
+    public StringBuilder appendXML(StringBuilder sb) {
+
+        XMLUtils.appendObject(sb, "MODULE", Modules.RUNEWARS.getName());
+        XMLUtils.appendObject(sb, "SEEDVALUE", getSeedValue());
+        XMLUtils.appendObject(sb, "SQUADID", getSquadId());
+        XMLUtils.appendObject(sb, "FACTION", getFaction());
+
+        return sb;
+    }
+
+    @Override
+    public int compareTo(ModulePlayer arg0) {
+        return this.getPlayer().getName().toUpperCase().compareTo(arg0.getPlayer().getName().toUpperCase());
+    }
 }

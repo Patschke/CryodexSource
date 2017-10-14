@@ -1,9 +1,5 @@
 package cryodex;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import cryodex.CryodexController.Modules;
 import cryodex.modules.Tournament;
 import cryodex.xml.XMLObject;
 import cryodex.xml.XMLUtils;
@@ -12,7 +8,9 @@ import cryodex.xml.XMLUtils.Element;
 public class CryodexOptions implements XMLObject {
 	private boolean showTableNumbers = true;
 	private boolean showQuickFind = false;
-	private final List<Modules> nonVisibleModules = new ArrayList<Modules>();
+	private boolean showKillPoints = true;
+	private boolean enterOnlyPoints = true;
+	private boolean hideCompletedMatches = false;
 
 	public CryodexOptions() {
 
@@ -21,20 +19,9 @@ public class CryodexOptions implements XMLObject {
 	public CryodexOptions(Element e) {
 		showTableNumbers = e.getBooleanFromChild("SHOWTABLENUMBERS", false);
 		showQuickFind = e.getBooleanFromChild("SHOWQUICKFIND", false);
-
-		String modulesToTurnOff = e.getStringFromChild("NONVISIBLEMODULES");
-
-		if (modulesToTurnOff != null && modulesToTurnOff.isEmpty() == false) {
-			for (String s : modulesToTurnOff.split(",")) {
-				Modules m = Modules.getEnumByName(s);
-
-				if (m != null) {
-					nonVisibleModules.add(m);
-					m.getModule().setModuleEnabled(false);
-					m.getModule().getViewMenuItem().setSelected(false);
-				}
-			}
-		}
+		showKillPoints = e.getBooleanFromChild("SHOWKILLPOINTS", true);
+		enterOnlyPoints = e.getBooleanFromChild("ENTERONLYPOINTS", true);
+		hideCompletedMatches = e.getBooleanFromChild("HIDECOMPLETED", false);
 	}
 
 	public boolean isShowTableNumbers() {
@@ -55,13 +42,36 @@ public class CryodexOptions implements XMLObject {
 		updateTournamentVisuals();
 	}
 
-	public List<Modules> getNonVisibleModules() {
-		return nonVisibleModules;
+
+	public boolean isHideCompleted() {
+	    return hideCompletedMatches;
+	}
+	
+	public void setHideCompleted(boolean hideCompletedMatches) {
+	    this.hideCompletedMatches = hideCompletedMatches;
+	    updateTournamentVisuals();
 	}
 
+	public boolean isShowKillPoints() {
+		return showKillPoints;
+	}
+
+	public void setShowKillPoints(boolean showKillPoints) {
+		this.showKillPoints = showKillPoints;
+		updateTournamentVisuals();
+	}
+
+	public boolean isEnterOnlyPoints() {
+		return enterOnlyPoints;
+	}
+
+	public void setEnterOnlyPoints(boolean enterOnlyPoints) {
+		this.enterOnlyPoints = enterOnlyPoints;
+		updateTournamentVisuals();
+	}
+	
 	private void updateTournamentVisuals() {
-		if (CryodexController.isLoading == false
-				&& CryodexController.getAllTournaments() != null) {
+		if (CryodexController.isLoading == false && CryodexController.getAllTournaments() != null) {
 			for (Tournament t : CryodexController.getAllTournaments()) {
 				t.updateVisualOptions();
 			}
@@ -73,15 +83,13 @@ public class CryodexOptions implements XMLObject {
 	public StringBuilder appendXML(StringBuilder sb) {
 
 		String moduleString = "";
-		String seperator = "";
-		for (Modules m : getNonVisibleModules()) {
-			moduleString += seperator + m.getName();
-			seperator = ",";
-		}
 
 		XMLUtils.appendObject(sb, "SHOWQUICKFIND", showQuickFind);
 		XMLUtils.appendObject(sb, "SHOWTABLENUMBERS", showTableNumbers);
 		XMLUtils.appendObject(sb, "NONVISIBLEMODULES", moduleString);
+	    XMLUtils.appendObject(sb, "HIDECOMPLETED", hideCompletedMatches);
+		XMLUtils.appendObject(sb, "SHOWKILLPOINTS", showKillPoints);
+		XMLUtils.appendObject(sb, "ENTERONLYPOINTS", enterOnlyPoints);
 
 		return sb;
 	}

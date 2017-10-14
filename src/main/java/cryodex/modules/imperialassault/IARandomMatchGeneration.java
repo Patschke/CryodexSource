@@ -6,20 +6,23 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
 
+import cryodex.Player;
+import cryodex.modules.Match;
+
 public class IARandomMatchGeneration {
 
 	private final IATournament tournament;
-	private final List<IAPlayer> players;
+	private final List<Player> players;
 
 	public IARandomMatchGeneration(IATournament tournament,
-			List<IAPlayer> players) {
+			List<Player> players) {
 		this.tournament = tournament;
 		this.players = players;
 	}
 
-	public List<IAMatch> generateMatches() {
+	public List<Match> generateMatches() {
 
-		TreeMap<Integer, List<IAPlayer>> playerMap = new TreeMap<Integer, List<IAPlayer>>(
+		TreeMap<Integer, List<Player>> playerMap = new TreeMap<Integer, List<Player>>(
 				new Comparator<Integer>() {
 
 					@Override
@@ -28,10 +31,10 @@ public class IARandomMatchGeneration {
 					}
 				});
 
-		for (IAPlayer xp : players) {
-			Integer points = xp.getScore(tournament);
+		for (Player xp : players) {
+			Integer points = tournament.getIAPlayer(xp).getScore(tournament);
 
-			List<IAPlayer> pointGroup = playerMap.get(points);
+			List<Player> pointGroup = playerMap.get(points);
 
 			if (pointGroup == null) {
 				pointGroup = new ArrayList<>();
@@ -43,26 +46,26 @@ public class IARandomMatchGeneration {
 
 		Integer firstSet = playerMap.keySet().iterator().next();
 
-		List<IAMatch> matches = resolvePointGroup(null, playerMap,
+		List<Match> matches = resolvePointGroup(null, playerMap,
 				playerMap.get(firstSet));
 
 		return matches;
 	}
 
-	private List<IAMatch> resolvePointGroup(IAPlayer carryOverPlayer,
-			TreeMap<Integer, List<IAPlayer>> playerMap,
-			List<IAPlayer> playerList) {
+	private List<Match> resolvePointGroup(Player carryOverPlayer,
+			TreeMap<Integer, List<Player>> playerMap,
+			List<Player> playerList) {
 
 		Collections.shuffle(playerList);
 
-		IAPlayer newCarryOverPlayer = null;
+		Player newCarryOverPlayer = null;
 		int carryOverPlayerIndex = playerList.size();
 		boolean isCarryOver = carryOverPlayer == null ? carryOverPlayerIndex % 2 == 1
 				: carryOverPlayerIndex % 2 == 0;
 
 		while (true) {
 
-			List<IAPlayer> tempList = new ArrayList<>();
+			List<Player> tempList = new ArrayList<>();
 			tempList.addAll(playerList);
 
 			if (isCarryOver) {
@@ -71,15 +74,15 @@ public class IARandomMatchGeneration {
 				tempList.remove(newCarryOverPlayer);
 			}
 
-			List<IAMatch> returnedMatches = getRandomMatches(
+			List<Match> returnedMatches = getRandomMatches(
 					carryOverPlayer, tempList);
 
 			// If the list was good or if there was no carry over players that
 			// can change things up
 			if (isCarryOver == false || carryOverPlayerIndex == 0
-					|| IAMatch.hasDuplicate(returnedMatches) == false) {
+					|| Match.hasDuplicate(returnedMatches) == false) {
 
-				List<IAPlayer> nextPointGroup = null;
+				List<Player> nextPointGroup = null;
 
 				boolean next = false;
 				for (Integer points : playerMap.keySet()) {
@@ -100,14 +103,14 @@ public class IARandomMatchGeneration {
 					return returnedMatches;
 				} else {
 					// Else, check the next point group
-					List<IAMatch> nextPointGroupMatches = resolvePointGroup(
+					List<Match> nextPointGroupMatches = resolvePointGroup(
 							newCarryOverPlayer, playerMap, nextPointGroup);
 
 					// Again, continue if the list is good or there are no other
 					// options
 					if (isCarryOver == false
 							|| carryOverPlayerIndex == 0
-							|| IAMatch.hasDuplicate(nextPointGroupMatches) == false) {
+							|| Match.hasDuplicate(nextPointGroupMatches) == false) {
 						returnedMatches.addAll(nextPointGroupMatches);
 						return returnedMatches;
 					}
@@ -124,19 +127,19 @@ public class IARandomMatchGeneration {
 	 * @param players
 	 * @return
 	 */
-	private List<IAMatch> getRandomMatches(IAPlayer carryOverPlayer,
-			List<IAPlayer> players) {
+	private List<Match> getRandomMatches(Player carryOverPlayer,
+			List<Player> players) {
 
-		List<IAMatch> matches = new ArrayList<>();
+		List<Match> matches = new ArrayList<>();
 
 		// if there are no players, return no matches
 		if (players.isEmpty()) {
 			return matches;
 		}
 
-		IAMatch m = new IAMatch();
+		Match m = new Match();
 
-		List<IAMatch> subMatches = new ArrayList<>();
+		List<Match> subMatches = new ArrayList<>();
 
 		// If there is a carry over player, they are always player 1
 		if (carryOverPlayer != null) {
@@ -149,13 +152,13 @@ public class IARandomMatchGeneration {
 				// Continue if the match is not a duplicate or this is the last
 				// chance
 				if (m.isDuplicate() == false || counter == players.size() - 1) {
-					List<IAPlayer> nextPlayers = new ArrayList<IAPlayer>();
+					List<Player> nextPlayers = new ArrayList<Player>();
 					nextPlayers.addAll(players);
 					nextPlayers.remove(m.getPlayer2());
 					subMatches = getRandomMatches(null, nextPlayers);
 
 					// if no duplicates, stop, else try again
-					if (IAMatch.hasDuplicate(subMatches) == false) {
+					if (Match.hasDuplicate(subMatches) == false) {
 						matches.add(m);
 						matches.addAll(subMatches);
 						return matches;
@@ -182,7 +185,7 @@ public class IARandomMatchGeneration {
 				if (m.isDuplicate() == false || counter == players.size() - 1) {
 
 					// Create the list of remaining players
-					List<IAPlayer> nextPlayers = new ArrayList<IAPlayer>();
+					List<Player> nextPlayers = new ArrayList<Player>();
 					nextPlayers.addAll(players);
 					nextPlayers.remove(m.getPlayer1());
 					nextPlayers.remove(m.getPlayer2());
@@ -191,7 +194,7 @@ public class IARandomMatchGeneration {
 					subMatches = getRandomMatches(null, nextPlayers);
 
 					// if no duplicates, stop, else try again
-					if (IAMatch.hasDuplicate(subMatches) == false) {
+					if (Match.hasDuplicate(subMatches) == false) {
 						matches.add(m);
 						matches.addAll(subMatches);
 						return matches;

@@ -1,18 +1,19 @@
 package cryodex.modules.imperialassault;
 
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JDialog;
 
 import cryodex.CryodexController;
 import cryodex.CryodexController.Modules;
 import cryodex.MenuBar;
 import cryodex.Player;
-import cryodex.modules.Menu;
 import cryodex.modules.Module;
 import cryodex.modules.ModulePlayer;
 import cryodex.modules.RegistrationPanel;
 import cryodex.modules.Tournament;
-import cryodex.modules.imperialassault.IATournamentCreationWizard.WizardOptions;
+import cryodex.modules.imperialassault.gui.IARegistrationPanel;
+import cryodex.modules.imperialassault.wizard.MainPage;
+import cryodex.widget.wizard.WizardOptions;
+import cryodex.widget.wizard.pages.Page;
 import cryodex.xml.XMLUtils;
 import cryodex.xml.XMLUtils.Element;
 
@@ -30,21 +31,11 @@ public class IAModule implements Module {
 
 	private JCheckBoxMenuItem viewMenuItem;
 	private IARegistrationPanel registrationPanel;
-	private IAMenu menu;
-	private IAOptions options;
 
-	private boolean isEnabled = true;
+	private boolean isEnabled = false;
 
 	private IAModule() {
-
-	}
-
-	@Override
-	public Menu getMenu() {
-		if (menu == null) {
-			menu = new IAMenu();
-		}
-		return menu;
+		getRegistration().setVisible(isEnabled);
 	}
 
 	@Override
@@ -59,8 +50,7 @@ public class IAModule implements Module {
 	public void setModuleEnabled(Boolean enabled) {
 		isEnabled = enabled;
 
-		getRegistration().getPanel().setVisible(enabled);
-		getMenu().getMenu().setVisible(enabled);
+		getRegistration().setVisible(enabled);
 	}
 
 	@Override
@@ -68,19 +58,26 @@ public class IAModule implements Module {
 		return isEnabled;
 	}
 
-	public static void createTournament() {
-		JDialog wizard = new IATournamentCreationWizard();
-		wizard.setVisible(true);
+	@Override
+	public IATournament createTournament(WizardOptions wizardOptions) {
 
+		IATournament tournament = new IATournament(wizardOptions.getName(), wizardOptions.getPlayerList(),
+				wizardOptions.getInitialSeedingEnum(), wizardOptions.getPoints(), wizardOptions.isSingleElimination());
+
+		// Add dependent events from a progressive cut
+		if (wizardOptions.isMerge() == false && wizardOptions.getSelectedTournaments() != null
+				&& wizardOptions.getSelectedTournaments().isEmpty() == false) {
+			tournament.addDependentTournaments(wizardOptions.getSelectedTournaments());
+		}
+
+		return tournament;
 	}
+	
+	@Override
+	public void initializeTournament(WizardOptions wizardOptions) {
 
-	public static void makeTournament(WizardOptions wizardOptions) {
-
-		IATournament tournament = new IATournament(wizardOptions.getName(),
-				wizardOptions.getPlayerList(),
-				wizardOptions.getInitialSeedingEnum(),
-				wizardOptions.isSingleElimination());
-
+		IATournament tournament = createTournament(wizardOptions);
+		
 		CryodexController.registerTournament(tournament);
 
 		tournament.startTournament();
@@ -89,17 +86,9 @@ public class IAModule implements Module {
 
 		CryodexController.saveData();
 	}
-
-	public IAOptions getOptions() {
-		if (options == null) {
-			options = new IAOptions();
-		}
-		return options;
-	}
-
+	
 	@Override
 	public StringBuilder appendXML(StringBuilder sb) {
-		XMLUtils.appendXMLObject(sb, "OPTIONS", getOptions());
 		XMLUtils.appendObject(sb, "NAME", Modules.IA.getName());
 		return sb;
 	}
@@ -116,7 +105,7 @@ public class IAModule implements Module {
 
 	@Override
 	public void loadModuleData(Element element) {
-		options = new IAOptions(element.getChild("OPTIONS"));
+
 	}
 
 	@Override
@@ -132,5 +121,10 @@ public class IAModule implements Module {
 	@Override
 	public void setViewMenuItem(JCheckBoxMenuItem viewMenuItem) {
 		this.viewMenuItem = viewMenuItem;
+	}
+
+	@Override
+	public Page getMainWizardPage() {
+		return new MainPage();
 	}
 }

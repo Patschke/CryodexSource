@@ -1,18 +1,19 @@
 package cryodex.modules.armada;
 
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JDialog;
 
 import cryodex.CryodexController;
 import cryodex.CryodexController.Modules;
 import cryodex.MenuBar;
 import cryodex.Player;
-import cryodex.modules.Menu;
 import cryodex.modules.Module;
 import cryodex.modules.ModulePlayer;
 import cryodex.modules.RegistrationPanel;
 import cryodex.modules.Tournament;
-import cryodex.modules.armada.ArmadaTournamentCreationWizard.WizardOptions;
+import cryodex.modules.armada.gui.ArmadaRegistrationPanel;
+import cryodex.modules.armada.wizard.MainPage;
+import cryodex.widget.wizard.WizardOptions;
+import cryodex.widget.wizard.pages.Page;
 import cryodex.xml.XMLUtils;
 import cryodex.xml.XMLUtils.Element;
 
@@ -30,21 +31,11 @@ public class ArmadaModule implements Module {
 
 	private JCheckBoxMenuItem viewMenuItem;
 	private ArmadaRegistrationPanel registrationPanel;
-	private ArmadaMenu menu;
-	private ArmadaOptions options;
 
-	private boolean isEnabled = true;
+	private boolean isEnabled = false;
 
 	private ArmadaModule() {
-
-	}
-
-	@Override
-	public Menu getMenu() {
-		if (menu == null) {
-			menu = new ArmadaMenu();
-		}
-		return menu;
+		getRegistration().setVisible(isEnabled);
 	}
 
 	@Override
@@ -59,8 +50,7 @@ public class ArmadaModule implements Module {
 	public void setModuleEnabled(Boolean enabled) {
 		isEnabled = enabled;
 
-		getRegistration().getPanel().setVisible(enabled);
-		getMenu().getMenu().setVisible(enabled);
+		getRegistration().setVisible(enabled);
 	}
 
 	@Override
@@ -68,20 +58,26 @@ public class ArmadaModule implements Module {
 		return isEnabled;
 	}
 
-	public static void createTournament() {
-		JDialog wizard = new ArmadaTournamentCreationWizard();
-		wizard.setVisible(true);
+	@Override
+	public ArmadaTournament createTournament(WizardOptions wizardOptions) {
 
+		ArmadaTournament tournament = new ArmadaTournament(wizardOptions.getName(), wizardOptions.getPlayerList(),
+				wizardOptions.getInitialSeedingEnum(), wizardOptions.getPoints(), wizardOptions.isSingleElimination());
+
+		// Add dependent events from a progressive cut
+		if (wizardOptions.isMerge() == false && wizardOptions.getSelectedTournaments() != null
+				&& wizardOptions.getSelectedTournaments().isEmpty() == false) {
+			tournament.addDependentTournaments(wizardOptions.getSelectedTournaments());
+		}
+
+		return tournament;
 	}
+	
+	@Override
+	public void initializeTournament(WizardOptions wizardOptions) {
 
-	public static void makeTournament(WizardOptions wizardOptions) {
-
-		ArmadaTournament tournament = new ArmadaTournament(
-				wizardOptions.getName(), wizardOptions.getPlayerList(),
-				wizardOptions.getInitialSeedingEnum(),
-				wizardOptions.getPoints(), wizardOptions.getEscalationPoints(),
-				wizardOptions.isSingleElimination());
-
+		ArmadaTournament tournament = createTournament(wizardOptions);
+		
 		CryodexController.registerTournament(tournament);
 
 		tournament.startTournament();
@@ -91,16 +87,8 @@ public class ArmadaModule implements Module {
 		CryodexController.saveData();
 	}
 
-	public ArmadaOptions getOptions() {
-		if (options == null) {
-			options = new ArmadaOptions();
-		}
-		return options;
-	}
-
 	@Override
 	public StringBuilder appendXML(StringBuilder sb) {
-		XMLUtils.appendXMLObject(sb, "OPTIONS", getOptions());
 		XMLUtils.appendObject(sb, "NAME", Modules.ARMADA.getName());
 		return sb;
 	}
@@ -117,7 +105,7 @@ public class ArmadaModule implements Module {
 
 	@Override
 	public void loadModuleData(Element element) {
-		options = new ArmadaOptions(element.getChild("OPTIONS"));
+
 	}
 
 	@Override
@@ -133,5 +121,10 @@ public class ArmadaModule implements Module {
 	@Override
 	public void setViewMenuItem(JCheckBoxMenuItem viewMenuItem) {
 		this.viewMenuItem = viewMenuItem;
+	}
+
+	@Override
+	public Page getMainWizardPage() {
+		return new MainPage();
 	}
 }

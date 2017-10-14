@@ -1,8 +1,10 @@
 package cryodex.modules.xwing;
 
+import cryodex.Player;
+import cryodex.modules.Tournament;
 import cryodex.modules.TournamentComparator;
 
-public class XWingComparator extends TournamentComparator<XWingPlayer> {
+public class XWingComparator extends TournamentComparator<Player> {
 
 	public static enum CompareOptions {
 		HEAD_TO_HEAD, MARGIN_OF_VICTORY, STRENGH_OF_SCHEDULE, AVERAGE_STRENGTH_OF_SCHEDULE, SCORE, RANDOM, NAME;
@@ -19,16 +21,16 @@ public class XWingComparator extends TournamentComparator<XWingPlayer> {
 			CompareOptions.SCORE, CompareOptions.MARGIN_OF_VICTORY,
 			CompareOptions.AVERAGE_STRENGTH_OF_SCHEDULE, CompareOptions.RANDOM };
 
-	private final XWingTournament t;
+	private final Tournament t;
 	private final CompareOptions[] sortOrder;
 
-	public XWingComparator(XWingTournament t, CompareOptions[] sortOrder) {
+	public XWingComparator(Tournament t, CompareOptions[] sortOrder) {
 		this.t = t;
 		this.sortOrder = sortOrder;
 	}
 
 	@Override
-	public int compare(XWingPlayer o1, XWingPlayer o2) {
+	public int compare(Player o1, Player o2) {
 
 		int result = 0;
 
@@ -41,11 +43,14 @@ public class XWingComparator extends TournamentComparator<XWingPlayer> {
 		return result;
 	}
 
-	private int compareOption(XWingPlayer o1, XWingPlayer o2,
+	private int compareOption(Player p1, Player p2,
 			CompareOptions option) {
 
 		int result = 0;
 
+		XWingPlayer o1 = (XWingPlayer) p1.getModuleInfoByModule(t.getModule());
+		XWingPlayer o2 = (XWingPlayer) p2.getModuleInfoByModule(t.getModule());
+		
 		switch (option) {
 		case SCORE:
 			result = compareInt(o1.getScore(t), o2.getScore(t));

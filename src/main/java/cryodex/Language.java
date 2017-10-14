@@ -1,6 +1,10 @@
 package cryodex;
 
 public class Language {
+	public static final String six = "6";
+	public static final String three = "3";
+	public static final String number_of_players_per_team = "Number of players per team";
+	public static final String choose_game = "Choose Game System";
 	public static final String name_event = "Name Event";
 	public static final String additional_options = "Additional Options";
 	public static final String split_into_subtournaments = "Split into subtournaments";
@@ -26,6 +30,8 @@ public class Language {
 	public static final String by_ranking = "By Ranking";
 	public static final String start_as_single_elimination = "Start event as single elimination<br>(only for 2/4/8/16/32 players)";
 	public static final String standard_points = "Standard - 100 Point Match";
+	public static final String armada_standard_points = "Standard - 400 Point Match";
+	public static final String runewars_standard_points = "Standard - 200 Point Match";
 	public static final String escalation_points = "Escalation - 60,90,120,150 Points";
 	public static final String epic_points = "Epic - 300 Point Match";
 	public static final String custom_points = "Custom - You define the points per match";

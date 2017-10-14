@@ -12,10 +12,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
-import cryodex.CryodexController.Modules;
 import cryodex.export.PlayerExport;
-import cryodex.modules.Module;
 import cryodex.widget.AboutPanel;
+import cryodex.widget.TournamentMenu;
 
 public class MenuBar extends JMenuBar {
 
@@ -23,10 +22,15 @@ public class MenuBar extends JMenuBar {
 
     private JMenu fileMenu;
     private JMenu viewMenu;
+    private TournamentMenu tournamentMenu;
     private JMenu helpMenu;
 
     private JCheckBoxMenuItem showTableNumbers;
     private JCheckBoxMenuItem showQuickFind;
+	private JCheckBoxMenuItem hideCompleted;
+	private JCheckBoxMenuItem showKillPoints;
+	private JCheckBoxMenuItem onlyEnterPoints;
+
 
     private static MenuBar instance;
 
@@ -42,15 +46,19 @@ public class MenuBar extends JMenuBar {
 
         this.add(getFileMenu());
         this.add(getViewMenu());
-
-        for (final Module m : CryodexController.getModules()) {
-            this.add(m.getMenu().getMenu());
-        }
+        this.add(getTournamentMenu().getMenu());
 
         this.add(getHelpMenu());
     }
 
-    public JMenu getFileMenu() {
+    private TournamentMenu getTournamentMenu() {
+		if(tournamentMenu == null){
+			tournamentMenu = new TournamentMenu();
+		}
+		return tournamentMenu;
+	}
+
+	public JMenu getFileMenu() {
         if (fileMenu == null) {
             fileMenu = new JMenu("File");
             fileMenu.setMnemonic('F');
@@ -156,32 +164,42 @@ public class MenuBar extends JMenuBar {
                 }
             });
 
-            viewMenu.add(showQuickFind);
+            hideCompleted = new JCheckBoxMenuItem("Hide Completed Matches");
+			hideCompleted.setSelected(CryodexController.getOptions().isHideCompleted());
+			hideCompleted.addItemListener(new ItemListener() {
+
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					CryodexController.getOptions().setHideCompleted(hideCompleted.isSelected());
+				}
+			});
+
+			showKillPoints = new JCheckBoxMenuItem("Show Kill Points");
+			showKillPoints.setSelected(CryodexController.getOptions().isShowKillPoints());
+			showKillPoints.addItemListener(new ItemListener() {
+
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					CryodexController.getOptions().setShowKillPoints(showKillPoints.isSelected());
+				}
+			});
+
+			onlyEnterPoints = new JCheckBoxMenuItem("Only Enter Points");
+			onlyEnterPoints.setSelected(CryodexController.getOptions().isEnterOnlyPoints());
+			onlyEnterPoints.addItemListener(new ItemListener() {
+
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					CryodexController.getOptions().setEnterOnlyPoints(onlyEnterPoints.isSelected());
+				}
+			});
+			
+			viewMenu.add(showQuickFind);
             viewMenu.add(showTableNumbers);
             viewMenu.add(showRegistrationPanel);
-
-            for (final Module m : CryodexController.getModules()) {
-                final JCheckBoxMenuItem moduleItem = new JCheckBoxMenuItem(Modules.getNameByModule(m));
-                moduleItem.setSelected(m.isModuleEnabled());
-                moduleItem.addItemListener(new ItemListener() {
-
-                    @Override
-                    public void itemStateChanged(ItemEvent arg0) {
-                        m.setModuleEnabled(moduleItem.isSelected());
-                        Modules moduleEnum = Modules.getEnumByName(Modules.getNameByModule(m));
-                        if (moduleItem.isSelected()) {
-                            CryodexController.getOptions().getNonVisibleModules().remove(moduleEnum);
-                        } else {
-                            CryodexController.getOptions().getNonVisibleModules().add(moduleEnum);
-                        }
-                        CryodexController.saveData();
-                    }
-                });
-
-                m.setViewMenuItem(moduleItem);
-
-                viewMenu.add(moduleItem);
-            }
+			viewMenu.add(hideCompleted);
+			viewMenu.add(showKillPoints);
+			viewMenu.add(onlyEnterPoints);
         }
 
         return viewMenu;
@@ -220,8 +238,8 @@ public class MenuBar extends JMenuBar {
                                     "Save location could not be determined. Check permissions to allow a Java application to save a file.");
                         } else if (file.exists() == false) {
                             JOptionPane.showMessageDialog(Main.getInstance(),
-                                    "<html>A save file could not be found. It should be called <b>" + CryodexController.getSaveFilename()
-                                            + "</b> and should be located in folder <b>" + path.getAbsolutePath() + "</b></html>");
+                                    "<html>A save file could not be found. It SHOULD be called <b>" + CryodexController.getSaveFilename()
+                                            + "</b> and SHOULD be located in folder <b>" + path.getAbsolutePath() + "</b></html>");
                         }
                     }
                 }
@@ -237,10 +255,9 @@ public class MenuBar extends JMenuBar {
 
         showTableNumbers.setSelected(CryodexController.getOptions().isShowTableNumbers());
         showQuickFind.setSelected(CryodexController.getOptions().isShowQuickFind());
-
-        for (Module m : CryodexController.getModules()) {
-            m.getMenu().resetMenuBar();
-        }
+        hideCompleted.setSelected(CryodexController.getOptions().isHideCompleted());
+        showKillPoints.setSelected(CryodexController.getOptions().isShowKillPoints());
+        onlyEnterPoints.setSelected(CryodexController.getOptions().isEnterOnlyPoints());
     }
 
     public void updateTournamentOptions(CryodexOptions options) {

@@ -1,18 +1,19 @@
 package cryodex.modules.runewars;
 
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JDialog;
 
 import cryodex.CryodexController;
 import cryodex.CryodexController.Modules;
 import cryodex.MenuBar;
 import cryodex.Player;
-import cryodex.modules.Menu;
 import cryodex.modules.Module;
 import cryodex.modules.ModulePlayer;
 import cryodex.modules.RegistrationPanel;
 import cryodex.modules.Tournament;
-import cryodex.modules.runewars.RunewarsTournamentCreationWizard.WizardOptions;
+import cryodex.modules.runewars.gui.RunewarsRegistrationPanel;
+import cryodex.modules.runewars.wizard.MainPage;
+import cryodex.widget.wizard.WizardOptions;
+import cryodex.widget.wizard.pages.Page;
 import cryodex.xml.XMLUtils;
 import cryodex.xml.XMLUtils.Element;
 
@@ -30,21 +31,11 @@ public class RunewarsModule implements Module {
 
 	private JCheckBoxMenuItem viewMenuItem;
 	private RunewarsRegistrationPanel registrationPanel;
-	private RunewarsMenu menu;
-	private RunewarsOptions options;
 
-	private boolean isEnabled = true;
+	private boolean isEnabled = false;
 
 	private RunewarsModule() {
-
-	}
-
-	@Override
-	public Menu getMenu() {
-		if (menu == null) {
-			menu = new RunewarsMenu();
-		}
-		return menu;
+		getRegistration().setVisible(isEnabled);
 	}
 
 	@Override
@@ -59,8 +50,7 @@ public class RunewarsModule implements Module {
 	public void setModuleEnabled(Boolean enabled) {
 		isEnabled = enabled;
 
-		getRegistration().getPanel().setVisible(enabled);
-		getMenu().getMenu().setVisible(enabled);
+		getRegistration().setVisible(enabled);
 	}
 
 	@Override
@@ -68,20 +58,26 @@ public class RunewarsModule implements Module {
 		return isEnabled;
 	}
 
-	public static void createTournament() {
-		JDialog wizard = new RunewarsTournamentCreationWizard();
-		wizard.setVisible(true);
+	@Override
+	public RunewarsTournament createTournament(WizardOptions wizardOptions) {
 
+		RunewarsTournament tournament = new RunewarsTournament(wizardOptions.getName(), wizardOptions.getPlayerList(),
+				wizardOptions.getInitialSeedingEnum(), wizardOptions.getPoints(), wizardOptions.isSingleElimination());
+
+		// Add dependent events from a progressive cut
+		if (wizardOptions.isMerge() == false && wizardOptions.getSelectedTournaments() != null
+				&& wizardOptions.getSelectedTournaments().isEmpty() == false) {
+			tournament.addDependentTournaments(wizardOptions.getSelectedTournaments());
+		}
+
+		return tournament;
 	}
+	
+	@Override
+	public void initializeTournament(WizardOptions wizardOptions) {
 
-	public static void makeTournament(WizardOptions wizardOptions) {
-
-		RunewarsTournament tournament = new RunewarsTournament(
-				wizardOptions.getName(), wizardOptions.getPlayerList(),
-				wizardOptions.getInitialSeedingEnum(),
-				wizardOptions.getPoints(), wizardOptions.getEscalationPoints(),
-				wizardOptions.isSingleElimination());
-
+		RunewarsTournament tournament = createTournament(wizardOptions);
+		
 		CryodexController.registerTournament(tournament);
 
 		tournament.startTournament();
@@ -91,16 +87,8 @@ public class RunewarsModule implements Module {
 		CryodexController.saveData();
 	}
 
-	public RunewarsOptions getOptions() {
-		if (options == null) {
-			options = new RunewarsOptions();
-		}
-		return options;
-	}
-
 	@Override
 	public StringBuilder appendXML(StringBuilder sb) {
-		XMLUtils.appendXMLObject(sb, "OPTIONS", getOptions());
 		XMLUtils.appendObject(sb, "NAME", Modules.RUNEWARS.getName());
 		return sb;
 	}
@@ -117,7 +105,7 @@ public class RunewarsModule implements Module {
 
 	@Override
 	public void loadModuleData(Element element) {
-		options = new RunewarsOptions(element.getChild("OPTIONS"));
+
 	}
 
 	@Override
@@ -133,5 +121,10 @@ public class RunewarsModule implements Module {
 	@Override
 	public void setViewMenuItem(JCheckBoxMenuItem viewMenuItem) {
 		this.viewMenuItem = viewMenuItem;
+	}
+
+	@Override
+	public Page getMainWizardPage() {
+		return new MainPage();
 	}
 }

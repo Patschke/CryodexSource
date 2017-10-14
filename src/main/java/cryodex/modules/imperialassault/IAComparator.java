@@ -1,29 +1,36 @@
 package cryodex.modules.imperialassault;
 
+import cryodex.Player;
+import cryodex.modules.Tournament;
 import cryodex.modules.TournamentComparator;
 
-public class IAComparator extends TournamentComparator<IAPlayer> {
+public class IAComparator extends TournamentComparator<Player> {
 
 	public static enum CompareOptions {
-		HEAD_TO_HEAD, MARGIN_OF_VICTORY, STRENGH_OF_SCHEDULE, AVERAGE_STRENGTH_OF_SCHEDULE, EXTENDED_STRENGTH_OF_SCHEDULE, SCORE, RANDOM;
+		HEAD_TO_HEAD, MARGIN_OF_VICTORY, STRENGH_OF_SCHEDULE, AVERAGE_STRENGTH_OF_SCHEDULE, SCORE, RANDOM, NAME;
 	}
 
-	public static final CompareOptions[] pairingCompare = { CompareOptions.SCORE };
+	public static final CompareOptions[] uniqueCompare = { CompareOptions.NAME };
+	public static final CompareOptions[] pairingCompare = {
+			CompareOptions.SCORE, CompareOptions.MARGIN_OF_VICTORY };
 	public static final CompareOptions[] rankingCompare = {
 			CompareOptions.SCORE,
-			CompareOptions.AVERAGE_STRENGTH_OF_SCHEDULE,
-			CompareOptions.EXTENDED_STRENGTH_OF_SCHEDULE, CompareOptions.RANDOM };
+			CompareOptions.MARGIN_OF_VICTORY,
+			CompareOptions.AVERAGE_STRENGTH_OF_SCHEDULE, CompareOptions.RANDOM };
+	public static final CompareOptions[] rankingCompareNoHeadToHead = {
+			CompareOptions.SCORE, CompareOptions.MARGIN_OF_VICTORY,
+			CompareOptions.AVERAGE_STRENGTH_OF_SCHEDULE, CompareOptions.RANDOM };
 
-	private final IATournament t;
+	private final Tournament t;
 	private final CompareOptions[] sortOrder;
 
-	public IAComparator(IATournament t, CompareOptions[] sortOrder) {
+	public IAComparator(Tournament t, CompareOptions[] sortOrder) {
 		this.t = t;
 		this.sortOrder = sortOrder;
 	}
 
 	@Override
-	public int compare(IAPlayer o1, IAPlayer o2) {
+	public int compare(Player o1, Player o2) {
 
 		int result = 0;
 
@@ -36,10 +43,14 @@ public class IAComparator extends TournamentComparator<IAPlayer> {
 		return result;
 	}
 
-	private int compareOption(IAPlayer o1, IAPlayer o2, CompareOptions option) {
+	private int compareOption(Player p1, Player p2,
+			CompareOptions option) {
 
 		int result = 0;
 
+		IAPlayer o1 = (IAPlayer) p1.getModuleInfoByModule(t.getModule());
+		IAPlayer o2 = (IAPlayer) p2.getModuleInfoByModule(t.getModule());
+		
 		switch (option) {
 		case SCORE:
 			result = compareInt(o1.getScore(t), o2.getScore(t));
@@ -59,12 +70,9 @@ public class IAComparator extends TournamentComparator<IAPlayer> {
 		case AVERAGE_STRENGTH_OF_SCHEDULE:
 			result = compareDouble(o1.getAverageSoS(t), o2.getAverageSoS(t));
 			break;
-		case EXTENDED_STRENGTH_OF_SCHEDULE:
-			result = compareDouble(o1.getExtendedStrengthOfSchedule(t),
-					o2.getExtendedStrengthOfSchedule(t));
-			break;
 		case MARGIN_OF_VICTORY:
-			// Not Implemented
+			result = compareInt(o1.getMarginOfVictory(t),
+					o2.getMarginOfVictory(t));
 			break;
 		case RANDOM:
 			String seedValue1 = o1.getSeedValue();
@@ -78,6 +86,9 @@ public class IAComparator extends TournamentComparator<IAPlayer> {
 			} catch (NumberFormatException e) {
 				result = seedValue1.compareTo(seedValue2);
 			}
+			break;
+		case NAME:
+			result = o1.getName().compareTo(o2.getName());
 			break;
 		}
 

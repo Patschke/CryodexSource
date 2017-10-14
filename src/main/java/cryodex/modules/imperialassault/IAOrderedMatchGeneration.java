@@ -7,6 +7,8 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import cryodex.Main;
+import cryodex.Player;
+import cryodex.modules.Match;
 
 /**
  * Generate matches in order of ranking or as close to it as possible. This
@@ -21,26 +23,26 @@ import cryodex.Main;
 public class IAOrderedMatchGeneration {
 
 	private final IATournament tournament;
-	private final List<IAPlayer> players;
+	private final List<Player> players;
 
 	private Integer lowScore = null;
-	private List<IAMatch> matchSetAtLowScore = null;
+	private List<Match> matchSetAtLowScore = null;
 
 	public IAOrderedMatchGeneration(IATournament tournament,
-			List<IAPlayer> players) {
+			List<Player> players) {
 		this.tournament = tournament;
 		this.players = players;
 
 	}
 
-	public List<IAMatch> generateMatches() {
+	public List<Match> generateMatches() {
 
-		List<IAPlayer> tempList = new ArrayList<>();
+		List<Player> tempList = new ArrayList<>();
 		tempList.addAll(players);
 		Collections.sort(tempList, new IAComparator(tournament,
 				IAComparator.pairingCompare));
 
-		generateMatch(new ArrayList<IAMatch>(), tempList);
+		generateMatch(new ArrayList<Match>(), tempList);
 
 		// If no valid match set was found then we create the true ranking match
 		// set and return it
@@ -48,7 +50,7 @@ public class IAOrderedMatchGeneration {
 			matchSetAtLowScore = new ArrayList<>();
 
 			for (int counter = 0; counter < players.size(); counter += 2) {
-				IAMatch m = new IAMatch(players.get(counter),
+				Match m = new Match(players.get(counter),
 						players.get(counter + 1));
 				m.checkDuplicate(tournament.getAllRounds());
 				matchSetAtLowScore.add(m);
@@ -65,16 +67,17 @@ public class IAOrderedMatchGeneration {
 		return matchSetAtLowScore;
 	}
 
-	private void generateMatch(List<IAMatch> matches, List<IAPlayer> player1List) {
+	private void generateMatch(List<Match> matches,
+			List<Player> player1List) {
 
 		if (player1List.size() == 0) {
 			scorePermutation(matches);
 			return;
 		}
 
-		for (IAPlayer xp : player1List) {
+		for (Player xp : player1List) {
 
-			List<IAPlayer> player2List = new ArrayList<>();
+			List<Player> player2List = new ArrayList<>();
 			player2List.addAll(player1List);
 			player2List.remove(xp);
 
@@ -86,16 +89,16 @@ public class IAOrderedMatchGeneration {
 		}
 	}
 
-	private void getPlayer2(IAPlayer player1, List<IAMatch> matches,
-			List<IAPlayer> player2List) {
-		for (IAPlayer player2 : player2List) {
-			IAMatch xm = new IAMatch(player1, player2);
+	private void getPlayer2(Player player1, List<Match> matches,
+			List<Player> player2List) {
+		for (Player player2 : player2List) {
+			Match xm = new Match(player1, player2);
 			xm.checkDuplicate(tournament.getAllRounds());
 
 			if (xm.isDuplicate() == false) {
 				matches.add(xm);
 				if (shouldContinue(matches)) {
-					List<IAPlayer> player1List = new ArrayList<>();
+					List<Player> player1List = new ArrayList<>();
 					player1List.addAll(player2List);
 					player1List.remove(xm.getPlayer2());
 
@@ -111,14 +114,14 @@ public class IAOrderedMatchGeneration {
 		}
 	}
 
-	private boolean shouldContinue(List<IAMatch> matches) {
+	private boolean shouldContinue(List<Match> matches) {
 		if (lowScore == null) {
 			return true;
 		}
 		return getScore(matches) < lowScore;
 	}
 
-	private void scorePermutation(List<IAMatch> matches) {
+	private void scorePermutation(List<Match> matches) {
 		int score = getScore(matches);
 
 		if (lowScore == null || score < lowScore) {
@@ -129,7 +132,7 @@ public class IAOrderedMatchGeneration {
 		}
 	}
 
-	private int getScore(List<IAMatch> matches) {
+	private int getScore(List<Match> matches) {
 
 		// order players
 		Collections.sort(players, new IAComparator(tournament,
@@ -137,9 +140,9 @@ public class IAOrderedMatchGeneration {
 
 		// get list of players in order of matches
 		List<IAPlayer> playerByMatchOrder = new ArrayList<IAPlayer>();
-		for (IAMatch xm : matches) {
-			playerByMatchOrder.add(xm.getPlayer1());
-			playerByMatchOrder.add(xm.getPlayer2());
+		for (Match xm : matches) {
+			playerByMatchOrder.add((IAPlayer) xm.getPlayer1().getModuleInfoByModule(tournament.getModule()));
+			playerByMatchOrder.add((IAPlayer) xm.getPlayer2().getModuleInfoByModule(tournament.getModule()));
 		}
 
 		int score = 0;

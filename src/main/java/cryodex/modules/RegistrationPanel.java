@@ -12,4 +12,6 @@ public interface RegistrationPanel {
 	public void load(Player player);
 
 	public void clearFields();
+	
+	public void setVisible(boolean isVisible);
 }

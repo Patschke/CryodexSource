@@ -1,19 +1,19 @@
 package cryodex.modules.xwing;
 
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JDialog;
 
 import cryodex.CryodexController;
 import cryodex.CryodexController.Modules;
 import cryodex.MenuBar;
 import cryodex.Player;
-import cryodex.modules.Menu;
 import cryodex.modules.Module;
 import cryodex.modules.ModulePlayer;
 import cryodex.modules.RegistrationPanel;
 import cryodex.modules.Tournament;
-import cryodex.modules.xwing.wizard.WizardOptions;
-import cryodex.modules.xwing.wizard.XWingWizard;
+import cryodex.modules.xwing.gui.XWingRegistrationPanel;
+import cryodex.modules.xwing.wizard.MainPage;
+import cryodex.widget.wizard.WizardOptions;
+import cryodex.widget.wizard.pages.Page;
 import cryodex.xml.XMLUtils;
 import cryodex.xml.XMLUtils.Element;
 
@@ -31,21 +31,11 @@ public class XWingModule implements Module {
 
 	private JCheckBoxMenuItem viewMenuItem;
 	private XWingRegistrationPanel registrationPanel;
-	private XWingMenu menu;
-	private XWingOptions options;
 
 	private boolean isEnabled = true;
 
 	private XWingModule() {
 
-	}
-
-	@Override
-	public Menu getMenu() {
-		if (menu == null) {
-			menu = new XWingMenu();
-		}
-		return menu;
 	}
 
 	@Override
@@ -60,8 +50,7 @@ public class XWingModule implements Module {
 	public void setModuleEnabled(Boolean enabled) {
 		isEnabled = enabled;
 
-		getRegistration().getPanel().setVisible(enabled);
-		getMenu().getMenu().setVisible(enabled);
+		getRegistration().setVisible(enabled);
 	}
 
 	@Override
@@ -69,25 +58,26 @@ public class XWingModule implements Module {
 		return isEnabled;
 	}
 
-	public static void createTournament() {
-		JDialog wizard = XWingWizard.getInstance();
-		wizard.setVisible(true);
 
-	}
+	@Override
+	public XWingTournament createTournament(WizardOptions wizardOptions) {
 
-	public static void makeTournament(WizardOptions wizardOptions) {
-
-		XWingTournament tournament = new XWingTournament(
-				wizardOptions.getName(), wizardOptions.getPlayerList(),
-				wizardOptions.getInitialSeedingEnum(),
-				wizardOptions.getPoints(),
-				wizardOptions.isSingleElimination(),
-                                wizardOptions.isRoundRobin());
+		XWingTournament tournament = new XWingTournament(wizardOptions.getName(), wizardOptions.getPlayerList(),
+				wizardOptions.getInitialSeedingEnum(), wizardOptions.getPoints(), wizardOptions.isSingleElimination());
 
 		// Add dependent events from a progressive cut
-		if(wizardOptions.isMerge() == false && wizardOptions.getSelectedTournaments() != null && wizardOptions.getSelectedTournaments().isEmpty() == false){
-		    tournament.addDependentTournaments(wizardOptions.getSelectedTournaments());
+		if (wizardOptions.isMerge() == false && wizardOptions.getSelectedTournaments() != null
+				&& wizardOptions.getSelectedTournaments().isEmpty() == false) {
+			tournament.addDependentTournaments(wizardOptions.getSelectedTournaments());
 		}
+
+		return tournament;
+	}
+	
+	@Override
+	public void initializeTournament(WizardOptions wizardOptions) {
+
+		XWingTournament tournament = createTournament(wizardOptions);
 		
 		CryodexController.registerTournament(tournament);
 
@@ -97,17 +87,9 @@ public class XWingModule implements Module {
 
 		CryodexController.saveData();
 	}
-
-	public XWingOptions getOptions() {
-		if (options == null) {
-			options = new XWingOptions();
-		}
-		return options;
-	}
-
+	
 	@Override
 	public StringBuilder appendXML(StringBuilder sb) {
-		XMLUtils.appendXMLObject(sb, "OPTIONS", getOptions());
 		XMLUtils.appendObject(sb, "NAME", Modules.XWING.getName());
 		return sb;
 	}
@@ -124,7 +106,7 @@ public class XWingModule implements Module {
 
 	@Override
 	public void loadModuleData(Element element) {
-		options = new XWingOptions(element.getChild("OPTIONS"));
+		
 	}
 
 	@Override
@@ -140,5 +122,10 @@ public class XWingModule implements Module {
 	@Override
 	public void setViewMenuItem(JCheckBoxMenuItem viewMenuItem) {
 		this.viewMenuItem = viewMenuItem;
+	}
+
+	@Override
+	public Page getMainWizardPage() {
+		return new MainPage();
 	}
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -46,6 +47,7 @@ public class RegisterPanel extends JPanel {
     private JTextField emailField;
     private JPanel playerInfoPanel;
     private JPanel playerPanel;
+    private JCheckBox firstRoundBye;
 
     private JTextField playerSearchField;
     private JButton clearFilter;
@@ -122,10 +124,15 @@ public class RegisterPanel extends JPanel {
 
             gbc.gridy++;
             playerInfoPanel.add(getEmailField(), gbc);
+            
+            gbc.gridy++;
+            playerInfoPanel.add(getFirstRoundByeCB(), gbc);
 
             for (Module m : CryodexController.getModules()) {
-                gbc.gridy++;
-                playerInfoPanel.add(m.getRegistration().getPanel(), gbc);
+            	if(m.getRegistration().getPanel() != null){
+            		gbc.gridy++;
+                	playerInfoPanel.add(m.getRegistration().getPanel(), gbc);
+            	}
             }
 
             gbc.gridy++;
@@ -158,6 +165,14 @@ public class RegisterPanel extends JPanel {
         }
         return emailField;
     }
+    
+    private JCheckBox getFirstRoundByeCB(){
+    	if (firstRoundBye == null) {
+    		firstRoundBye = new JCheckBox("First Round Bye");
+    	}
+    	
+    	return firstRoundBye;
+    }
 
     private JButton getSaveButton() {
 
@@ -175,6 +190,7 @@ public class RegisterPanel extends JPanel {
                     String name = getNameField().getText();
                     String groupName = getGroupNameField().getText();
                     String email = getEmailField().getText();
+                    boolean isFirstRoundBye = getFirstRoundByeCB().isSelected();
 
                     if (name == null || name.isEmpty()) {
                         JOptionPane.showMessageDialog((Component) null, "Name is required", "Error", JOptionPane.ERROR_MESSAGE);
@@ -206,6 +222,7 @@ public class RegisterPanel extends JPanel {
                         player.setGroupName(groupName);
                     }
                     player.setEmail(email);
+                    player.setFirstRoundBye(isFirstRoundBye);
 
                     for (Module m : CryodexController.getModules()) {
                         m.getRegistration().save(player);
@@ -281,6 +298,7 @@ public class RegisterPanel extends JPanel {
         getNameField().setRequestFocusEnabled(true);
         getGroupNameField().setText("");
         getEmailField().setText("");
+        getFirstRoundByeCB().setSelected(false);
 
         for (Module m : CryodexController.getModules()) {
             m.getRegistration().clearFields();
@@ -353,6 +371,7 @@ public class RegisterPanel extends JPanel {
                         getNameField().setText(player.getName());
                         getGroupNameField().setText(player.getGroupName());
                         getEmailField().setText(player.getEmail());
+                        getFirstRoundByeCB().setSelected(player.isFirstRoundBye());
 
                         for (Module m : CryodexController.getModules()) {
                             m.getRegistration().load(player);

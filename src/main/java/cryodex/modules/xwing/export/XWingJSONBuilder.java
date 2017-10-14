@@ -10,18 +10,20 @@ import javax.swing.JOptionPane;
 
 import cryodex.CryodexController;
 import cryodex.Main;
-import cryodex.modules.xwing.XWingMatch;
+import cryodex.Player;
+import cryodex.modules.Match;
+import cryodex.modules.Round;
+import cryodex.modules.Tournament;
 import cryodex.modules.xwing.XWingPlayer;
-import cryodex.modules.xwing.XWingRound;
 import cryodex.modules.xwing.XWingTournament;
 
 public class XWingJSONBuilder {
 
 	private static final String COMMA_NEWLINE = ",\n";
 
-	private static XWingTournament tournament;
+	private static Tournament tournament;
 
-	public static void buildTournament(XWingTournament t) {
+	public static void buildTournament(Tournament t) {
 
 		tournament = t;
 
@@ -33,7 +35,7 @@ public class XWingJSONBuilder {
 
 		sb.append(COMMA_NEWLINE);
 
-		addPlayers(sb, t.getAllXWingPlayers());
+		addPlayers(sb, t.getAllPlayers());
 
 		sb.append(COMMA_NEWLINE);
 
@@ -69,7 +71,7 @@ public class XWingJSONBuilder {
 		}
 	}
 
-	private static void addRounds(StringBuilder sb, List<XWingRound> rounds) {
+	private static void addRounds(StringBuilder sb, List<Round> rounds) {
 		sb.append("\"rounds\": [\n");
 
 		for (int i = 0; i < rounds.size(); i++) {
@@ -82,7 +84,7 @@ public class XWingJSONBuilder {
 		sb.append("\n]");
 	}
 
-	private static void addRound(StringBuilder sb, XWingRound round,
+	private static void addRound(StringBuilder sb, Round round,
 			int roundNumber) {
 		sb.append("{\n");
 
@@ -101,7 +103,7 @@ public class XWingJSONBuilder {
 		sb.append("\n}");
 	}
 
-	private static void addMatches(StringBuilder sb, List<XWingMatch> matches) {
+	private static void addMatches(StringBuilder sb, List<Match> matches) {
 		sb.append("\"matches\": [\n");
 
 		for (int i = 0; i < matches.size(); i++) {
@@ -114,7 +116,7 @@ public class XWingJSONBuilder {
 		sb.append("\n]");
 	}
 
-	private static void addMatch(StringBuilder sb, XWingMatch match) {
+	private static void addMatch(StringBuilder sb, Match match) {
 		sb.append("{\n");
 
 		addValue(sb, "player1", match.getPlayer1().getName());
@@ -123,8 +125,8 @@ public class XWingJSONBuilder {
 		addValue(
 				sb,
 				"player1points",
-				match.getPlayer1PointsDestroyed() == null ? 0 : match
-						.getPlayer1PointsDestroyed());
+				match.getPlayer1Points() == null ? 0 : match
+						.getPlayer1Points());
 		sb.append(COMMA_NEWLINE);
 
 		if (match.getPlayer2() != null) {
@@ -133,8 +135,8 @@ public class XWingJSONBuilder {
 			addValue(
 					sb,
 					"player2points",
-					match.getPlayer2PointsDestroyed() == null ? 0 : match
-							.getPlayer2PointsDestroyed());
+					match.getPlayer2Points() == null ? 0 : match
+							.getPlayer2Points());
 			sb.append(COMMA_NEWLINE);
 		}
 
@@ -148,15 +150,15 @@ public class XWingJSONBuilder {
 		sb.append("\n}");
 	}
 
-	private static void addPlayers(StringBuilder sb, Set<XWingPlayer> players) {
+	private static void addPlayers(StringBuilder sb, Set<Player> players) {
 		sb.append("\"players\": [\n");
 
 		boolean addComma = false;
-		for (XWingPlayer p : players) {
+		for (Player p : players) {
 			if (addComma) {
 				sb.append(COMMA_NEWLINE);
 			}
-			addPlayer(sb, p);
+			addPlayer(sb, ((XWingTournament)tournament).getXWingPlayer(p));
 			addComma = true;
 		}
 
@@ -182,7 +184,7 @@ public class XWingJSONBuilder {
 		sb.append(COMMA_NEWLINE);
 		addValue(sb, "sos", player.getAverageSoS(tournament));
 		sb.append(COMMA_NEWLINE);
-		if (tournament.getXWingPlayers().contains(player) == false) {
+		if (tournament.getPlayers().contains(player) == false) {
 			addValue(sb, "dropped", player.getRoundDropped(tournament));
 			sb.append(COMMA_NEWLINE);
 		}

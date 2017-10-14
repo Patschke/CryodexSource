@@ -3,12 +3,12 @@ package cryodex.modules;
 import javax.swing.JCheckBoxMenuItem;
 
 import cryodex.Player;
+import cryodex.widget.wizard.WizardOptions;
+import cryodex.widget.wizard.pages.Page;
 import cryodex.xml.XMLObject;
 import cryodex.xml.XMLUtils.Element;
 
 public interface Module extends XMLObject {
-
-	public Menu getMenu();
 
 	public RegistrationPanel getRegistration();
 
@@ -27,4 +27,10 @@ public interface Module extends XMLObject {
 	public JCheckBoxMenuItem getViewMenuItem();
 	
 	public void setViewMenuItem(JCheckBoxMenuItem viewMenuItem);
+	
+	public Tournament createTournament(WizardOptions wizardOptions);
+	
+	public void initializeTournament(WizardOptions wizardOptions);
+	
+	public Page getMainWizardPage();
 }

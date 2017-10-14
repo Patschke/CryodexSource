@@ -7,6 +7,8 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import cryodex.Main;
+import cryodex.Player;
+import cryodex.modules.Match;
 
 /**
  * Generate matches in order of ranking or as close to it as possible. This
@@ -21,26 +23,26 @@ import cryodex.Main;
 public class XWingOrderedMatchGeneration {
 
 	private final XWingTournament tournament;
-	private final List<XWingPlayer> players;
+	private final List<Player> players;
 
 	private Integer lowScore = null;
-	private List<XWingMatch> matchSetAtLowScore = null;
+	private List<Match> matchSetAtLowScore = null;
 
 	public XWingOrderedMatchGeneration(XWingTournament tournament,
-			List<XWingPlayer> players) {
+			List<Player> players) {
 		this.tournament = tournament;
 		this.players = players;
 
 	}
 
-	public List<XWingMatch> generateMatches() {
+	public List<Match> generateMatches() {
 
-		List<XWingPlayer> tempList = new ArrayList<>();
+		List<Player> tempList = new ArrayList<>();
 		tempList.addAll(players);
 		Collections.sort(tempList, new XWingComparator(tournament,
 				XWingComparator.pairingCompare));
 
-		generateMatch(new ArrayList<XWingMatch>(), tempList);
+		generateMatch(new ArrayList<Match>(), tempList);
 
 		// If no valid match set was found then we create the true ranking match
 		// set and return it
@@ -48,7 +50,7 @@ public class XWingOrderedMatchGeneration {
 			matchSetAtLowScore = new ArrayList<>();
 
 			for (int counter = 0; counter < players.size(); counter += 2) {
-				XWingMatch m = new XWingMatch(players.get(counter),
+				Match m = new Match(players.get(counter),
 						players.get(counter + 1));
 				m.checkDuplicate(tournament.getAllRounds());
 				matchSetAtLowScore.add(m);
@@ -65,17 +67,17 @@ public class XWingOrderedMatchGeneration {
 		return matchSetAtLowScore;
 	}
 
-	private void generateMatch(List<XWingMatch> matches,
-			List<XWingPlayer> player1List) {
+	private void generateMatch(List<Match> matches,
+			List<Player> player1List) {
 
 		if (player1List.size() == 0) {
 			scorePermutation(matches);
 			return;
 		}
 
-		for (XWingPlayer xp : player1List) {
+		for (Player xp : player1List) {
 
-			List<XWingPlayer> player2List = new ArrayList<>();
+			List<Player> player2List = new ArrayList<>();
 			player2List.addAll(player1List);
 			player2List.remove(xp);
 
@@ -87,16 +89,16 @@ public class XWingOrderedMatchGeneration {
 		}
 	}
 
-	private void getPlayer2(XWingPlayer player1, List<XWingMatch> matches,
-			List<XWingPlayer> player2List) {
-		for (XWingPlayer player2 : player2List) {
-			XWingMatch xm = new XWingMatch(player1, player2);
+	private void getPlayer2(Player player1, List<Match> matches,
+			List<Player> player2List) {
+		for (Player player2 : player2List) {
+			Match xm = new Match(player1, player2);
 			xm.checkDuplicate(tournament.getAllRounds());
 
 			if (xm.isDuplicate() == false) {
 				matches.add(xm);
 				if (shouldContinue(matches)) {
-					List<XWingPlayer> player1List = new ArrayList<>();
+					List<Player> player1List = new ArrayList<>();
 					player1List.addAll(player2List);
 					player1List.remove(xm.getPlayer2());
 
@@ -112,14 +114,14 @@ public class XWingOrderedMatchGeneration {
 		}
 	}
 
-	private boolean shouldContinue(List<XWingMatch> matches) {
+	private boolean shouldContinue(List<Match> matches) {
 		if (lowScore == null) {
 			return true;
 		}
 		return getScore(matches) < lowScore;
 	}
 
-	private void scorePermutation(List<XWingMatch> matches) {
+	private void scorePermutation(List<Match> matches) {
 		int score = getScore(matches);
 
 		if (lowScore == null || score < lowScore) {
@@ -130,7 +132,7 @@ public class XWingOrderedMatchGeneration {
 		}
 	}
 
-	private int getScore(List<XWingMatch> matches) {
+	private int getScore(List<Match> matches) {
 
 		// order players
 		Collections.sort(players, new XWingComparator(tournament,
@@ -138,9 +140,9 @@ public class XWingOrderedMatchGeneration {
 
 		// get list of players in order of matches
 		List<XWingPlayer> playerByMatchOrder = new ArrayList<XWingPlayer>();
-		for (XWingMatch xm : matches) {
-			playerByMatchOrder.add(xm.getPlayer1());
-			playerByMatchOrder.add(xm.getPlayer2());
+		for (Match xm : matches) {
+			playerByMatchOrder.add((XWingPlayer) xm.getPlayer1().getModuleInfoByModule(tournament.getModule()));
+			playerByMatchOrder.add((XWingPlayer) xm.getPlayer2().getModuleInfoByModule(tournament.getModule()));
 		}
 
 		int score = 0;

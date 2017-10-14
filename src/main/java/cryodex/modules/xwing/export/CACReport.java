@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.TreeSet;
 
 import cryodex.CryodexController;
+import cryodex.Player;
 import cryodex.modules.Tournament;
 import cryodex.modules.xwing.XWingComparator;
 import cryodex.modules.xwing.XWingPlayer;
@@ -68,13 +69,15 @@ public class CACReport {
 
 		for (Tournament t : CryodexController.getAllTournaments()) {
 			if (t instanceof XWingTournament) {
-				playerList.addAll(((XWingTournament) t).getAllXWingPlayers());
+				for(Player p : ((XWingTournament) t).getAllPlayers()){
+					playerList.add(((XWingTournament) t).getXWingPlayer(p));
+				}
 			}
 
 		}
 
 		for (XWingPlayer p : playerList) {
-			p.clearKillMap();
+//			p.clearKillMap();
 			Faction f = p.getFaction() == null ? Faction.IMPERIAL : p.getFaction();
 			switch (f) {
 			case IMPERIAL:
@@ -115,30 +118,32 @@ public class CACReport {
 				XWingTournament tournament = (XWingTournament) t;
 
 				if (tournament.getName().toUpperCase().startsWith("R2")) {
-					List<XWingPlayer> playerList = new ArrayList<XWingPlayer>();
-					List<XWingPlayer> activePlayers = new ArrayList<XWingPlayer>();
-					activePlayers.addAll(tournament.getXWingPlayers());
+					List<Player> playerList = new ArrayList<Player>();
+					List<Player> activePlayers = new ArrayList<Player>();
+					activePlayers.addAll(tournament.getPlayers());
 
-					playerList.addAll(tournament.getAllXWingPlayers());
+					playerList.addAll(tournament.getAllPlayers());
 					Collections.sort(playerList, new XWingComparator(
 							tournament, XWingComparator.rankingCompare));
 
 					String content = "<h3>Tournament Results - " + tournament.getName() + "</h3><table border=\"1\"><tr><td style=\"width: 20px;\">Rank</td><td style=\"width: 250px;\">Name</td><td style=\"width: 50px;\">Score</td><td style=\"width: 50px;\">MoV</td><td style=\"width: 50px;\">SoS</td><td style=\"width: 100px;\">Total Score</td><td style=\"width: 100px;\">Total MoV</td></tr>";
 
-					for (XWingPlayer p : playerList) {
+					for (Player p : playerList) {
 
+						XWingPlayer xp = tournament.getXWingPlayer(p);
+						
 						String name = p.getName();
 
 						if (activePlayers.contains(p) == false) {
-							name = "(D#" + p.getRoundDropped(tournament) + ")"
+							name = "(D#" + xp.getRoundDropped(tournament) + ")"
 									+ name;
 						}
 						CACPlayer cp = playerData.get(p);
-						content += "<tr><td>" + p.getRank(tournament)
+						content += "<tr><td>" + xp.getRank(tournament)
 								+ "</td><td>" + name + "</td><td>"
-								+ p.getScore(tournament) + "</td><td>"
-								+ p.getMarginOfVictory(tournament)
-								+ "</td><td>" + p.getAverageSoS(tournament)
+								+ xp.getScore(tournament) + "</td><td>"
+								+ xp.getMarginOfVictory(tournament)
+								+ "</td><td>" + xp.getAverageSoS(tournament)
 								+ "</td><td>" + cp.getPoints() + "</td><td>"
 								+ cp.getMOV() + "</td></tr>";
 					}
@@ -223,18 +228,18 @@ public class CACReport {
 		sb.append("<h3>").append(kl.label).append("</h3>");
 		while (counter < RESULTS_TO_SHOW && playerList.size() > counter) {
 
-			XWingPlayer p = playerList.get(counter);
+//			XWingPlayer p = playerList.get(counter);
 
-			Map<Faction, Integer> killMap = p.getKillMap();
+//			Map<Faction, Integer> killMap = null;//p.getKillMap();
 
 			Integer killCount = 0;
 
 			if (kl.getFaction1() != null) {
-				killCount += killMap.get(kl.getFaction1());
+//				killCount += killMap.get(kl.getFaction1());
 			}
 
 			if (kl.getFaction2() != null) {
-				killCount += killMap.get(kl.getFaction2());
+//				killCount += killMap.get(kl.getFaction2());
 			}
 
 			sb.append(counter + 1).append(") ")
@@ -256,20 +261,20 @@ public class CACReport {
 		@Override
 		public int compare(XWingPlayer o1, XWingPlayer o2) {
 
-			Map<Faction, Integer> killMap1 = o1.getKillMap();
-			Map<Faction, Integer> killMap2 = o2.getKillMap();
+//			Map<Faction, Integer> killMap1 = null;//o1.getKillMap();
+//			Map<Faction, Integer> killMap2 = null;//o2.getKillMap();
 
 			Integer killCount1 = 0;
 			Integer killCount2 = 0;
 
 			if (killLabel.getFaction1() != null) {
-				killCount1 += killMap1.get(killLabel.getFaction1());
-				killCount2 += killMap2.get(killLabel.getFaction1());
+//				killCount1 += killMap1.get(killLabel.getFaction1());
+//				killCount2 += killMap2.get(killLabel.getFaction1());
 			}
 
 			if (killLabel.getFaction2() != null) {
-				killCount1 += killMap1.get(killLabel.getFaction2());
-				killCount2 += killMap2.get(killLabel.getFaction2());
+//				killCount1 += killMap1.get(killLabel.getFaction2());
+//				killCount2 += killMap2.get(killLabel.getFaction2());
 			}
 
 			return killCount1.compareTo(killCount2) * -1;

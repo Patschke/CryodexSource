@@ -14,8 +14,11 @@ public class RoundTabbedPane extends AddTabTabbedPane {
 
 	public void addSwissTab(int roundNumber, JPanel roundPanel) {
 		setVisible(true);
+
+		// This loop removes the tab for the current round number and all
+		// subsequent rounds. This is used if a round is being regenerated.
 		while (this.getTabCount() > roundNumber) {
-			this.remove(roundNumber - 2);
+			this.remove(roundNumber - 1);
 		}
 
 		this.addTab("Round " + roundNumber, roundPanel);
@@ -35,8 +38,7 @@ public class RoundTabbedPane extends AddTabTabbedPane {
 
 	@Override
 	public void triggerEvent() {
-		boolean successful = CryodexController.getActiveTournament()
-				.generateNextRound();
+		boolean successful = CryodexController.getActiveTournament().generateNextRound();
 
 		if (successful == false) {
 			setSelectedIndex(getTabCount() - 2);

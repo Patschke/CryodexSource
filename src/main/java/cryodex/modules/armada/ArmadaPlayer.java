@@ -8,7 +8,10 @@ import java.util.List;
 
 import cryodex.CryodexController.Modules;
 import cryodex.Player;
+import cryodex.modules.Match;
 import cryodex.modules.ModulePlayer;
+import cryodex.modules.Round;
+import cryodex.modules.Tournament;
 import cryodex.xml.XMLObject;
 import cryodex.xml.XMLUtils;
 import cryodex.xml.XMLUtils.Element;
@@ -90,87 +93,76 @@ public class ArmadaPlayer implements Comparable<ModulePlayer>, XMLObject, Module
 			return getResultByMOV(mov).getLoseScore();
 		}
 	}
+	
+    public static enum Faction {
+        IMPERIAL, REBEL;
+    }
 
-	private Player player;
-	private String seedValue;
-	private boolean firstRoundBye = false;
-	private String squadId;
+    private Player player;
+    private String seedValue;
+    private String squadId;
+    private Faction faction;
 
-	public ArmadaPlayer(Player p) {
-		player = p;
-		seedValue = String.valueOf(Math.random());
-	}
+    public ArmadaPlayer(Player p) {
+        player = p;
+        seedValue = String.valueOf(Math.random());
+    }
 
-	public ArmadaPlayer(Player p, Element e) {
-		this.player = p;
-		this.seedValue = e.getStringFromChild("SEEDVALUE");
-		this.firstRoundBye = e.getBooleanFromChild("FIRSTROUNDBYE");
-		this.squadId = e.getStringFromChild("SQUADID");
-	}
+    public ArmadaPlayer(Player p, Element e) {
+        this.player = p;
+        this.seedValue = e.getStringFromChild("SEEDVALUE");
+        this.squadId = e.getStringFromChild("SQUADID");
+        String factionString = e.getStringFromChild("FACTION");
 
-	@Override
-	public Player getPlayer() {
-		return player;
-	}
+        if (factionString != null && factionString.isEmpty() == false) {
+            faction = Faction.valueOf(factionString);
+        } else {
+            faction = Faction.IMPERIAL;
+        }
+    }
 
-	@Override
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
+    @Override
+    public Player getPlayer() {
+        return player;
+    }
 
-	public String getSeedValue() {
-		return seedValue;
-	}
+    @Override
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 
-	public void setSeedValue(String seedValue) {
-		this.seedValue = seedValue;
-	}
+    public String getSeedValue() {
+        return seedValue;
+    }
 
-	public boolean isFirstRoundBye() {
-		return firstRoundBye;
-	}
+    public void setSeedValue(String seedValue) {
+        this.seedValue = seedValue;
+    }
 
-	public void setFirstRoundBye(boolean firstRoundBye) {
-		this.firstRoundBye = firstRoundBye;
-	}
+    public String getSquadId() {
+        return squadId;
+    }
 
-	public String getSquadId() {
-		return squadId;
-	}
+    public void setSquadId(String squadId) {
+        this.squadId = squadId;
+    }
 
-	public void setSquadId(String squadId) {
-		this.squadId = squadId;
-	}
+    public Faction getFaction() {
+        return faction;
+    }
 
-	public List<ArmadaMatch> getMatches(ArmadaTournament t) {
+    public void setFaction(Faction faction) {
+        this.faction = faction;
+    }
 
-		List<ArmadaMatch> matches = new ArrayList<ArmadaMatch>();
+    @Override
+    public String toString() {
+        return getPlayer().getName();
+    }
 
-		if (t != null) {
-
-			rounds: for (ArmadaRound r : t.getAllRounds()) {
-				if (r.isSingleElimination()) {
-					continue;
-				}
-				for (ArmadaMatch m : r.getMatches()) {
-					if (m.getPlayer1() == this || (m.getPlayer2() != null && m.getPlayer2() == this)) {
-						matches.add(m);
-						continue rounds;
-					}
-				}
-			}
-		}
-		return matches;
-	}
-
-	@Override
-	public String toString() {
-		return getPlayer().getName();
-	}
-
-	public int getScore(ArmadaTournament t) {
+    public int getScore(Tournament t) {
 		int score = 0;
-		for (ArmadaMatch match : getMatches(t)) {
+		for (Match match : getPlayer().getMatches(t)) {
 			if (match.isBye()) {
 				score += 8;
 			} else {
@@ -179,32 +171,11 @@ public class ArmadaPlayer implements Comparable<ModulePlayer>, XMLObject, Module
 					continue;
 				}
 
-				int mov = 0;
-
-				try {
-
-					int player1Score = match.getPlayer1Score() == null ? 0 : match.getPlayer1Score();
-					int player2Score = match.getPlayer2Score() == null ? 0 : match.getPlayer2Score();
-
-					if (match.getPlayer1() == match.getWinner()) {
-						mov = player1Score - player2Score;
-					} else {
-						mov = player2Score - player1Score;
-					}
-				} catch (Exception e) {
-				}
-
-				// Check to see if MOV is outside the min/max
-				mov = mov < 0 ? 0 : mov;
-				mov = mov > MAX_MOV ? MAX_MOV : mov;
+				int mov = getWinnerMOV(match);
 
 				int matchScore = 0;
-				if (match.getWinner() == this) {
-					if(match.isConcede()){
-						matchScore = CONCEDE_WIN_SCORE;
-					} else {
-						matchScore = ScoreTableEnum.getWinScore(mov);	
-					}
+				if (match.getWinner() == this.getPlayer()) {
+						matchScore = ScoreTableEnum.getWinScore(mov);
 				} else {
 					if(match.isConcede()){
 						matchScore = CONCEDE_LOSE_SCORE;
@@ -219,244 +190,235 @@ public class ArmadaPlayer implements Comparable<ModulePlayer>, XMLObject, Module
 		return score;
 	}
 
-	public double getAverageScore(ArmadaTournament t) {
-		return getScore(t) * 1.0 / getMatches(t).size();
-	}
+    public double getAverageScore(Tournament t) {
 
-	public double getAverageSoS(ArmadaTournament t) {
-		double sos = 0.0;
-		List<ArmadaMatch> matches = getMatches(t);
+        int score = getScore(t);
+        int matchCount = getPlayer().getMatches(t).size();
 
-		int numOpponents = 0;
-		for (ArmadaMatch m : matches) {
-			if (m.isBye() == false && (m.getWinner() != null)) {
-				if (m.getPlayer1() == this) {
-					sos += m.getPlayer2().getAverageScore(t);
-					numOpponents++;
-				} else {
-					sos += m.getPlayer1().getAverageScore(t);
-					numOpponents++;
-				}
-			}
-		}
+        return score * 1.0 / matchCount;
+    }
+
+    public double getAverageSoS(Tournament t) {
+        double sos = 0.0;
+        List<Match> matches = getPlayer().getMatches(t);
+
+        int numOpponents = 0;
+        for (Match m : matches) {
+            if (m.isBye() == false && m.getWinner() != null) {
+                if (m.getPlayer1() == this.getPlayer()) {
+                    sos += ((ArmadaPlayer) m.getPlayer2().getModuleInfoByModule(t.getModule())).getAverageScore(t);
+                    numOpponents++;
+                } else {
+                    sos += ((ArmadaPlayer) m.getPlayer1().getModuleInfoByModule(t.getModule())).getAverageScore(t);
+                    numOpponents++;
+                }
+            }
+        }
 
 		// if they don't have any opponents recorded yet, don't divide by 0
-		double averageSos = numOpponents>0 ? sos / numOpponents : 0;
+        double averageSos = numOpponents>0 ? sos / numOpponents : 0;
         if (Double.isNaN(averageSos) != true) {
             BigDecimal bd = new BigDecimal(averageSos);
-            bd = bd.setScale(3, RoundingMode.HALF_UP);
+            bd = bd.setScale(2, RoundingMode.HALF_UP);
             return bd.doubleValue();
         }
         return averageSos;
-	}
+    }
 
-	public int getWins(ArmadaTournament t) {
-		int score = 0;
-		for (ArmadaMatch match : getMatches(t)) {
-			if (match.getWinner() == this || match.isBye()) {
-				score++;
-			}
-		}
-		return score;
-	}
+    public int getWins(Tournament t) {
+        int score = 0;
+        for (Match match : getPlayer().getMatches(t)) {
+            if (match.getWinner() == this.getPlayer() || match.isBye()) {
+                score++;
+            }
+        }
+        return score;
+    }
 
-	public int getLosses(ArmadaTournament t) {
-		int score = 0;
-		for (ArmadaMatch match : getMatches(t)) {
-			if (match.getWinner() != null && match.getWinner() != this) {
-				score++;
-			}
-		}
-		return score;
-	}
+    public int getLosses(Tournament t) {
+        int score = 0;
+        for (Match match : getPlayer().getMatches(t)) {
+            if (match.getWinner() != null && match.getWinner() != this.getPlayer()) {
+                score++;
+            }
+        }
+        return score;
+    }
 
-	public int getByes(ArmadaTournament t) {
-		int byes = 0;
-		for (ArmadaMatch match : getMatches(t)) {
-			if (match.isBye()) {
-				byes++;
-			}
-		}
-		return byes;
-	}
+    public int getRank(Tournament t) {
+        List<Player> players = new ArrayList<Player>();
+        players.addAll(t.getPlayers());
+        Collections.sort(players, new ArmadaComparator(t, ArmadaComparator.rankingCompare));
 
-	public int getRank(ArmadaTournament t) {
-		List<ArmadaPlayer> players = new ArrayList<ArmadaPlayer>();
-		players.addAll(t.getArmadaPlayers());
-		Collections.sort(players, new ArmadaComparator(t, ArmadaComparator.rankingCompare));
+        for (int i = 0; i < players.size(); i++) {
+            if (((ArmadaTournament) t).getArmadaPlayer(players.get(i)) == this) {
+                return i + 1;
+            }
+        }
 
-		for (int i = 0; i < players.size(); i++) {
-			if (players.get(i) == this) {
-				return i + 1;
-			}
-		}
+        return 0;
+    }
 
-		return 0;
-	}
+    public int getEliminationRank(Tournament t) {
 
-	public int getEliminationRank(ArmadaTournament t) {
+        int rank = 0;
 
-		int rank = 0;
+        for (Round r : t.getAllRounds()) {
+            if (r.isSingleElimination()) {
+                for (Match m : r.getMatches()) {
+                    if ((m.getPlayer1() == this.getPlayer() || m.getPlayer2() == this.getPlayer()) && (m.getWinner() != null && m.getWinner() != this.getPlayer())) {
+                        return r.getMatches().size() * 2;
+                    }
 
-		for (ArmadaRound r : t.getAllRounds()) {
-			if (r.isSingleElimination()) {
-				for (ArmadaMatch m : r.getMatches()) {
-					if ((m.getPlayer1() == this || m.getPlayer2() == this)
-							&& (m.getWinner() != null && m.getWinner() != this)) {
-						return r.getMatches().size() * 2;
-					}
+                    if (r.getMatches().size() == 1 && m.getWinner() != null && m.getWinner() == this.getPlayer()) {
+                        return 1;
+                    }
+                }
+            }
+        }
 
-					if (r.getMatches().size() == 1 && m.getWinner() != null && m.getWinner() == this) {
-						return 1;
-					}
-				}
-			}
-		}
+        return rank;
+    }
 
-		return rank;
-	}
-
-	public int getMarginOfVictory(ArmadaTournament t) {
-
-		int roundNumber = 0;
+    public int getMarginOfVictory(Tournament t) {
 
 		Integer totalMov = 0;
 
-		for (ArmadaMatch match : getMatches(t)) {
-
-			roundNumber++;
-
-			Integer tournamentPoints = t.getPoints();
-			if (tournamentPoints == null && t.getEscalationPoints() != null
-					&& t.getEscalationPoints().isEmpty() == false) {
-
-				tournamentPoints = t.getEscalationPoints().size() >= roundNumber
-						? t.getEscalationPoints().get(roundNumber - 1)
-						: t.getEscalationPoints().get(t.getEscalationPoints().size() - 1);
-			}
-
-			if (match.isBye()) {
-				totalMov += BYE_MOV;
-
-				continue;
-			} else if (match.getWinner() == null) {
-				continue;
-			}
-
-			if (match.getWinner() == this) {
-				int mov = 0;
-				try {
-
-					int player1Score = match.getPlayer1Score() == null ? 0 : match.getPlayer1Score();
-					int player2Score = match.getPlayer2Score() == null ? 0 : match.getPlayer2Score();
-
-					if (match.getPlayer1() == this) {
-						mov = player1Score - player2Score;
-					} else {
-						mov = player2Score - player1Score;
-					}
-				} catch (Exception e) {
-				}
-
-				if (match.isConcede()) {
-					mov = CONCEDE_MOV;
-				}
-
-				// Check to see if MOV is outside the min/max
-				mov = mov < 0 ? 0 : mov;
-				mov = mov > MAX_MOV ? MAX_MOV : mov;
-
-				totalMov += mov;
-			} else {
-				totalMov += 0;
-			}
+		for (Match match : getPlayer().getMatches(t)) {
+			totalMov += getMatchMOV(match);
 		}
 		return totalMov;
 	}
+    
+    public int getMatchMOV(Match match){
+        if (match.isBye()) {
+            return BYE_MOV;
+         
+        } else if (match.getWinner() == null) {
+        	return 0;
+        }
 
-	public boolean isHeadToHeadWinner(ArmadaTournament t) {
-
-		if (t != null) {
-			int score = getScore(t);
-			List<ArmadaPlayer> players = new ArrayList<ArmadaPlayer>();
-			for (ArmadaPlayer p : t.getArmadaPlayers()) {
-				if (p != this && p.getScore(t) == score) {
-					players.add(p);
-				}
-			}
-
-			if (players.isEmpty()) {
-				return false;
-			}
-
-			playerLoop: for (ArmadaPlayer p : players) {
-				for (ArmadaMatch m : p.getMatches(t)) {
-					if (m.getPlayer1() == p && m.getPlayer2() == this && m.getWinner() == this) {
-						continue playerLoop;
-					} else if (m.getPlayer2() == p && m.getPlayer1() == this && m.getWinner() == p) {
-						continue playerLoop;
-					}
-				}
-				return false;
-			}
+		if (match.getWinner() == this.getPlayer()) {
+			return getWinnerMOV(match);
 		}
-
-		return true;
-	}
-
-	public int getRoundDropped(ArmadaTournament t) {
-		for (int i = t.getAllRounds().size(); i > 0; i--) {
-
-			boolean found = false;
-			ArmadaRound r = t.getAllRounds().get(i - 1);
-			for (ArmadaMatch m : r.getMatches()) {
-				if (m.getPlayer1() == this) {
-					found = true;
-					break;
-				} else if (m.isBye() == false && m.getPlayer2() == this) {
-					found = true;
-					break;
-				}
-			}
-
-			if (found) {
-				return i + 1;
-			}
-		}
-
+		
 		return 0;
+    }
+    
+    public int getWinnerMOV(Match match){
+		int mov = 0;
+		try {
+
+			int player1Score = match.getPlayer1Points() == null ? 0 : match.getPlayer1Points();
+			int player2Score = match.getPlayer2Points() == null ? 0 : match.getPlayer2Points();
+
+			if (match.getPlayer1() == match.getWinner()) {
+				mov = player1Score - player2Score;
+			} else {
+				mov = player2Score - player1Score;
+			}
+		} catch (Exception e) {
+		}
+
+		if (match.isConcede() && mov < CONCEDE_MOV) {
+			mov = CONCEDE_MOV;
+		}
+
+		// Check to see if MOV is outside the min/max
+		mov = mov < 0 ? 0 : mov;
+		mov = mov > MAX_MOV ? MAX_MOV : mov;
+		
+		return mov;
 	}
 
-	public String getName() {
-		return getPlayer().getName();
-	}
+    /**
+     * Returns true if the player has defeated every other person in their score group.
+     * 
+     * @param t
+     * @return
+     */
+    public boolean isHeadToHeadWinner(Tournament t) {
 
-	@Override
-	public String getModuleName() {
-		return Modules.ARMADA.getName();
-	}
+        if (t != null) {
+            int score = getScore(t);
+            List<ArmadaPlayer> players = new ArrayList<ArmadaPlayer>();
+            for (Player p : t.getPlayers()) {
+                ArmadaPlayer xp = ((ArmadaTournament) t).getArmadaPlayer(p);
+                if (xp != this && xp.getScore(t) == score) {
+                    players.add(xp);
+                }
+            }
 
-	public String toXML() {
-		StringBuilder sb = new StringBuilder();
+            if (players.isEmpty()) {
+                return false;
+            }
 
-		appendXML(sb);
+            playerLoop: for (ArmadaPlayer p : players) {
+                for (Match m : p.getPlayer().getMatches(t)) {
+                    if (m.getWinner() != null && m.getWinner() == this.getPlayer()) {
+                        continue playerLoop;
+                    }
+                }
+                return false;
+            }
+        }
 
-		return sb.toString();
-	}
+        return true;
+    }
 
-	@Override
-	public StringBuilder appendXML(StringBuilder sb) {
+    public int getRoundDropped(Tournament t) {
+        for (int i = t.getAllRounds().size(); i > 0; i--) {
 
-		XMLUtils.appendObject(sb, "MODULE", Modules.ARMADA.getName());
-		XMLUtils.appendObject(sb, "SEEDVALUE", getSeedValue());
-		XMLUtils.appendObject(sb, "FIRSTROUNDBYE", isFirstRoundBye());
-		XMLUtils.appendObject(sb, "SQUADID", getSquadId());
+            boolean found = false;
+            Round r = t.getAllRounds().get(i - 1);
+            for (Match m : r.getMatches()) {
+                if (m.getPlayer1() == this.getPlayer()) {
+                    found = true;
+                    break;
+                } else if (m.isBye() == false && m.getPlayer2() == this.getPlayer()) {
+                    found = true;
+                    break;
+                }
+            }
 
-		return sb;
-	}
+            if (found) {
+                return i + 1;
+            }
+        }
 
-	@Override
-	public int compareTo(ModulePlayer arg0) {
-		return this.getPlayer().getName().toUpperCase().compareTo(arg0.getPlayer().getName().toUpperCase());
-	}
+        return 0;
+    }
+
+    public String getName() {
+        return getPlayer().getName();
+    }
+
+    @Override
+    public String getModuleName() {
+        return Modules.ARMADA.getName();
+    }
+
+    public String toXML() {
+        StringBuilder sb = new StringBuilder();
+
+        appendXML(sb);
+
+        return sb.toString();
+    }
+
+    @Override
+    public StringBuilder appendXML(StringBuilder sb) {
+
+        XMLUtils.appendObject(sb, "MODULE", Modules.ARMADA.getName());
+        XMLUtils.appendObject(sb, "SEEDVALUE", getSeedValue());
+        XMLUtils.appendObject(sb, "SQUADID", getSquadId());
+        XMLUtils.appendObject(sb, "FACTION", getFaction());
+
+        return sb;
+    }
+
+    @Override
+    public int compareTo(ModulePlayer arg0) {
+        return this.getPlayer().getName().toUpperCase().compareTo(arg0.getPlayer().getName().toUpperCase());
+    }
 }

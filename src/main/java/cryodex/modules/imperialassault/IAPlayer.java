@@ -8,173 +8,144 @@ import java.util.List;
 
 import cryodex.CryodexController.Modules;
 import cryodex.Player;
+import cryodex.modules.Match;
 import cryodex.modules.ModulePlayer;
+import cryodex.modules.Round;
+import cryodex.modules.Tournament;
 import cryodex.xml.XMLObject;
 import cryodex.xml.XMLUtils;
 import cryodex.xml.XMLUtils.Element;
 
-public class IAPlayer implements Comparable<ModulePlayer>, XMLObject,
-		ModulePlayer {
+public class IAPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePlayer {
 
-	private Player player;
-	private String seedValue;
-	private boolean firstRoundBye = false;
-	private String squadId;
+    public static enum Faction {
+        IMPERIAL, REBEL, SCUM;
+    }
 
-	public IAPlayer(Player p) {
-		player = p;
-		seedValue = String.valueOf(Math.random());
-	}
+    private Player player;
+    private String seedValue;
+    private String squadId;
+    private Faction faction;
 
-	public IAPlayer(Player p, Element e) {
-		this.player = p;
-		this.seedValue = e.getStringFromChild("SEEDVALUE");
-		this.firstRoundBye = e.getBooleanFromChild("FIRSTROUNDBYE");
-		this.squadId = e.getStringFromChild("SQUADID");
-	}
+    public IAPlayer(Player p) {
+        player = p;
+        seedValue = String.valueOf(Math.random());
+    }
 
-	@Override
-	public Player getPlayer() {
-		return player;
-	}
+    public IAPlayer(Player p, Element e) {
+        this.player = p;
+        this.seedValue = e.getStringFromChild("SEEDVALUE");
+        this.squadId = e.getStringFromChild("SQUADID");
+        String factionString = e.getStringFromChild("FACTION");
 
-	@Override
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
+        if (factionString != null && factionString.isEmpty() == false) {
+            faction = Faction.valueOf(factionString);
+        } else {
+            faction = Faction.IMPERIAL;
+        }
+    }
 
-	public String getSeedValue() {
-		return seedValue;
-	}
+    @Override
+    public Player getPlayer() {
+        return player;
+    }
 
-	public void setSeedValue(String seedValue) {
-		this.seedValue = seedValue;
-	}
+    @Override
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 
-	public boolean isFirstRoundBye() {
-		return firstRoundBye;
-	}
+    public String getSeedValue() {
+        return seedValue;
+    }
 
-	public void setFirstRoundBye(boolean firstRoundBye) {
-		this.firstRoundBye = firstRoundBye;
-	}
+    public void setSeedValue(String seedValue) {
+        this.seedValue = seedValue;
+    }
 
-	public String getSquadId() {
-		return squadId;
-	}
+    public String getSquadId() {
+        return squadId;
+    }
 
-	public void setSquadId(String squadId) {
-		this.squadId = squadId;
-	}
+    public void setSquadId(String squadId) {
+        this.squadId = squadId;
+    }
 
-	public List<IAMatch> getMatches(IATournament t) {
+    public Faction getFaction() {
+        return faction;
+    }
 
-		List<IAMatch> matches = new ArrayList<IAMatch>();
+    public void setFaction(Faction faction) {
+        this.faction = faction;
+    }
 
-		if (t != null) {
+    @Override
+    public String toString() {
+        return getPlayer().getName();
+    }
 
-			rounds: for (IARound r : t.getAllRounds()) {
-				if (r.isSingleElimination()) {
-					continue;
-				}
-				for (IAMatch m : r.getMatches()) {
-					if (m.getPlayer1() == this
-							|| (m.getPlayer2() != null && m.getPlayer2() == this)) {
-						matches.add(m);
-						continue rounds;
-					}
-				}
-			}
-		}
-		return matches;
-	}
+    public int getScore(Tournament t) {
+        int score = 0;
+        for (Match match : getPlayer().getMatches(t)) {
+            if (match.getWinner() == this.getPlayer()) {
+                score += IAConstants.WIN_POINTS;
+            } else if (match.isBye()) {
+                score += IAConstants.BYE_POINTS;
+            } else {
+                score += IAConstants.LOSS_POINTS;
+            }
+        }
+        
+        return score;
+    }
 
-	@Override
-	public String toString() {
-		return getPlayer().getName();
-	}
+    public double getAverageScore(Tournament t) {
 
-	public int getScore(IATournament t) {
-		int score = 0;
-		for (IAMatch match : getMatches(t)) {
-			if (match.getWinner() == this) {
-				score += IAMatch.WIN_POINTS;
-			} else if (match.isBye()) {
-				score += IAMatch.BYE_POINTS;
-			} else {
-				score += IAMatch.LOSS_POINTS;
-			}
-		}
+        int score = getScore(t);
+        int matchCount = getPlayer().getMatches(t).size();
 
-		return score;
-	}
+        return score * 1.0 / matchCount;
+    }
 
-	public double getAverageScore(IATournament t) {
-		return getScore(t) * 1.0 / getMatches(t).size();
-	}
+    public double getAverageSoS(Tournament t) {
+        double sos = 0.0;
+        List<Match> matches = getPlayer().getMatches(t);
 
-	public double getAverageSoS(IATournament t) {
-		double sos = 0.0;
-		List<IAMatch> matches = getMatches(t);
+        int numOpponents = 0;
+        for (Match m : matches) {
+            if (m.isBye() == false && m.getWinner() != null) {
+                if (m.getPlayer1() == this.getPlayer()) {
+                    sos += ((IAPlayer) m.getPlayer2().getModuleInfoByModule(t.getModule())).getAverageScore(t);
+                    numOpponents++;
+                } else {
+                    sos += ((IAPlayer) m.getPlayer1().getModuleInfoByModule(t.getModule())).getAverageScore(t);
+                    numOpponents++;
+                }
+            }
+        }
 
-		int numOpponents = 0;
-		for (IAMatch m : matches) {
-			if (m.isBye() == false && (m.getWinner() != null)) {
-				if (m.getPlayer1() == this) {
-					sos += m.getPlayer2().getAverageScore(t);
-					numOpponents++;
-				} else {
-					sos += m.getPlayer1().getAverageScore(t);
-					numOpponents++;
-				}
-			}
-		}
-
-		return sos / numOpponents;
-	}
-
-	public int getWins(IATournament t) {
-		int score = 0;
-		for (IAMatch match : getMatches(t)) {
-			if (match.getWinner() == this || match.isBye()) {
-				score++;
-			}
-		}
-		return score;
-	}
-
-	public int getLosses(IATournament t) {
-		int score = 0;
-		for (IAMatch match : getMatches(t)) {
-			if (match.getWinner() != null && match.getWinner() != this) {
-				score++;
-			}
-		}
-		return score;
-	}
-
-	public int getByes(IATournament t) {
-		int byes = 0;
-		for (IAMatch match : getMatches(t)) {
-			if (match.isBye()) {
-				byes++;
-			}
-		}
-		return byes;
-	}
-
-	public double getExtendedStrengthOfSchedule(IATournament t) {
+		// if they don't have any opponents recorded yet, don't divide by 0
+        double averageSos = numOpponents>0 ? sos / numOpponents : 0;
+        if (Double.isNaN(averageSos) != true) {
+            BigDecimal bd = new BigDecimal(averageSos);
+            bd = bd.setScale(2, RoundingMode.HALF_UP);
+            return bd.doubleValue();
+        }
+        return averageSos;
+    }
+    
+    public double getExtendedStrengthOfSchedule(Tournament t) {
 		double sos = 0;
-		List<IAMatch> matches = getMatches(t);
+		List<Match> matches = getPlayer().getMatches(t);
 
 		int numOpponents = 0;
-		for (IAMatch m : matches) {
+		for (Match m : matches) {
 			if (m.isBye() == false & m.getWinner() != null) {
-				if (m.getPlayer1() == this) {
-					sos += m.getPlayer2().getAverageSoS(t);
+				if (m.getPlayer1() == this.getPlayer()) {
+					sos += ((IATournament) t).getIAPlayer(m.getPlayer2()).getAverageSoS(t);
 					numOpponents++;
 				} else {
-					sos += m.getPlayer1().getAverageSoS(t);
+					sos += ((IATournament) t).getIAPlayer(m.getPlayer1()).getAverageSoS(t);
 					numOpponents++;
 				}
 			}
@@ -190,212 +161,180 @@ public class IAPlayer implements Comparable<ModulePlayer>, XMLObject,
         return averageSos;
 	}
 
-	public int getRank(IATournament t) {
-		List<IAPlayer> players = new ArrayList<IAPlayer>();
-		players.addAll(t.getIAPlayers());
-		Collections.sort(players, new IAComparator(t,
-				IAComparator.rankingCompare));
+    public int getWins(Tournament t) {
+        int score = 0;
+        for (Match match : getPlayer().getMatches(t)) {
+            if (match.getWinner() == this.getPlayer() || match.isBye()) {
+                score++;
+            }
+        }
+        return score;
+    }
 
-		for (int i = 0; i < players.size(); i++) {
-			if (players.get(i) == this) {
-				return i + 1;
-			}
-		}
+    public int getLosses(Tournament t) {
+        int score = 0;
+        for (Match match : getPlayer().getMatches(t)) {
+            if (match.getWinner() != null && match.getWinner() != this.getPlayer()) {
+                score++;
+            }
+        }
+        return score;
+    }
 
-		return 0;
-	}
+    public int getRank(Tournament t) {
+        List<Player> players = new ArrayList<Player>();
+        players.addAll(t.getPlayers());
+        Collections.sort(players, new IAComparator(t, IAComparator.rankingCompare));
 
-	public int getEliminationRank(IATournament t) {
+        for (int i = 0; i < players.size(); i++) {
+            if (((IATournament) t).getIAPlayer(players.get(i)) == this) {
+                return i + 1;
+            }
+        }
 
-		int rank = 0;
+        return 0;
+    }
 
-		for (IARound r : t.getAllRounds()) {
-			if (r.isSingleElimination()) {
-				for (IAMatch m : r.getMatches()) {
-					if ((m.getPlayer1() == this || m.getPlayer2() == this)
-							&& (m.getWinner() != null && m.getWinner() != this)) {
-						return r.getMatches().size() * 2;
-					}
+    public int getEliminationRank(Tournament t) {
 
-					if (r.getMatches().size() == 1 && m.getWinner() != null
-							&& m.getWinner() == this) {
-						return 1;
-					}
-				}
-			}
-		}
+        int rank = 0;
 
-		return rank;
-	}
+        for (Round r : t.getAllRounds()) {
+            if (r.isSingleElimination()) {
+                for (Match m : r.getMatches()) {
+                    if ((m.getPlayer1() == this.getPlayer() || m.getPlayer2() == this.getPlayer()) && (m.getWinner() != null && m.getWinner() != this.getPlayer())) {
+                        return r.getMatches().size() * 2;
+                    }
 
-	public boolean isHeadToHeadWinner(IATournament t) {
+                    if (r.getMatches().size() == 1 && m.getWinner() != null && m.getWinner() == this.getPlayer()) {
+                        return 1;
+                    }
+                }
+            }
+        }
 
-		if (t != null) {
-			int score = getScore(t);
-			List<IAPlayer> players = new ArrayList<IAPlayer>();
-			for (IAPlayer p : t.getIAPlayers()) {
-				if (p != this && p.getScore(t) == score) {
-					players.add(p);
-				}
-			}
+        return rank;
+    }
 
-			if (players.isEmpty()) {
-				return false;
-			}
+    public int getMarginOfVictory(Tournament t) {
 
-			playerLoop: for (IAPlayer p : players) {
-				for (IAMatch m : p.getMatches(t)) {
-					if (m.getPlayer1() == p && m.getPlayer2() == this
-							&& m.getWinner() == this) {
-						continue playerLoop;
-					} else if (m.getPlayer2() == p && m.getPlayer1() == this
-							&& m.getWinner() == p) {
-						continue playerLoop;
-					}
-				}
-				return false;
-			}
-		}
+        int roundNumber = 0;
 
-		return true;
-	}
+        Integer movPoints = 0;
 
-	public int getRoundDropped(IATournament t) {
-		for (int i = t.getAllRounds().size(); i > 0; i--) {
+        for (Match match : getPlayer().getMatches(t)) {
 
-			boolean found = false;
-			IARound r = t.getAllRounds().get(i - 1);
-			for (IAMatch m : r.getMatches()) {
-				if (m.getPlayer1() == this) {
-					found = true;
-					break;
-				} else if (m.isBye() == false && m.getPlayer2() == this) {
-					found = true;
-					break;
-				}
-			}
+            roundNumber++;
 
-			if (found) {
-				return i + 1;
-			}
-		}
+            Integer tournamentPoints = t.getRoundPoints(roundNumber);
 
-		return 0;
-	}
+            if (match.isBye()) {
+                movPoints += tournamentPoints + (tournamentPoints / 2);
+                continue;
+            } else if (match.getWinner() == null) {
+                continue;
+            }
 
-	public String getName() {
-		return getPlayer().getName();
-	}
+            boolean isPlayer1 = match.getPlayer1() == this.getPlayer();
 
-	// public static class RankingComparator extends
-	// TournamentComparator<IAPlayer> {
-	//
-	// private final IATournament t;
-	//
-	// public RankingComparator(IATournament t) {
-	// this.t = t;
-	// }
-	//
-	// @Override
-	// public int compare(IAPlayer o1, IAPlayer o2) {
-	//
-	// int result = compareInt(o1.getScore(t), o2.getScore(t));
-	//
-	// if (result == 0) {
-	// result = compareDouble(o1.getAverageSoS(t), o2.getAverageSoS(t));
-	// }
-	//
-	// if (result == 0) {
-	// result = compareDouble(o1.getExtendedStrengthOfSchedule(t),
-	// o2.getExtendedStrengthOfSchedule(t));
-	// }
-	//
-	// if (result == 0) {
-	// String seedValue1 = o1.getSeedValue();
-	// String seedValue2 = o2.getSeedValue();
-	//
-	// try {
-	// Double d1 = Double.valueOf(seedValue1);
-	// Double d2 = Double.valueOf(seedValue2);
-	//
-	// result = d1.compareTo(d2);
-	// } catch (NumberFormatException e) {
-	// result = seedValue1.compareTo(seedValue2);
-	// }
-	// }
-	//
-	// return result;
-	// }
-	// }
+            int player1Points = match.getPlayer1Points() == null ? 0 : match.getPlayer1Points();
+            int player2Points = match.getPlayer2Points() == null ? 0 : match.getPlayer2Points();
 
-	// public static class PairingComparator extends
-	// TournamentComparator<IAPlayer> {
-	//
-	// private final IATournament t;
-	//
-	// public PairingComparator(IATournament t) {
-	// this.t = t;
-	// }
-	//
-	// @Override
-	// public int compare(IAPlayer o1, IAPlayer o2) {
-	//
-	// int result = compareInt(o1.getScore(t), o2.getScore(t));
-	//
-	// if (result == 0) {
-	// result = compareDouble(o1.getAverageSoS(t), o2.getAverageSoS(t));
-	// }
-	//
-	// if (result == 0) {
-	// result = compareDouble(o1.getExtendedStrengthOfSchedule(t),
-	// o2.getExtendedStrengthOfSchedule(t));
-	// }
-	//
-	// if (result == 0) {
-	// String seedValue1 = o1.getSeedValue();
-	// String seedValue2 = o2.getSeedValue();
-	//
-	// try {
-	// Double d1 = Double.valueOf(seedValue1);
-	// Double d2 = Double.valueOf(seedValue2);
-	//
-	// result = d1.compareTo(d2);
-	// } catch (NumberFormatException e) {
-	// result = seedValue1.compareTo(seedValue2);
-	// }
-	// }
-	//
-	// return result;
-	// }
-	// }
+            int diff = player1Points - player2Points;
 
-	@Override
-	public String getModuleName() {
-		return Modules.IA.getName();
-	}
+            movPoints += isPlayer1 ? tournamentPoints + diff : tournamentPoints - diff;
+        }
+        return movPoints;
+    }
 
-	public String toXML() {
-		StringBuilder sb = new StringBuilder();
+    /**
+     * Returns true if the player has defeated every other person in their score group.
+     * 
+     * @param t
+     * @return
+     */
+    public boolean isHeadToHeadWinner(Tournament t) {
 
-		appendXML(sb);
+        if (t != null) {
+            int score = getScore(t);
+            List<IAPlayer> players = new ArrayList<IAPlayer>();
+            for (Player p : t.getPlayers()) {
+                IAPlayer xp = ((IATournament) t).getIAPlayer(p);
+                if (xp != this && xp.getScore(t) == score) {
+                    players.add(xp);
+                }
+            }
 
-		return sb.toString();
-	}
+            if (players.isEmpty()) {
+                return false;
+            }
 
-	@Override
-	public StringBuilder appendXML(StringBuilder sb) {
+            playerLoop: for (IAPlayer p : players) {
+                for (Match m : p.getPlayer().getMatches(t)) {
+                    if (m.getWinner() != null && m.getWinner() == this.getPlayer()) {
+                        continue playerLoop;
+                    }
+                }
+                return false;
+            }
+        }
 
-		XMLUtils.appendObject(sb, "MODULE", Modules.IA.getName());
-		XMLUtils.appendObject(sb, "SEEDVALUE", getSeedValue());
-		XMLUtils.appendObject(sb, "FIRSTROUNDBYE", isFirstRoundBye());
-		XMLUtils.appendObject(sb, "SQUADID", getSquadId());
+        return true;
+    }
 
-		return sb;
-	}
+    public int getRoundDropped(Tournament t) {
+        for (int i = t.getAllRounds().size(); i > 0; i--) {
 
-	@Override
-	public int compareTo(ModulePlayer arg0) {
-		return this.getPlayer().getName().toUpperCase()
-				.compareTo(arg0.getPlayer().getName().toUpperCase());
-	}
+            boolean found = false;
+            Round r = t.getAllRounds().get(i - 1);
+            for (Match m : r.getMatches()) {
+                if (m.getPlayer1() == this.getPlayer()) {
+                    found = true;
+                    break;
+                } else if (m.isBye() == false && m.getPlayer2() == this.getPlayer()) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found) {
+                return i + 1;
+            }
+        }
+
+        return 0;
+    }
+
+    public String getName() {
+        return getPlayer().getName();
+    }
+
+    @Override
+    public String getModuleName() {
+        return Modules.IA.getName();
+    }
+
+    public String toXML() {
+        StringBuilder sb = new StringBuilder();
+
+        appendXML(sb);
+
+        return sb.toString();
+    }
+
+    @Override
+    public StringBuilder appendXML(StringBuilder sb) {
+
+        XMLUtils.appendObject(sb, "MODULE", Modules.IA.getName());
+        XMLUtils.appendObject(sb, "SEEDVALUE", getSeedValue());
+        XMLUtils.appendObject(sb, "SQUADID", getSquadId());
+        XMLUtils.appendObject(sb, "FACTION", getFaction());
+
+        return sb;
+    }
+
+    @Override
+    public int compareTo(ModulePlayer arg0) {
+        return this.getPlayer().getName().toUpperCase().compareTo(arg0.getPlayer().getName().toUpperCase());
+    }
 }

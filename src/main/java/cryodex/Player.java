@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cryodex.CryodexController.Modules;
+import cryodex.modules.Match;
 import cryodex.modules.Module;
 import cryodex.modules.ModulePlayer;
+import cryodex.modules.Round;
+import cryodex.modules.Tournament;
 import cryodex.xml.XMLObject;
 import cryodex.xml.XMLUtils;
 import cryodex.xml.XMLUtils.Element;
@@ -16,6 +19,7 @@ public class Player implements Comparable<Player>, XMLObject {
 	private String groupName;
 	private String saveId;
 	private String email;
+    private boolean firstRoundBye = false;
 	private List<ModulePlayer> moduleInfo;
 
 	public Player() {
@@ -33,6 +37,7 @@ public class Player implements Comparable<Player>, XMLObject {
 		this.groupName = e.getStringFromChild("GROUPNAME");
 		this.saveId = e.getStringFromChild("SAVEID");
 		this.email = e.getStringFromChild("EMAIL");
+        this.firstRoundBye = e.getBooleanFromChild("FIRSTROUNDBYE",false);
 
 		Element moduleInfoElement = e.getChild("MODULE-INFO");
 
@@ -42,7 +47,9 @@ public class Player implements Comparable<Player>, XMLObject {
 			for (Element mp : moduleInfoElement.getChildren()) {
 				String moduleName = mp.getStringFromChild("MODULE");
 				Module m = Modules.getModuleByName(moduleName);
-				moduleInfo.add(m.loadPlayer(this, mp));
+				if(m != null){
+					moduleInfo.add(m.loadPlayer(this, mp));
+				}
 			}
 		}
 	}
@@ -62,6 +69,14 @@ public class Player implements Comparable<Player>, XMLObject {
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
 	}
+
+    public boolean isFirstRoundBye() {
+        return firstRoundBye;
+    }
+
+    public void setFirstRoundBye(boolean firstRoundBye) {
+        this.firstRoundBye = firstRoundBye;
+    }
 
 	public String getSaveId() {
 		return saveId;
@@ -100,6 +115,70 @@ public class Player implements Comparable<Player>, XMLObject {
 
 		return player;
 	}
+	
+	public int getByes(Tournament t) {
+        int byes = 0;
+        for (Match match : getMatches(t)) {
+            if (match.isBye()) {
+                byes++;
+            }
+        }
+        return byes;
+    }
+	
+    public List<Match> getMatches(Tournament t) {
+
+        List<Match> matches = new ArrayList<Match>();
+
+        if (t != null) {
+
+            rounds: for (Round r : t.getAllRounds()) {
+                if (r.isSingleElimination()) {
+                    continue;
+                }
+                for (Match m : r.getMatches()) {
+                    if (m.getPlayer1() == this || (m.getPlayer2() != null && m.getPlayer2() == this)) {
+                        matches.add(m);
+                        continue rounds;
+                    }
+                }
+            }
+
+            // Recursively get dependent event matches
+            for (Tournament dt : t.getDependentTournaments()) {
+                matches.addAll(getMatches(dt));
+            }
+        }
+        return matches;
+    }
+    
+    public List<Match> getCompletedMatches(Tournament t) {
+
+        List<Match> matches = new ArrayList<Match>();
+
+        if (t != null) {
+
+            rounds: for (Round r : t.getAllRounds()) {
+                if (r.isSingleElimination()) {
+                    continue;
+                }
+                for (Match m : r.getMatches()) {
+                    if (m.getPlayer1() == this || (m.getPlayer2() != null && m.getPlayer2() == this)) {
+                    	if(t.isMatchComplete(m)){
+                    		matches.add(m);
+                    	}
+                        continue rounds;
+                    }
+                }
+            }
+
+            // Recursively get dependent event matches
+            for (Tournament dt : t.getDependentTournaments()) {
+                matches.addAll(getCompletedMatches(dt));
+            }
+        }
+        return matches;
+    }
 
 	@Override
 	public String toString() {
@@ -122,6 +201,7 @@ public class Player implements Comparable<Player>, XMLObject {
 		XMLUtils.appendObject(sb, "GROUPNAME", getGroupName());
 		XMLUtils.appendObject(sb, "SAVEID", getSaveId());
 		XMLUtils.appendObject(sb, "EMAIL", getEmail());
+        XMLUtils.appendObject(sb, "FIRSTROUNDBYE", isFirstRoundBye());
 		XMLUtils.appendList(sb, "MODULE-INFO", "MODULE-PLAYER", getModuleInfo());
 
 		return sb;

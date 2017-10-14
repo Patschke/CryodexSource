@@ -1,29 +1,36 @@
 package cryodex.modules.armada;
 
+import cryodex.Player;
+import cryodex.modules.Tournament;
 import cryodex.modules.TournamentComparator;
 
-public class ArmadaComparator extends TournamentComparator<ArmadaPlayer> {
+public class ArmadaComparator extends TournamentComparator<Player> {
 
 	public static enum CompareOptions {
-		HEAD_TO_HEAD, MARGIN_OF_VICTORY, STRENGH_OF_SCHEDULE, AVERAGE_STRENGTH_OF_SCHEDULE, SCORE, RANDOM;
+		HEAD_TO_HEAD, MARGIN_OF_VICTORY, STRENGH_OF_SCHEDULE, AVERAGE_STRENGTH_OF_SCHEDULE, SCORE, RANDOM, NAME;
 	}
 
-	public static final CompareOptions[] pairingCompare = { CompareOptions.SCORE };
+	public static final CompareOptions[] uniqueCompare = { CompareOptions.NAME };
+	public static final CompareOptions[] pairingCompare = {
+			CompareOptions.SCORE, CompareOptions.MARGIN_OF_VICTORY };
 	public static final CompareOptions[] rankingCompare = {
 			CompareOptions.SCORE,
 			CompareOptions.MARGIN_OF_VICTORY,
 			CompareOptions.AVERAGE_STRENGTH_OF_SCHEDULE, CompareOptions.RANDOM };
+	public static final CompareOptions[] rankingCompareNoHeadToHead = {
+			CompareOptions.SCORE, CompareOptions.MARGIN_OF_VICTORY,
+			CompareOptions.AVERAGE_STRENGTH_OF_SCHEDULE, CompareOptions.RANDOM };
 
-	private final ArmadaTournament t;
+	private final Tournament t;
 	private final CompareOptions[] sortOrder;
 
-	public ArmadaComparator(ArmadaTournament t, CompareOptions[] sortOrder) {
+	public ArmadaComparator(Tournament t, CompareOptions[] sortOrder) {
 		this.t = t;
 		this.sortOrder = sortOrder;
 	}
 
 	@Override
-	public int compare(ArmadaPlayer o1, ArmadaPlayer o2) {
+	public int compare(Player o1, Player o2) {
 
 		int result = 0;
 
@@ -36,11 +43,14 @@ public class ArmadaComparator extends TournamentComparator<ArmadaPlayer> {
 		return result;
 	}
 
-	private int compareOption(ArmadaPlayer o1, ArmadaPlayer o2,
+	private int compareOption(Player p1, Player p2,
 			CompareOptions option) {
 
 		int result = 0;
 
+		ArmadaPlayer o1 = (ArmadaPlayer) p1.getModuleInfoByModule(t.getModule());
+		ArmadaPlayer o2 = (ArmadaPlayer) p2.getModuleInfoByModule(t.getModule());
+		
 		switch (option) {
 		case SCORE:
 			result = compareInt(o1.getScore(t), o2.getScore(t));
@@ -76,6 +86,9 @@ public class ArmadaComparator extends TournamentComparator<ArmadaPlayer> {
 			} catch (NumberFormatException e) {
 				result = seedValue1.compareTo(seedValue2);
 			}
+			break;
+		case NAME:
+			result = o1.getName().compareTo(o2.getName());
 			break;
 		}
 

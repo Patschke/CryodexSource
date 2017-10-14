@@ -1,18 +1,19 @@
 package cryodex.modules.destiny;
 
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JDialog;
 
 import cryodex.CryodexController;
 import cryodex.CryodexController.Modules;
 import cryodex.MenuBar;
 import cryodex.Player;
-import cryodex.modules.Menu;
 import cryodex.modules.Module;
 import cryodex.modules.ModulePlayer;
 import cryodex.modules.RegistrationPanel;
 import cryodex.modules.Tournament;
-import cryodex.modules.destiny.DestinyTournamentCreationWizard.WizardOptions;
+import cryodex.modules.destiny.gui.DestinyRegistrationPanel;
+import cryodex.modules.destiny.wizard.MainPage;
+import cryodex.widget.wizard.WizardOptions;
+import cryodex.widget.wizard.pages.Page;
 import cryodex.xml.XMLUtils;
 import cryodex.xml.XMLUtils.Element;
 
@@ -30,21 +31,11 @@ public class DestinyModule implements Module {
 
 	private JCheckBoxMenuItem viewMenuItem;
 	private DestinyRegistrationPanel registrationPanel;
-	private DestinyMenu menu;
-	private DestinyOptions options;
 
-	private boolean isEnabled = true;
+	private boolean isEnabled = false;
 
 	private DestinyModule() {
-
-	}
-
-	@Override
-	public Menu getMenu() {
-		if (menu == null) {
-			menu = new DestinyMenu();
-		}
-		return menu;
+		getRegistration().setVisible(isEnabled);
 	}
 
 	@Override
@@ -59,8 +50,7 @@ public class DestinyModule implements Module {
 	public void setModuleEnabled(Boolean enabled) {
 		isEnabled = enabled;
 
-		getRegistration().getPanel().setVisible(enabled);
-		getMenu().getMenu().setVisible(enabled);
+		getRegistration().setVisible(enabled);
 	}
 
 	@Override
@@ -68,19 +58,26 @@ public class DestinyModule implements Module {
 		return isEnabled;
 	}
 
-	public static void createTournament() {
-		JDialog wizard = new DestinyTournamentCreationWizard();
-		wizard.setVisible(true);
+	@Override
+	public DestinyTournament createTournament(WizardOptions wizardOptions) {
 
+		DestinyTournament tournament = new DestinyTournament(wizardOptions.getName(), wizardOptions.getPlayerList(),
+				wizardOptions.getInitialSeedingEnum(), wizardOptions.getPoints(), wizardOptions.isSingleElimination());
+
+		// Add dependent events from a progressive cut
+		if (wizardOptions.isMerge() == false && wizardOptions.getSelectedTournaments() != null
+				&& wizardOptions.getSelectedTournaments().isEmpty() == false) {
+			tournament.addDependentTournaments(wizardOptions.getSelectedTournaments());
+		}
+
+		return tournament;
 	}
+	
+	@Override
+	public void initializeTournament(WizardOptions wizardOptions) {
 
-	public static void makeTournament(WizardOptions wizardOptions) {
-
-		DestinyTournament tournament = new DestinyTournament(wizardOptions.getName(),
-				wizardOptions.getPlayerList(),
-				wizardOptions.getInitialSeedingEnum(),
-				wizardOptions.isSingleElimination());
-
+		DestinyTournament tournament = createTournament(wizardOptions);
+		
 		CryodexController.registerTournament(tournament);
 
 		tournament.startTournament();
@@ -90,16 +87,8 @@ public class DestinyModule implements Module {
 		CryodexController.saveData();
 	}
 
-	public DestinyOptions getOptions() {
-		if (options == null) {
-			options = new DestinyOptions();
-		}
-		return options;
-	}
-
 	@Override
 	public StringBuilder appendXML(StringBuilder sb) {
-		XMLUtils.appendXMLObject(sb, "OPTIONS", getOptions());
 		XMLUtils.appendObject(sb, "NAME", Modules.DESTINY.getName());
 		return sb;
 	}
@@ -116,7 +105,7 @@ public class DestinyModule implements Module {
 
 	@Override
 	public void loadModuleData(Element element) {
-		options = new DestinyOptions(element.getChild("OPTIONS"));
+		
 	}
 
 	@Override
@@ -132,5 +121,10 @@ public class DestinyModule implements Module {
 	@Override
 	public void setViewMenuItem(JCheckBoxMenuItem viewMenuItem) {
 		this.viewMenuItem = viewMenuItem;
+	}
+
+	@Override
+	public Page getMainWizardPage() {
+		return new MainPage();
 	}
 }
