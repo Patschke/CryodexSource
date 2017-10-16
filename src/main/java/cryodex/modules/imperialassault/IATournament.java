@@ -94,7 +94,7 @@ public class IATournament extends Tournament implements XMLObject {
 
 	@Override
 	public TournamentComparator<Player> getRankingNoHeadToHeadComparator() {
-		return new IAComparator(this, IAComparator.rankingCompareNoHeadToHead);
+		return new IAComparator(this, IAComparator.rankingCompare);
 	}
 
 	@Override

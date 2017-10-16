@@ -95,7 +95,7 @@ public class DestinyTournament extends Tournament implements XMLObject {
 
 	@Override
 	public TournamentComparator<Player> getRankingNoHeadToHeadComparator() {
-		return new DestinyComparator(this, DestinyComparator.rankingCompareNoHeadToHead);
+		return new DestinyComparator(this, DestinyComparator.rankingCompare);
 	}
 
 	@Override

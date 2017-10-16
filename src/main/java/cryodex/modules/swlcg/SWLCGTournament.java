@@ -95,7 +95,7 @@ public class SWLCGTournament extends Tournament implements XMLObject {
 
 	@Override
 	public TournamentComparator<Player> getRankingNoHeadToHeadComparator() {
-		return new SWLCGComparator(this, SWLCGComparator.rankingCompareNoHeadToHead);
+		return new SWLCGComparator(this, SWLCGComparator.rankingCompare);
 	}
 
 	@Override
