@@ -61,8 +61,7 @@ public class RunewarsModule implements Module {
 	@Override
 	public RunewarsTournament createTournament(WizardOptions wizardOptions) {
 
-		RunewarsTournament tournament = new RunewarsTournament(wizardOptions.getName(), wizardOptions.getPlayerList(),
-				wizardOptions.getInitialSeedingEnum(), wizardOptions.getPoints(), wizardOptions.isSingleElimination());
+		RunewarsTournament tournament = new RunewarsTournament(wizardOptions);
 
 		// Add dependent events from a progressive cut
 		if (wizardOptions.isMerge() == false && wizardOptions.getSelectedTournaments() != null

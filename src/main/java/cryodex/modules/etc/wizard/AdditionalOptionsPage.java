@@ -34,6 +34,9 @@ public class AdditionalOptionsPage implements Page {
 	private JRadioButton escalationRB;
 	private JRadioButton epicRB;
 	private JRadioButton customRB;
+	
+	private JRadioButton randomPairingRB;
+	private JRadioButton orderedPairingRB;
 
 	private JPanel pagePanel;
 
@@ -60,12 +63,20 @@ public class AdditionalOptionsPage implements Page {
 					BorderLayout.CENTER);
 
 			JPanel centerPanel = new JPanel(new BorderLayout());
+			
+			JPanel southPanel = new JPanel(new BorderLayout());
 
-			JLabel pointHeader = new JLabel("<HTML><H3>" + Language.choose_point_type + "</H3></HTML>");
+            JLabel pointHeader = new JLabel("<HTML><H3>" + Language.choose_point_type + "</H3></HTML>");
 
-			centerPanel.add(ComponentUtils.addToFlowLayout(pointHeader, FlowLayout.LEFT), BorderLayout.NORTH);
+            JLabel pairingHeader = new JLabel("<HTML><H3>" + Language.choose_pairing_style + "</H3></HTML>");
+
+            centerPanel.add(ComponentUtils.addToFlowLayout(pointHeader, FlowLayout.LEFT), BorderLayout.NORTH);
+
+            southPanel.add(ComponentUtils.addToFlowLayout(pairingHeader, FlowLayout.LEFT), BorderLayout.NORTH);
 
 			JPanel pointsPanel = new JPanel(new SpringLayout());
+			
+			JPanel pairingPanel = new JPanel(new SpringLayout());
 
 			ButtonGroup pointsBG = new ButtonGroup();
 
@@ -74,6 +85,11 @@ public class AdditionalOptionsPage implements Page {
 			epicRB = new JRadioButton(Language.epic_points);
 			customRB = new JRadioButton(Language.custom_points);
 
+			ButtonGroup pairingBG = new ButtonGroup();
+			
+			randomPairingRB = new JRadioButton(Language.random);
+			orderedPairingRB = new JRadioButton(Language.by_ranking);
+			
 			final JLabel customPointsInfo = new JLabel(Language.comma_separated);
 
 			ActionListener customListener = new ActionListener() {
@@ -102,8 +118,13 @@ public class AdditionalOptionsPage implements Page {
 			pointsBG.add(escalationRB);
 			pointsBG.add(epicRB);
 			pointsBG.add(customRB);
+			
+			pairingBG.add(randomPairingRB);
+			pairingBG.add(orderedPairingRB);
 
 			standardRB.setSelected(true);
+			
+			randomPairingRB.setSelected(true);
 
 			pointsPanel.add(standardRB);
 			pointsPanel.add(escalationRB);
@@ -115,12 +136,19 @@ public class AdditionalOptionsPage implements Page {
 					ComponentUtils.addToFlowLayout(customPointsTF, FlowLayout.LEFT), new JPanel()));
 
 			SpringUtilities.makeCompactGrid(pointsPanel, 6, 1, 0, 0, 0, 0);
+			
+            pairingPanel.add(randomPairingRB);
+            pairingPanel.add(orderedPairingRB);
+            
+            SpringUtilities.makeCompactGrid(pairingPanel, pairingPanel.getComponentCount(), 1, 0, 0, 0, 0);
 
 			centerPanel.add(ComponentUtils.addToFlowLayout(pointsPanel, FlowLayout.LEFT), BorderLayout.CENTER);
+			
+			southPanel.add(ComponentUtils.addToFlowLayout(pairingPanel, FlowLayout.LEFT), BorderLayout.CENTER);
 
 			pagePanel = new JPanel(new FlowLayout());
 
-			pagePanel.add(ComponentUtils.addToVerticalBorderLayout(initialPairingPanel, centerPanel, null));
+			pagePanel.add(ComponentUtils.addToVerticalBorderLayout(initialPairingPanel, centerPanel, southPanel));
 		}
 
 		return pagePanel;
@@ -165,6 +193,12 @@ public class AdditionalOptionsPage implements Page {
 				wizardOptions.setPoints(points);
 			}
 
+		}
+		
+		if(randomPairingRB.isSelected()){
+		    wizardOptions.setRandomPairing(true);
+		} else {
+		    wizardOptions.setRandomPairing(false);
 		}
 
 		wizardOptions.setInitialSeedingEnum(InitialSeedingEnum.RANDOM);

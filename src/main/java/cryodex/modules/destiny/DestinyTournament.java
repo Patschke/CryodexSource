@@ -18,6 +18,7 @@ import cryodex.modules.TournamentComparator;
 import cryodex.modules.destiny.export.DestinyExportController;
 import cryodex.modules.destiny.gui.DestinyRankingTable;
 import cryodex.modules.destiny.gui.DestinyRoundPanel;
+import cryodex.widget.wizard.WizardOptions;
 import cryodex.xml.XMLObject;
 import cryodex.xml.XMLUtils.Element;
 
@@ -31,9 +32,8 @@ public class DestinyTournament extends Tournament implements XMLObject {
 		loadXML(tournamentElement);
 	}
 
-	public DestinyTournament(String name, List<Player> players, InitialSeedingEnum seedingEnum, List<Integer> points,
-			boolean isSingleElimination) {
-		super(name, players, seedingEnum, points, isSingleElimination);
+	public DestinyTournament(WizardOptions wizardOptions) {
+		super(wizardOptions);
 		setupTournamentGUI(new DestinyRankingTable(this));
 	}
 
@@ -87,6 +87,11 @@ public class DestinyTournament extends Tournament implements XMLObject {
 	public List<Match> getRandomMatches(List<Player> playerList) {
 		return new DestinyRandomMatchGeneration(this, playerList).generateMatches();
 	}
+    
+    @Override
+    public List<Match> getOrderedMatches(List<Player> playerList) {
+        return null;
+    }
 
 	@Override
 	public TournamentComparator<Player> getRankingComparator() {

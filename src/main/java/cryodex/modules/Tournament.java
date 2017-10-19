@@ -15,6 +15,7 @@ import cryodex.CryodexController;
 import cryodex.CryodexController.Modules;
 import cryodex.Main;
 import cryodex.Player;
+import cryodex.widget.wizard.WizardOptions;
 import cryodex.xml.XMLObject;
 import cryodex.xml.XMLUtils;
 import cryodex.xml.XMLUtils.Element;
@@ -34,29 +35,40 @@ public abstract class Tournament implements XMLObject {
     private boolean startAsSingleElimination = false;
     private List<String> dependentTournaments;
     private Module module;
+    private boolean isRandomPairing = true;
     
     public Tournament(){
-    	this("", null, null, null, false);
+    	this(null);
     }
     
-	public Tournament(String name, List<Player> players, InitialSeedingEnum seedingEnum, List<Integer> points, boolean isSingleElimination) {
+	public Tournament(WizardOptions wizardOptions) {
 		
 		// Initialize
         this.players = new ArrayList<>();
         this.rounds = new ArrayList<>();
         this.dependentTournaments = new ArrayList<>();
         this.seedingEnum = InitialSeedingEnum.RANDOM;
-		
-        // Load values
-        this.name = name;
-        this.seedingEnum = seedingEnum;
-        this.points = points;
-        this.startAsSingleElimination = isSingleElimination;
 
-        if(players != null){
-        	this.players.addAll(players);
+        // Default Values
+        this.name = "";
+        this.seedingEnum = null;
+        this.points = null;
+        this.startAsSingleElimination = false;
+        this.isRandomPairing = true;
+		
+        if(wizardOptions != null){
+            // Load values
+            this.name = wizardOptions.getName();
+            this.seedingEnum = wizardOptions.getInitialSeedingEnum();
+            this.points = wizardOptions.getPoints();
+            this.startAsSingleElimination = wizardOptions.isSingleElimination();
+            this.isRandomPairing = wizardOptions.isRandomPairing();
+            
+            if(wizardOptions.getPlayerList() != null){
+                this.players.addAll(wizardOptions.getPlayerList());
+            }
         }
-        
+
         module = Modules.getModuleByName(getModuleName());
     }
 	
@@ -69,10 +81,11 @@ public abstract class Tournament implements XMLObject {
             addPlayer(p);
         }
 
-        Element roundElement = tournamentElement.getChild("ROUNDS");
-        for (Element e : roundElement.getChildren()) {
-            rounds.add(new Round(e, this));
-
+        if(rounds == null || rounds.isEmpty()){
+            Element roundElement = tournamentElement.getChild("ROUNDS");
+            for (Element e : roundElement.getChildren()) {
+                rounds.add(new Round(e, this));
+            }
         }
 
         Element dependentElement = tournamentElement.getChild("DEPENDENTTOURNAMENTS");
@@ -98,6 +111,8 @@ public abstract class Tournament implements XMLObject {
                 points.add(new Integer(s));
             }
         }
+        
+        isRandomPairing = tournamentElement.getBooleanFromChild("ISRANDOMPAIRING", true);
 
         int counter = 1;
         for (Round r : rounds) {
@@ -485,7 +500,11 @@ public abstract class Tournament implements XMLObject {
             tempList.remove(byeUser);
         }
 
-        matches = getRandomMatches(tempList);
+        if(isRandomPairing){
+            matches = getRandomMatches(tempList);
+        } else {
+            matches = getOrderedMatches(tempList);
+        }
 
         if (Match.hasDuplicate(matches)) {
             JOptionPane.showMessageDialog(Main.getInstance(), "Unable to resolve duplicate matches. Please review for best course of action.");
@@ -498,6 +517,8 @@ public abstract class Tournament implements XMLObject {
 
         return matches;
     }
+    
+    public abstract List<Match> getOrderedMatches(List<Player> playerList);
 
     public abstract List<Match> getRandomMatches(List<Player> playerList);
     
@@ -589,6 +610,7 @@ public abstract class Tournament implements XMLObject {
             }
         }
 
+        XMLUtils.appendObject(sb, "ISRANDOMPAIRING", isRandomPairing);
         XMLUtils.appendObject(sb, "POINTS", pointsString);
         XMLUtils.appendObject(sb, "NAME", name);
         XMLUtils.appendObject(sb, "MODULE", getModuleName());

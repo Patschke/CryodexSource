@@ -62,8 +62,7 @@ public class EtcModule implements Module {
 	@Override
 	public EtcTournament createTournament(WizardOptions wizardOptions) {
 
-		EtcTournament tournament = new EtcTournament(wizardOptions.getName(), wizardOptions.getPlayerList(),
-				wizardOptions.getInitialSeedingEnum(), wizardOptions.getPoints(), wizardOptions.isSingleElimination());
+		EtcTournament tournament = new EtcTournament(wizardOptions);
 
 		// Add dependent events from a progressive cut
 		if (wizardOptions.isMerge() == false && wizardOptions.getSelectedTournaments() != null

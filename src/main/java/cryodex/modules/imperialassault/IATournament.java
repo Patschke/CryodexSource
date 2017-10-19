@@ -18,6 +18,7 @@ import cryodex.modules.TournamentComparator;
 import cryodex.modules.imperialassault.export.IAExportController;
 import cryodex.modules.imperialassault.gui.IARankingTable;
 import cryodex.modules.imperialassault.gui.IARoundPanel;
+import cryodex.widget.wizard.WizardOptions;
 import cryodex.xml.XMLObject;
 import cryodex.xml.XMLUtils.Element;
 
@@ -31,9 +32,8 @@ public class IATournament extends Tournament implements XMLObject {
 		loadXML(tournamentElement);
 	}
 
-	public IATournament(String name, List<Player> players, InitialSeedingEnum seedingEnum, List<Integer> points,
-			boolean isSingleElimination) {
-		super(name, players, seedingEnum, points, isSingleElimination);
+	public IATournament(WizardOptions wizardOptions) {
+		super(wizardOptions);
 		setupTournamentGUI(new IARankingTable(this));
 	}
 	
@@ -86,6 +86,11 @@ public class IATournament extends Tournament implements XMLObject {
 	public List<Match> getRandomMatches(List<Player> playerList) {
 		return new IARandomMatchGeneration(this, playerList).generateMatches();
 	}
+    
+    @Override
+    public List<Match> getOrderedMatches(List<Player> playerList) {
+        return null;
+    }
 
 	@Override
 	public TournamentComparator<Player> getRankingComparator() {

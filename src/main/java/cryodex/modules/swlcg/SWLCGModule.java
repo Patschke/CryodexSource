@@ -61,8 +61,7 @@ public class SWLCGModule implements Module {
 	@Override
 	public SWLCGTournament createTournament(WizardOptions wizardOptions) {
 
-		SWLCGTournament tournament = new SWLCGTournament(wizardOptions.getName(), wizardOptions.getPlayerList(),
-				wizardOptions.getInitialSeedingEnum(), wizardOptions.getPoints(), wizardOptions.isSingleElimination());
+		SWLCGTournament tournament = new SWLCGTournament(wizardOptions);
 
 		// Add dependent events from a progressive cut
 		if (wizardOptions.isMerge() == false && wizardOptions.getSelectedTournaments() != null

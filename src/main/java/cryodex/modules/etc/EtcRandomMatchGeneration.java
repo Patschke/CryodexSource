@@ -216,6 +216,7 @@ public class EtcRandomMatchGeneration {
 			EtcMatch assocMatch = EtcMatch.copyMatch(m, String.valueOf(i));
 			matches.add(assocMatch);
 		}
+        ((EtcMatch)m).setSuffix(tournament.getPlayerCount() + "");
 		matches.add(m);
 	}
 	

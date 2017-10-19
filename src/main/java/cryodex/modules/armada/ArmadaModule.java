@@ -61,8 +61,7 @@ public class ArmadaModule implements Module {
 	@Override
 	public ArmadaTournament createTournament(WizardOptions wizardOptions) {
 
-		ArmadaTournament tournament = new ArmadaTournament(wizardOptions.getName(), wizardOptions.getPlayerList(),
-				wizardOptions.getInitialSeedingEnum(), wizardOptions.getPoints(), wizardOptions.isSingleElimination());
+		ArmadaTournament tournament = new ArmadaTournament(wizardOptions);
 
 		// Add dependent events from a progressive cut
 		if (wizardOptions.isMerge() == false && wizardOptions.getSelectedTournaments() != null

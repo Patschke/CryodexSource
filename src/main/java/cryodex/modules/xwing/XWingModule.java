@@ -62,8 +62,7 @@ public class XWingModule implements Module {
 	@Override
 	public XWingTournament createTournament(WizardOptions wizardOptions) {
 
-		XWingTournament tournament = new XWingTournament(wizardOptions.getName(), wizardOptions.getPlayerList(),
-				wizardOptions.getInitialSeedingEnum(), wizardOptions.getPoints(), wizardOptions.isSingleElimination());
+		XWingTournament tournament = new XWingTournament(wizardOptions);
 
 		// Add dependent events from a progressive cut
 		if (wizardOptions.isMerge() == false && wizardOptions.getSelectedTournaments() != null

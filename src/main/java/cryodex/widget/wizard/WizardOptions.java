@@ -24,6 +24,7 @@ public class WizardOptions {
     private int maxPlayers = 0;
     private Module module = null;
     private Map<String,String> additionalOptions;
+    private boolean isRandomPairing;
 
     public WizardOptions() {
     	additionalOptions = new HashMap<String, String>();
@@ -34,6 +35,7 @@ public class WizardOptions {
         this.initialSeedingEnum = wizardOptions.getInitialSeedingEnum();
         this.points = wizardOptions.getPoints();
         this.isSingleElimination = wizardOptions.isSingleElimination();
+        this.isRandomPairing = wizardOptions.isRandomPairing();
         for(String option : wizardOptions.getAdditionalOptions().keySet()){
         	setOption(option, wizardOptions.getOption(option));
         }
@@ -118,6 +120,14 @@ public class WizardOptions {
 
     public void setSingleElimination(boolean isSingleElimination) {
         this.isSingleElimination = isSingleElimination;
+    }
+    
+    public boolean isRandomPairing() {
+        return isRandomPairing;
+    }
+    
+    public void setRandomPairing(boolean isRandomPairing) {
+        this.isRandomPairing = isRandomPairing;
     }
 
     public int getMinPoints() {

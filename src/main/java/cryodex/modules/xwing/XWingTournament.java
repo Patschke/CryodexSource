@@ -18,6 +18,7 @@ import cryodex.modules.TournamentComparator;
 import cryodex.modules.xwing.export.XWingExportController;
 import cryodex.modules.xwing.gui.XWingRankingTable;
 import cryodex.modules.xwing.gui.XWingRoundPanel;
+import cryodex.widget.wizard.WizardOptions;
 import cryodex.xml.XMLObject;
 import cryodex.xml.XMLUtils.Element;
 
@@ -31,9 +32,8 @@ public class XWingTournament extends Tournament implements XMLObject {
 		loadXML(tournamentElement);
 	}
 
-	public XWingTournament(String name, List<Player> players, InitialSeedingEnum seedingEnum, List<Integer> points,
-			boolean isSingleElimination) {
-		super(name, players, seedingEnum, points, isSingleElimination);
+	public XWingTournament(WizardOptions wizardOptions) {
+		super(wizardOptions);
 		setupTournamentGUI(new XWingRankingTable(this));
 	}
 
@@ -85,6 +85,11 @@ public class XWingTournament extends Tournament implements XMLObject {
 	public List<Match> getRandomMatches(List<Player> playerList) {
 		return new XWingRandomMatchGeneration(this, playerList).generateMatches();
 	}
+	
+	@Override
+    public List<Match> getOrderedMatches(List<Player> playerList) {
+        return null;
+    }
 
 	@Override
 	public TournamentComparator<Player> getRankingComparator() {

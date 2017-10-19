@@ -61,8 +61,7 @@ public class DestinyModule implements Module {
 	@Override
 	public DestinyTournament createTournament(WizardOptions wizardOptions) {
 
-		DestinyTournament tournament = new DestinyTournament(wizardOptions.getName(), wizardOptions.getPlayerList(),
-				wizardOptions.getInitialSeedingEnum(), wizardOptions.getPoints(), wizardOptions.isSingleElimination());
+		DestinyTournament tournament = new DestinyTournament(wizardOptions);
 
 		// Add dependent events from a progressive cut
 		if (wizardOptions.isMerge() == false && wizardOptions.getSelectedTournaments() != null

@@ -61,8 +61,7 @@ public class IAModule implements Module {
 	@Override
 	public IATournament createTournament(WizardOptions wizardOptions) {
 
-		IATournament tournament = new IATournament(wizardOptions.getName(), wizardOptions.getPlayerList(),
-				wizardOptions.getInitialSeedingEnum(), wizardOptions.getPoints(), wizardOptions.isSingleElimination());
+		IATournament tournament = new IATournament(wizardOptions);
 
 		// Add dependent events from a progressive cut
 		if (wizardOptions.isMerge() == false && wizardOptions.getSelectedTournaments() != null

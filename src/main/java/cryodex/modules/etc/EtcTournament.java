@@ -9,6 +9,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import cryodex.CryodexController.Modules;
+import cryodex.Language;
 import cryodex.Player;
 import cryodex.modules.ExportController;
 import cryodex.modules.Match;
@@ -18,6 +19,7 @@ import cryodex.modules.TournamentComparator;
 import cryodex.modules.etc.export.EtcExportController;
 import cryodex.modules.etc.gui.EtcRankingTable;
 import cryodex.modules.etc.gui.EtcRoundPanel;
+import cryodex.widget.wizard.WizardOptions;
 import cryodex.xml.XMLObject;
 import cryodex.xml.XMLUtils;
 import cryodex.xml.XMLUtils.Element;
@@ -34,19 +36,26 @@ public class EtcTournament extends Tournament implements XMLObject {
 		if(playerCount == null){
 			playerCount = 6;
 		}
-		loadXML(tournamentElement);
-		
+
         Element roundElement = tournamentElement.getChild("ROUNDS");
         for (Element e : roundElement.getChildren()) {
             getAllRounds().add(new EtcRound(e, this));
-
         }
+        
+		loadXML(tournamentElement);
+		
 	}
 
-	public EtcTournament(String name, List<Player> players, InitialSeedingEnum seedingEnum, List<Integer> points,
-			boolean isSingleElimination) {
-		super(name, players, seedingEnum, points, isSingleElimination);
+	public EtcTournament(WizardOptions wizardOptions) {
+		super(wizardOptions);
 		setupTournamentGUI(new EtcRankingTable(this));
+		
+		String playersPerTeamString = wizardOptions.getOption(Language.number_of_players_per_team);
+		try{
+		    playerCount = Integer.parseInt(playersPerTeamString);
+		} catch (Exception e) {
+		    playerCount = 6;
+		}
 	}
 
 	@Override
@@ -97,6 +106,11 @@ public class EtcTournament extends Tournament implements XMLObject {
 	public List<Match> getRandomMatches(List<Player> playerList) {
 		return new EtcRandomMatchGeneration(this, playerList).generateMatches();
 	}
+	
+	@Override
+    public List<Match> getOrderedMatches(List<Player> playerList) {
+        return new EtcOrderedMatchGeneration(this, playerList).generateMatches();
+    }
 
 	@Override
 	public TournamentComparator<Player> getRankingComparator() {

@@ -18,6 +18,7 @@ import cryodex.modules.TournamentComparator;
 import cryodex.modules.swlcg.export.SWLCGExportController;
 import cryodex.modules.swlcg.gui.SWLCGRankingTable;
 import cryodex.modules.swlcg.gui.SWLCGRoundPanel;
+import cryodex.widget.wizard.WizardOptions;
 import cryodex.xml.XMLObject;
 import cryodex.xml.XMLUtils.Element;
 
@@ -31,9 +32,8 @@ public class SWLCGTournament extends Tournament implements XMLObject {
 		loadXML(tournamentElement);
 	}
 
-	public SWLCGTournament(String name, List<Player> players, InitialSeedingEnum seedingEnum, List<Integer> points,
-			boolean isSingleElimination) {
-		super(name, players, seedingEnum, points, isSingleElimination);
+	public SWLCGTournament(WizardOptions wizardOptions) {
+		super(wizardOptions);
 		setupTournamentGUI(new SWLCGRankingTable(this));
 	}
 
@@ -87,6 +87,11 @@ public class SWLCGTournament extends Tournament implements XMLObject {
 	public List<Match> getRandomMatches(List<Player> playerList) {
 		return new SWLCGRandomMatchGeneration(this, playerList).generateMatches();
 	}
+    
+    @Override
+    public List<Match> getOrderedMatches(List<Player> playerList) {
+        return null;
+    }
 
 	@Override
 	public TournamentComparator<Player> getRankingComparator() {

@@ -18,6 +18,7 @@ import cryodex.modules.TournamentComparator;
 import cryodex.modules.runewars.export.RunewarsExportController;
 import cryodex.modules.runewars.gui.RunewarsRankingTable;
 import cryodex.modules.runewars.gui.RunewarsRoundPanel;
+import cryodex.widget.wizard.WizardOptions;
 import cryodex.xml.XMLObject;
 import cryodex.xml.XMLUtils.Element;
 
@@ -31,9 +32,8 @@ public class RunewarsTournament extends Tournament implements XMLObject {
 		loadXML(tournamentElement);
 	}
 
-	public RunewarsTournament(String name, List<Player> players, InitialSeedingEnum seedingEnum, List<Integer> points,
-			boolean isSingleElimination) {
-		super(name, players, seedingEnum, points, isSingleElimination);
+	public RunewarsTournament(WizardOptions wizardOptions) {
+		super(wizardOptions);
 		setupTournamentGUI(new RunewarsRankingTable(this));
 	}
 	
@@ -86,6 +86,11 @@ public class RunewarsTournament extends Tournament implements XMLObject {
 	public List<Match> getRandomMatches(List<Player> playerList) {
 		return new RunewarsRandomMatchGeneration(this, playerList).generateMatches();
 	}
+    
+    @Override
+    public List<Match> getOrderedMatches(List<Player> playerList) {
+        return null;
+    }
 
 	@Override
 	public TournamentComparator<Player> getRankingComparator() {
