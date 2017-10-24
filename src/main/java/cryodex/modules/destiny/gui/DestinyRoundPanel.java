@@ -31,6 +31,7 @@ import cryodex.CryodexController;
 import cryodex.Player;
 import cryodex.modules.Match;
 import cryodex.modules.RoundPanel;
+import cryodex.modules.Match.GameResult;
 import cryodex.modules.destiny.DestinyTournament;
 import cryodex.widget.ComponentUtils;
 
@@ -357,18 +358,18 @@ public class DestinyRoundPanel extends RoundPanel {
 
 			switch (getResultCombo().getSelectedIndex()) {
 			case 0:
-				match.setWinner(null);
+				match.setGame1Result(null);
 				match.setBye(false);
 				break;
 			case 1:
 				if (match.getPlayer2() == null) {
 					match.setBye(true);
 				} else {
-					match.setWinner(match.getPlayer1());
+					match.setGame1Result(GameResult.PLAYER_1_WINS);
 				}
 				break;
 			case 2:
-				match.setWinner(match.getPlayer2());
+				match.setGame1Result(GameResult.PLAYER_2_WINS);
 				break;
 			default:
 				break;
@@ -381,9 +382,9 @@ public class DestinyRoundPanel extends RoundPanel {
 				if (match.isBye()) {
 					getResultCombo().setSelectedIndex(1);
 				} else {
-					if (match.getWinner() == match.getPlayer1()) {
+					if (match.getWinner(1) == match.getPlayer1()) {
 						getResultCombo().setSelectedIndex(1);
-					} else if (match.getWinner() == match.getPlayer2()) {
+					} else if (match.getWinner(1) == match.getPlayer2()) {
 						getResultCombo().setSelectedIndex(2);
 					}
 				}

@@ -278,12 +278,7 @@ public abstract class Tournament implements XMLObject {
                 int index = rounds.size() - 1;
                 Round roundToRemove = rounds.get(index);
                 for (Match m : roundToRemove.getMatches()) {
-                    m.setWinner(null);
-                    m.setBye(false);
-                    m.setPlayer1(null);
-                    m.setPlayer2(null);
-                    m.setPlayer1PointsDestroyed(null);
-                    m.setPlayer2PointsDestroyed(null);
+                    m.clear();
                 }
                 rounds.remove(roundToRemove);
 
@@ -532,7 +527,7 @@ public abstract class Tournament implements XMLObject {
             List<Match> lastRoundMatches = getLatestRound().getMatches();
 
             for (int index = 0; index < lastRoundMatches.size(); index = index + 2) {
-                Match newMatch = new Match(lastRoundMatches.get(index).getWinner(), lastRoundMatches.get(index + 1).getWinner());
+                Match newMatch = new Match(lastRoundMatches.get(index).getWinner(1), lastRoundMatches.get(index + 1).getWinner(1));
                 matches.add(newMatch);
             }
 
@@ -735,7 +730,7 @@ public abstract class Tournament implements XMLObject {
 	
 	public boolean isMatchComplete(Match m){
 
-        boolean winnerChosen = m.getWinner() != null;
+        boolean winnerChosen = m.getWinner(1) != null;
         
         return m.isBye() || winnerChosen;
 	}
@@ -751,9 +746,9 @@ public abstract class Tournament implements XMLObject {
 
         // For single elimination we just look to make sure the correct
         // player is the winner according to points
-        if ((m.getWinner() == m.getPlayer1() && player1Points >= player2Points)
-                || (m.getWinner() == m.getPlayer2() && player2Points >= player1Points)
-                || (player1Points == player2Points && m.getWinner() != null)) {
+        if ((m.getWinner(1) == m.getPlayer1() && player1Points >= player2Points)
+                || (m.getWinner(1) == m.getPlayer2() && player2Points >= player1Points)
+                || (player1Points == player2Points && m.getWinner(1) != null)) {
             return true;
         }
         

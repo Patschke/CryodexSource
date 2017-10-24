@@ -1,4 +1,4 @@
-package cryodex.modules.imperialassault;
+package cryodex.modules.l5r;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -12,37 +12,26 @@ import cryodex.modules.Match;
 import cryodex.modules.ModulePlayer;
 import cryodex.modules.Round;
 import cryodex.modules.Tournament;
+import cryodex.modules.Match.GameResult;
 import cryodex.xml.XMLObject;
 import cryodex.xml.XMLUtils;
 import cryodex.xml.XMLUtils.Element;
 
-public class IAPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePlayer {
-
-    public static enum Faction {
-        IMPERIAL, REBEL, SCUM;
-    }
+public class L5RPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePlayer {
 
     private Player player;
     private String seedValue;
     private String squadId;
-    private Faction faction;
 
-    public IAPlayer(Player p) {
+    public L5RPlayer(Player p) {
         player = p;
         seedValue = String.valueOf(Math.random());
     }
 
-    public IAPlayer(Player p, Element e) {
+    public L5RPlayer(Player p, Element e) {
         this.player = p;
         this.seedValue = e.getStringFromChild("SEEDVALUE");
         this.squadId = e.getStringFromChild("SQUADID");
-        String factionString = e.getStringFromChild("FACTION");
-
-        if (factionString != null && factionString.isEmpty() == false) {
-            faction = Faction.valueOf(factionString);
-        } else {
-            faction = Faction.IMPERIAL;
-        }
     }
 
     @Override
@@ -71,14 +60,6 @@ public class IAPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePlay
         this.squadId = squadId;
     }
 
-    public Faction getFaction() {
-        return faction;
-    }
-
-    public void setFaction(Faction faction) {
-        this.faction = faction;
-    }
-
     @Override
     public String toString() {
         return getPlayer().getName();
@@ -87,15 +68,35 @@ public class IAPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePlay
     public int getScore(Tournament t) {
         int score = 0;
         for (Match match : getPlayer().getMatches(t)) {
-            if (match.getWinner(1) == this.getPlayer()) {
-                score += IAConstants.WIN_POINTS;
-            } else if (match.isBye()) {
-                score += IAConstants.BYE_POINTS;
-            } else {
-                score += IAConstants.LOSS_POINTS;
+
+            if(match.isBye()){
+                score += L5RConstants.BYE_POINTS;
             }
+            
+            if(match.getPlayer1() == this.getPlayer()){
+                if (match.getGame1Result() == GameResult.PLAYER_1_WINS) {
+                    score += L5RConstants.WIN_POINTS;
+                } else if (match.getGame1Result() == GameResult.PLAYER_2_WINS) {
+                    score += L5RConstants.LOSS_POINTS;
+                } else if (match.getGame1Result() == GameResult.PLAYER_1_MOD_WINS) {
+                    score += L5RConstants.MOD_WIN_POINTS;
+                } else if (match.getGame1Result() == GameResult.PLAYER_2_MOD_WINS) {
+                    score += L5RConstants.MOD_LOSS_POINTS;
+                }
+            } else {
+                if (match.getGame1Result() == GameResult.PLAYER_1_WINS) {
+                    score += L5RConstants.LOSS_POINTS;
+                } else if (match.getGame1Result() == GameResult.PLAYER_2_WINS) {
+                    score += L5RConstants.WIN_POINTS;
+                } else if (match.getGame1Result() == GameResult.PLAYER_1_MOD_WINS) {
+                    score += L5RConstants.MOD_LOSS_POINTS;
+                } else if (match.getGame1Result() == GameResult.PLAYER_2_MOD_WINS) {
+                    score += L5RConstants.MOD_WIN_POINTS;
+                }    
+            }
+
         }
-        
+
         return score;
     }
 
@@ -115,16 +116,16 @@ public class IAPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePlay
         for (Match m : matches) {
             if (m.isBye() == false && m.getWinner(1) != null) {
                 if (m.getPlayer1() == this.getPlayer()) {
-                    sos += ((IAPlayer) m.getPlayer2().getModuleInfoByModule(t.getModule())).getAverageScore(t);
+                    sos += ((L5RPlayer) m.getPlayer2().getModuleInfoByModule(t.getModule())).getAverageScore(t);
                     numOpponents++;
                 } else {
-                    sos += ((IAPlayer) m.getPlayer1().getModuleInfoByModule(t.getModule())).getAverageScore(t);
+                    sos += ((L5RPlayer) m.getPlayer1().getModuleInfoByModule(t.getModule())).getAverageScore(t);
                     numOpponents++;
                 }
             }
         }
 
-		// if they don't have any opponents recorded yet, don't divide by 0
+        // if they don't have any opponents recorded yet, don't divide by 0
         double averageSos = numOpponents>0 ? sos / numOpponents : 0;
         if (Double.isNaN(averageSos) != true) {
             BigDecimal bd = new BigDecimal(averageSos);
@@ -133,33 +134,33 @@ public class IAPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePlay
         }
         return averageSos;
     }
-    
+
     public double getExtendedStrengthOfSchedule(Tournament t) {
-		double sos = 0;
-		List<Match> matches = getPlayer().getMatches(t);
+        double sos = 0;
+        List<Match> matches = getPlayer().getMatches(t);
 
-		int numOpponents = 0;
-		for (Match m : matches) {
-			if (m.isBye() == false & m.getWinner(1) != null) {
-				if (m.getPlayer1() == this.getPlayer()) {
-					sos += ((IATournament) t).getIAPlayer(m.getPlayer2()).getAverageSoS(t);
-					numOpponents++;
-				} else {
-					sos += ((IATournament) t).getIAPlayer(m.getPlayer1()).getAverageSoS(t);
-					numOpponents++;
-				}
-			}
-		}
+        int numOpponents = 0;
+        for (Match m : matches) {
+            if (m.isBye() == false & m.getWinner(1) != null) {
+                if (m.getPlayer1() == this.getPlayer()) {
+                    sos += ((L5RTournament) t).getL5RPlayer(m.getPlayer2()).getAverageSoS(t);
+                    numOpponents++;
+                } else {
+                    sos += ((L5RTournament) t).getL5RPlayer(m.getPlayer1()).getAverageSoS(t);
+                    numOpponents++;
+                }
+            }
+        }
 
-		// if they don't have any opponents recorded yet, don't divide by 0
-		double averageSos = numOpponents>0 ? sos / numOpponents : 0;
+        // if they don't have any opponents recorded yet, don't divide by 0
+        double averageSos = numOpponents>0 ? sos / numOpponents : 0;
         if (Double.isNaN(averageSos) != true) {
             BigDecimal bd = new BigDecimal(averageSos);
             bd = bd.setScale(3, RoundingMode.HALF_UP);
             return bd.doubleValue();
         }
         return averageSos;
-	}
+    }
 
     public int getWins(Tournament t) {
         int score = 0;
@@ -184,10 +185,10 @@ public class IAPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePlay
     public int getRank(Tournament t) {
         List<Player> players = new ArrayList<Player>();
         players.addAll(t.getPlayers());
-        Collections.sort(players, new IAComparator(t, IAComparator.rankingCompare));
+        Collections.sort(players, new L5RComparator(t, L5RComparator.rankingCompare));
 
         for (int i = 0; i < players.size(); i++) {
-            if (((IATournament) t).getIAPlayer(players.get(i)) == this) {
+            if (((L5RTournament) t).getL5RPlayer(players.get(i)) == this) {
                 return i + 1;
             }
         }
@@ -257,9 +258,9 @@ public class IAPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePlay
 
         if (t != null) {
             int score = getScore(t);
-            List<IAPlayer> players = new ArrayList<IAPlayer>();
+            List<L5RPlayer> players = new ArrayList<L5RPlayer>();
             for (Player p : t.getPlayers()) {
-                IAPlayer xp = ((IATournament) t).getIAPlayer(p);
+                L5RPlayer xp = ((L5RTournament) t).getL5RPlayer(p);
                 if (xp != this && xp.getScore(t) == score) {
                     players.add(xp);
                 }
@@ -269,7 +270,7 @@ public class IAPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePlay
                 return false;
             }
 
-            playerLoop: for (IAPlayer p : players) {
+            playerLoop: for (L5RPlayer p : players) {
                 for (Match m : p.getPlayer().getMatches(t)) {
                     if (m.getWinner(1) != null && m.getWinner(1) == this.getPlayer()) {
                         continue playerLoop;
@@ -311,7 +312,7 @@ public class IAPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePlay
 
     @Override
     public String getModuleName() {
-        return Modules.IA.getName();
+        return Modules.L5R.getName();
     }
 
     public String toXML() {
@@ -325,10 +326,9 @@ public class IAPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePlay
     @Override
     public StringBuilder appendXML(StringBuilder sb) {
 
-        XMLUtils.appendObject(sb, "MODULE", Modules.IA.getName());
+        XMLUtils.appendObject(sb, "MODULE", Modules.L5R.getName());
         XMLUtils.appendObject(sb, "SEEDVALUE", getSeedValue());
         XMLUtils.appendObject(sb, "SQUADID", getSquadId());
-        XMLUtils.appendObject(sb, "FACTION", getFaction());
 
         return sb;
     }

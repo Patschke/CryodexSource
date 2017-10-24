@@ -140,7 +140,7 @@ public class SWLCGPlayer implements Comparable<ModulePlayer>, XMLObject, ModuleP
 
 		int numOpponents = 0;
 		for (Match m : matches) {
-			if (m.isBye() == false & m.getWinner() != null) {
+			if (m.isBye() == false & m.getWinner(1) != null) {
 				if (m.getPlayer1() == this.getPlayer()) {
 					sos += ((SWLCGTournament) t).getSWLCGPlayer(m.getPlayer2()).getAverageSoS(t);
 					numOpponents++;
@@ -164,7 +164,7 @@ public class SWLCGPlayer implements Comparable<ModulePlayer>, XMLObject, ModuleP
     public int getWins(Tournament t) {
         int score = 0;
         for (Match match : getPlayer().getMatches(t)) {
-            if (match.getWinner() == this.getPlayer() || match.isBye()) {
+            if (match.getWinner(1) == this.getPlayer() || match.isBye()) {
                 score++;
             }
         }
@@ -174,7 +174,7 @@ public class SWLCGPlayer implements Comparable<ModulePlayer>, XMLObject, ModuleP
     public int getLosses(Tournament t) {
         int score = 0;
         for (Match match : getPlayer().getMatches(t)) {
-            if (match.getWinner() != null && match.getWinner() != this.getPlayer()) {
+            if (match.getWinner(1) != null && match.getWinner(1) != this.getPlayer()) {
                 score++;
             }
         }
@@ -202,11 +202,11 @@ public class SWLCGPlayer implements Comparable<ModulePlayer>, XMLObject, ModuleP
         for (Round r : t.getAllRounds()) {
             if (r.isSingleElimination()) {
                 for (Match m : r.getMatches()) {
-                    if ((m.getPlayer1() == this.getPlayer() || m.getPlayer2() == this.getPlayer()) && (m.getWinner() != null && m.getWinner() != this.getPlayer())) {
+                    if ((m.getPlayer1() == this.getPlayer() || m.getPlayer2() == this.getPlayer()) && (m.getWinner(1) != null && m.getWinner(1) != this.getPlayer())) {
                         return r.getMatches().size() * 2;
                     }
 
-                    if (r.getMatches().size() == 1 && m.getWinner() != null && m.getWinner() == this.getPlayer()) {
+                    if (r.getMatches().size() == 1 && m.getWinner(1) != null && m.getWinner(1) == this.getPlayer()) {
                         return 1;
                     }
                 }
@@ -231,7 +231,7 @@ public class SWLCGPlayer implements Comparable<ModulePlayer>, XMLObject, ModuleP
             if (match.isBye()) {
                 movPoints += tournamentPoints + (tournamentPoints / 2);
                 continue;
-            } else if (match.getWinner() == null) {
+            } else if (match.getWinner(1) == null) {
                 continue;
             }
 
@@ -271,7 +271,7 @@ public class SWLCGPlayer implements Comparable<ModulePlayer>, XMLObject, ModuleP
 
             playerLoop: for (SWLCGPlayer p : players) {
                 for (Match m : p.getPlayer().getMatches(t)) {
-                    if (m.getWinner() != null && m.getWinner() == this.getPlayer()) {
+                    if (m.getWinner(1) != null && m.getWinner(1) == this.getPlayer()) {
                         continue playerLoop;
                     }
                 }

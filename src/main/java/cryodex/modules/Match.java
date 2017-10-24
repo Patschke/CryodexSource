@@ -9,16 +9,14 @@ import cryodex.xml.XMLUtils;
 import cryodex.xml.XMLUtils.Element;
 
 public class Match implements XMLObject {
-	
+
     public static enum GameResult {
-        PLAYER_1_WINS,
-        PLAYER_2_WINS,
-        DRAW;
+        PLAYER_1_WINS, PLAYER_2_WINS, PLAYER_1_MOD_WINS, PLAYER_2_MOD_WINS, DRAW;
     }
-	
+
     private Player player1;
     private Player player2;
-    private Player winner;
+    // private Player winner;
     private GameResult game2Result;
     private GameResult game1Result;
     private boolean isBye = false;
@@ -44,10 +42,10 @@ public class Match implements XMLObject {
 
         String player2String = matchElement.getStringFromChild("PLAYER2");
         player2 = CryodexController.getPlayerByID(player2String);
-        
-        String winnerString = matchElement.getStringFromChild("WINNER");
-        winner = CryodexController.getPlayerByID(winnerString);
-        
+
+        // String winnerString = matchElement.getStringFromChild("WINNER");
+        // winner = CryodexController.getPlayerByID(winnerString);
+
         isBye = matchElement.getBooleanFromChild("ISBYE", false);
         isDuplicate = matchElement.getBooleanFromChild("ISDUPLICATE", false);
         isConcede = matchElement.getBooleanFromChild("ISCONCEDE", false);
@@ -56,12 +54,12 @@ public class Match implements XMLObject {
         player2PointsDestroyed = matchElement.getIntegerFromChild("PLAYER2POINTS");
 
         String game1ResultString = matchElement.getStringFromChild("GAME1RESULT");
-        if(game1ResultString != null){
+        if (game1ResultString != null) {
             game1Result = GameResult.valueOf(game1ResultString);
         }
-        
+
         String game2ResultString = matchElement.getStringFromChild("GAME2RESULT");
-        if(game2ResultString != null){
+        if (game2ResultString != null) {
             game2Result = GameResult.valueOf(game2ResultString);
         }
 
@@ -84,13 +82,13 @@ public class Match implements XMLObject {
         this.player2 = player2;
     }
 
-    public Player getWinner() {
-        return winner;
-    }
-
-    public void setWinner(Player winner) {
-        this.winner = winner;
-    }
+    // public Player getWinner() {
+    // return winner;
+    // }
+    //
+    // public void setWinner(Player winner) {
+    // this.winner = winner;
+    // }
 
     public boolean isBye() {
         return isBye;
@@ -115,7 +113,7 @@ public class Match implements XMLObject {
     public void setPlayer2PointsDestroyed(Integer player2PointsDestroyed) {
         this.player2PointsDestroyed = player2PointsDestroyed;
     }
-    
+
     public GameResult getGame1Result() {
         return game1Result;
     }
@@ -139,13 +137,46 @@ public class Match implements XMLObject {
     public void setDuplicate(boolean isDuplicate) {
         this.isDuplicate = isDuplicate;
     }
-    
+
     public boolean isConcede() {
         return isConcede;
     }
 
     public void setConcede(boolean isConcede) {
         this.isConcede = isConcede;
+    }
+    
+    public Player getWinner(int i){
+        
+        GameResult result = null;
+        
+        if(i == 1){
+            result = getGame1Result();
+        } else if(i == 2){
+            result = getGame2Result();
+        }
+        
+        if(result == GameResult.PLAYER_1_WINS || result == GameResult.PLAYER_1_MOD_WINS){
+            return getPlayer1();
+        } else if(result == GameResult.PLAYER_2_WINS || result == GameResult.PLAYER_2_MOD_WINS){
+            return getPlayer2();
+        }
+        
+        return null;
+    }
+
+    public void clear() {
+
+        player1 = null;
+        player2 = null;
+        game2Result = null;
+        game1Result = null;
+        isBye = false;
+        player1PointsDestroyed = null;
+        player2PointsDestroyed = null;
+        isDuplicate = false;
+        isConcede = false;
+        matchLabel = null;
     }
 
     public void checkDuplicate(List<Round> rounds) {
@@ -186,7 +217,7 @@ public class Match implements XMLObject {
 
         XMLUtils.appendObject(sb, "PLAYER1", getPlayer1().getSaveId());
         XMLUtils.appendObject(sb, "PLAYER2", getPlayer2() == null ? "" : getPlayer2().getSaveId());
-        XMLUtils.appendObject(sb, "WINNER", getWinner() == null ? "" : getWinner().getSaveId());
+        // XMLUtils.appendObject(sb, "WINNER", getWinner() == null ? "" : getWinner().getSaveId());
         XMLUtils.appendObject(sb, "ISBYE", isBye());
         XMLUtils.appendObject(sb, "PLAYER1POINTS", getPlayer1Points());
         XMLUtils.appendObject(sb, "PLAYER2POINTS", getPlayer2Points());

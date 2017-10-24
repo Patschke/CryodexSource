@@ -121,9 +121,9 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
 		
 		for(Match m : r.getMatches()){
 			if(this.getPlayer().equals(m.getPlayer1()) || this.getPlayer().equals(m.getPlayer2())){
-				if(m.getWinner() != null || m.isBye()){
+				if(m.getWinner(1) != null || m.isBye()){
 					completeGameCount++;
-					if(this.getPlayer().equals(m.getWinner()) || m.isBye()){
+					if(this.getPlayer().equals(m.getWinner(1)) || m.isBye()){
 						if(etcT.getPlayerCount() == 6){
 							score++;
 						} else if(etcT.getPlayerCount() == 3){
@@ -176,7 +176,7 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
 
 		int numOpponents = 0;
 		for (Match m : matches) {
-			if (m.isBye() == false && m.getWinner() != null) {
+			if (m.isBye() == false && m.getWinner(1) != null) {
 				if (m.getPlayer1() == this.getPlayer()) {
 					sos += ((EtcPlayer) m.getPlayer2().getModuleInfoByModule(t.getModule())).getAverageScore(t);
 					numOpponents++;
@@ -210,7 +210,7 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
 
 		score = 0;
 		for (Match match : getPlayer().getMatches(t)) {
-			if (match.getWinner() == this.getPlayer() || match.isBye()) {
+			if (match.getWinner(1) == this.getPlayer() || match.isBye()) {
 				score++;
 			}
 		}
@@ -230,7 +230,7 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
 
 		score = 0;
 		for (Match match : getPlayer().getMatches(t)) {
-			if (match.getWinner() != null && match.getWinner() != this.getPlayer()) {
+			if (match.getWinner(1) != null && match.getWinner(1) != this.getPlayer()) {
 				score++;
 			}
 		}
@@ -281,11 +281,11 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
 		for (Round r : t.getAllRounds()) {
 			if (r.isSingleElimination()) {
 				for (Match m : r.getMatches()) {
-					if ((m.getPlayer1() == this.getPlayer() || m.getPlayer2() == this.getPlayer()) && (m.getWinner() != null && m.getWinner() != this.getPlayer())) {
+					if ((m.getPlayer1() == this.getPlayer() || m.getPlayer2() == this.getPlayer()) && (m.getWinner(1) != null && m.getWinner(1) != this.getPlayer())) {
 						return r.getMatches().size() * 2;
 					}
 
-					if (r.getMatches().size() == 1 && m.getWinner() != null && m.getWinner() == this.getPlayer()) {
+					if (r.getMatches().size() == 1 && m.getWinner(1) != null && m.getWinner(1) == this.getPlayer()) {
 						return 1;
 					}
 				}
@@ -318,7 +318,7 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
 			if (match.isBye()) {
 				movPoints += tournamentPoints + (tournamentPoints / 2);
 				continue;
-			} else if (match.getWinner() == null) {
+			} else if (match.getWinner(1) == null) {
 				continue;
 			}
 

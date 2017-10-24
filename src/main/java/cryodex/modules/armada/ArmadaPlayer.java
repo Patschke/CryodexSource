@@ -167,14 +167,14 @@ public class ArmadaPlayer implements Comparable<ModulePlayer>, XMLObject, Module
 				score += 8;
 			} else {
 
-				if (match.getWinner() == null) {
+				if (match.getWinner(1) == null) {
 					continue;
 				}
 
 				int mov = getWinnerMOV(match);
 
 				int matchScore = 0;
-				if (match.getWinner() == this.getPlayer()) {
+				if (match.getWinner(1) == this.getPlayer()) {
 						matchScore = ScoreTableEnum.getWinScore(mov);
 				} else {
 					if(match.isConcede()){
@@ -204,7 +204,7 @@ public class ArmadaPlayer implements Comparable<ModulePlayer>, XMLObject, Module
 
         int numOpponents = 0;
         for (Match m : matches) {
-            if (m.isBye() == false && m.getWinner() != null) {
+            if (m.isBye() == false && m.getWinner(1) != null) {
                 if (m.getPlayer1() == this.getPlayer()) {
                     sos += ((ArmadaPlayer) m.getPlayer2().getModuleInfoByModule(t.getModule())).getAverageScore(t);
                     numOpponents++;
@@ -228,7 +228,7 @@ public class ArmadaPlayer implements Comparable<ModulePlayer>, XMLObject, Module
     public int getWins(Tournament t) {
         int score = 0;
         for (Match match : getPlayer().getMatches(t)) {
-            if (match.getWinner() == this.getPlayer() || match.isBye()) {
+            if (match.getWinner(1) == this.getPlayer() || match.isBye()) {
                 score++;
             }
         }
@@ -238,7 +238,7 @@ public class ArmadaPlayer implements Comparable<ModulePlayer>, XMLObject, Module
     public int getLosses(Tournament t) {
         int score = 0;
         for (Match match : getPlayer().getMatches(t)) {
-            if (match.getWinner() != null && match.getWinner() != this.getPlayer()) {
+            if (match.getWinner(1) != null && match.getWinner(1) != this.getPlayer()) {
                 score++;
             }
         }
@@ -266,11 +266,11 @@ public class ArmadaPlayer implements Comparable<ModulePlayer>, XMLObject, Module
         for (Round r : t.getAllRounds()) {
             if (r.isSingleElimination()) {
                 for (Match m : r.getMatches()) {
-                    if ((m.getPlayer1() == this.getPlayer() || m.getPlayer2() == this.getPlayer()) && (m.getWinner() != null && m.getWinner() != this.getPlayer())) {
+                    if ((m.getPlayer1() == this.getPlayer() || m.getPlayer2() == this.getPlayer()) && (m.getWinner(1) != null && m.getWinner(1) != this.getPlayer())) {
                         return r.getMatches().size() * 2;
                     }
 
-                    if (r.getMatches().size() == 1 && m.getWinner() != null && m.getWinner() == this.getPlayer()) {
+                    if (r.getMatches().size() == 1 && m.getWinner(1) != null && m.getWinner(1) == this.getPlayer()) {
                         return 1;
                     }
                 }
@@ -294,11 +294,11 @@ public class ArmadaPlayer implements Comparable<ModulePlayer>, XMLObject, Module
         if (match.isBye()) {
             return BYE_MOV;
          
-        } else if (match.getWinner() == null) {
+        } else if (match.getWinner(1) == null) {
         	return 0;
         }
 
-		if (match.getWinner() == this.getPlayer()) {
+		if (match.getWinner(1) == this.getPlayer()) {
 			return getWinnerMOV(match);
 		}
 		
@@ -312,7 +312,7 @@ public class ArmadaPlayer implements Comparable<ModulePlayer>, XMLObject, Module
 			int player1Score = match.getPlayer1Points() == null ? 0 : match.getPlayer1Points();
 			int player2Score = match.getPlayer2Points() == null ? 0 : match.getPlayer2Points();
 
-			if (match.getPlayer1() == match.getWinner()) {
+			if (match.getPlayer1() == match.getWinner(1)) {
 				mov = player1Score - player2Score;
 			} else {
 				mov = player2Score - player1Score;
@@ -355,7 +355,7 @@ public class ArmadaPlayer implements Comparable<ModulePlayer>, XMLObject, Module
 
             playerLoop: for (ArmadaPlayer p : players) {
                 for (Match m : p.getPlayer().getMatches(t)) {
-                    if (m.getWinner() != null && m.getWinner() == this.getPlayer()) {
+                    if (m.getWinner(1) != null && m.getWinner(1) == this.getPlayer()) {
                         continue playerLoop;
                     }
                 }

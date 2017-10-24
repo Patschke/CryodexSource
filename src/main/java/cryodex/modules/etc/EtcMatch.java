@@ -11,7 +11,7 @@ public class EtcMatch extends Match {
 		EtcMatch copy = new EtcMatch(m.getPlayer1(), m.getPlayer2());
 		copy.setBye(m.isBye());
 		copy.setConcede(m.isConcede());
-		copy.setWinner(m.getWinner());
+		copy.setGame1Result(m.getGame1Result());
 		copy.setPlayer1PointsDestroyed(m.getPlayer1Points());
 		copy.setPlayer2PointsDestroyed(m.getPlayer2Points());
 		copy.setSuffix(suffix);

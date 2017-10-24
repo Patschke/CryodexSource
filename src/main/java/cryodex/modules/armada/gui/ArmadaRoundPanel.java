@@ -30,6 +30,7 @@ import javax.swing.event.DocumentListener;
 import cryodex.CryodexController;
 import cryodex.Player;
 import cryodex.modules.Match;
+import cryodex.modules.Match.GameResult;
 import cryodex.modules.RoundPanel;
 import cryodex.modules.armada.ArmadaTournament;
 import cryodex.widget.ComponentUtils;
@@ -413,38 +414,6 @@ public class ArmadaRoundPanel extends RoundPanel {
 			return player2Score;
 		}
 
-		/**
-		 * This function sets the combo box value to the winner of the match
-		 * based on points.
-		 */
-		private void setResultsCombo() {
-
-			if (match.getPlayer1Points() != null || match.getPlayer2Points() != null) {
-
-				Integer p1points = match.getPlayer1Points() == null ? 0 : match.getPlayer1Points();
-				Integer p2points = match.getPlayer2Points() == null ? 0 : match.getPlayer2Points();
-
-				if (p1points.equals(p2points)) {
-					// Only reset the result if it was not enabled before. This
-					// prevents the combo box from resetting if the result
-					// didn't actually change.
-					if (getResultCombo().isEnabled() == false) {
-						getResultCombo().setSelectedIndex(0);
-					}
-					getResultCombo().setEnabled(true);
-				}
-				if (p1points > p2points) {
-					getResultCombo().setSelectedIndex(1);
-				}
-
-				if (p2points > p1points) {
-					getResultCombo().setSelectedIndex(2);
-				}
-			} else {
-				getResultCombo().setSelectedIndex(0);
-			}
-		}
-
 		public void markInvalid() {
 			if (tournament.isValidResult(match) == false) {
 				getPlayerTitle().setForeground(Color.red);
@@ -510,7 +479,7 @@ public class ArmadaRoundPanel extends RoundPanel {
 
 			switch (getResultCombo().getSelectedIndex()) {
 			case 0:
-				match.setWinner(null);
+				match.setGame1Result(null);
 				match.setBye(false);
 				match.setConcede(false);
 				break;
@@ -518,20 +487,20 @@ public class ArmadaRoundPanel extends RoundPanel {
 				if (match.getPlayer2() == null) {
 					match.setBye(true);
 				} else {
-					match.setWinner(match.getPlayer1());
+					match.setGame1Result(GameResult.PLAYER_1_WINS);
 				}
 				match.setConcede(false);
 				break;
 			case 2:
-				match.setWinner(match.getPlayer2());
+				match.setGame1Result(GameResult.PLAYER_2_WINS);
 				match.setConcede(false);
 				break;
 			case 3:
-				match.setWinner(match.getPlayer2());
+				match.setGame1Result(GameResult.PLAYER_2_WINS);
 				match.setConcede(true);
 				break;
 			case 4:
-				match.setWinner(match.getPlayer1());
+				match.setGame1Result(GameResult.PLAYER_1_WINS);
 				match.setConcede(true);
 				break;
 			default:
@@ -546,15 +515,15 @@ public class ArmadaRoundPanel extends RoundPanel {
 					getResultCombo().setSelectedIndex(1);
 				} else {
 					if(match.isConcede()){
-						if (match.getWinner() == match.getPlayer1()) {
+						if (match.getWinner(1) == match.getPlayer1()) {
 							getResultCombo().setSelectedIndex(4);
-						} else if (match.getWinner() == match.getPlayer2()) {
+						} else if (match.getWinner(1) == match.getPlayer2()) {
 							getResultCombo().setSelectedIndex(3);
 						}
 					} else {
-						if (match.getWinner() == match.getPlayer1()) {
+						if (match.getWinner(1) == match.getPlayer1()) {
 							getResultCombo().setSelectedIndex(1);
-						} else if (match.getWinner() == match.getPlayer2()) {
+						} else if (match.getWinner(1) == match.getPlayer2()) {
 							getResultCombo().setSelectedIndex(2);
 						}
 					}

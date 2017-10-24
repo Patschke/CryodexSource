@@ -1,4 +1,4 @@
-package cryodex.modules.runewars.gui;
+package cryodex.modules.l5r.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -32,11 +32,10 @@ import cryodex.Player;
 import cryodex.modules.Match;
 import cryodex.modules.RoundPanel;
 import cryodex.modules.Match.GameResult;
-import cryodex.modules.runewars.RunewarsTournament;
+import cryodex.modules.l5r.L5RTournament;
 import cryodex.widget.ComponentUtils;
-import cryodex.widget.ConfirmationTextField;
 
-public class RunewarsRoundPanel extends RoundPanel {
+public class L5RRoundPanel extends RoundPanel {
 
 	private static final long serialVersionUID = 1L;
 
@@ -48,9 +47,9 @@ public class RunewarsRoundPanel extends RoundPanel {
 	private JComboBox<Player> playerCombo;
 	private final JScrollPane scroll;
 
-	private final RunewarsTournament tournament;
+	private final L5RTournament tournament;
 
-	public RunewarsRoundPanel(RunewarsTournament t, List<Match> matches) {
+	public L5RRoundPanel(L5RTournament t, List<Match> matches) {
 
 		super(new BorderLayout());
 
@@ -144,7 +143,7 @@ public class RunewarsRoundPanel extends RoundPanel {
 
 		scroll.getViewport().removeAll();
 		scroll.getViewport().add(ComponentUtils.addToFlowLayout(buildPanel(), FlowLayout.CENTER));
-		ComponentUtils.repaint(RunewarsRoundPanel.this);
+		ComponentUtils.repaint(L5RRoundPanel.this);
 
 		Integer i = null;
 		try {
@@ -205,36 +204,6 @@ public class RunewarsRoundPanel extends RoundPanel {
 		gbc.fill = GridBagConstraints.BOTH;
 		panel.add(gamePanel.getResultCombo(), gbc);
 
-		if (gamePanel.getMatch().getPlayer2() != null) {
-			gbc.gridy++;
-			gbc.gridwidth = 1;
-			gbc.fill = GridBagConstraints.NONE;
-
-			gbc.gridx = 1;
-			panel.add(gamePanel.getPlayer1ScoreLabel(), gbc);
-
-			gbc.gridx = 2;
-			panel.add(gamePanel.getPlayer1ScoreField(), gbc);
-
-			gbc.gridx = 3;
-			gbc.anchor = GridBagConstraints.WEST;
-			panel.add(gamePanel.getPlayer1ScoreField().getIndicator(), gbc);
-
-			gbc.gridy++;
-			gbc.gridwidth = 1;
-			gbc.anchor = GridBagConstraints.EAST;
-
-			gbc.gridx = 1;
-			panel.add(gamePanel.getPlayer2ScoreLabel(), gbc);
-
-			gbc.gridx = 2;
-			panel.add(gamePanel.getPlayer2ScoreField(), gbc);
-
-			gbc.gridx = 3;
-			gbc.anchor = GridBagConstraints.WEST;
-			panel.add(gamePanel.getPlayer2ScoreField().getIndicator(), gbc);
-		}
-
 		quickEntrySubPanel.add(panel, BorderLayout.CENTER);
 
 		ComponentUtils.repaint(quickEntrySubPanel);
@@ -260,36 +229,6 @@ public class RunewarsRoundPanel extends RoundPanel {
 			gbc.gridx = 2;
 			gbc.fill = GridBagConstraints.BOTH;
 			panel.add(gp.getResultCombo(), gbc);
-
-			if (gp.getMatch().getPlayer2() != null) {
-				gbc.gridy++;
-				gbc.gridwidth = 1;
-				gbc.fill = GridBagConstraints.NONE;
-
-				gbc.gridx = 1;
-				panel.add(gp.getPlayer1ScoreLabel(), gbc);
-
-				gbc.gridx = 2;
-				panel.add(gp.getPlayer1ScoreField(), gbc);
-
-				gbc.gridx = 3;
-				gbc.anchor = GridBagConstraints.WEST;
-				panel.add(gp.getPlayer1ScoreField().getIndicator(), gbc);
-
-				gbc.gridy++;
-				gbc.gridwidth = 1;
-				gbc.anchor = GridBagConstraints.EAST;
-
-				gbc.gridx = 1;
-				panel.add(gp.getPlayer2ScoreLabel(), gbc);
-
-				gbc.gridx = 2;
-				panel.add(gp.getPlayer2ScoreField(), gbc);
-
-				gbc.gridx = 3;
-				gbc.anchor = GridBagConstraints.WEST;
-				panel.add(gp.getPlayer2ScoreField().getIndicator(), gbc);
-			}
 		}
 
 		return panel;
@@ -311,10 +250,6 @@ public class RunewarsRoundPanel extends RoundPanel {
 		private final Match match;
 		private JLabel playersTitle;
 		private JComboBox<String> resultsCombo;
-		private ConfirmationTextField player1Score;
-		private ConfirmationTextField player2Score;
-		private JLabel player1ScoreLabel;
-		private JLabel player2ScoreLabel;
 		private boolean isLoading = false;
 		private boolean isChanging = false;
 		private int tableNumber = -1;
@@ -346,30 +281,16 @@ public class RunewarsRoundPanel extends RoundPanel {
 			return playersTitle;
 		}
 
-		private JLabel getPlayer1ScoreLabel() {
-			if (player1ScoreLabel == null) {
-				player1ScoreLabel = new JLabel();
-			}
-			return player1ScoreLabel;
-		}
-
-		private JLabel getPlayer2ScoreLabel() {
-			if (player2ScoreLabel == null) {
-				player2ScoreLabel = new JLabel();
-			}
-			return player2ScoreLabel;
-		}
-
 		private String[] getComboValues() {
 
 			if (match.getPlayer2() == null) {
 				String[] values = { "Select a result", "BYE" };
 				return values;
 			} else {
-				String generic =  "Select a result";
+				String generic = "Select a result";
 				String[] values = { generic, "WIN - " + match.getPlayer1().getName(),
-						"WIN - " + match.getPlayer2().getName(), match.getPlayer1().getName() + " conceded",
-						match.getPlayer2().getName() + " conceded" };
+						"WIN - " + match.getPlayer2().getName(), "MOD WIN - " + match.getPlayer1().getName(),
+                        "MOD WIN - " + match.getPlayer2().getName() };
 				return values;
 			}
 		}
@@ -394,57 +315,6 @@ public class RunewarsRoundPanel extends RoundPanel {
 			return resultsCombo;
 		}
 
-		public ConfirmationTextField getPlayer1ScoreField() {
-			if (player1Score == null) {
-				player1Score = new ConfirmationTextField();
-				player1Score.addFocusListener(GamePanel.this);
-				ComponentUtils.forceSize(player1Score, 50, 25);
-			}
-
-			return player1Score;
-		}
-
-		public ConfirmationTextField getPlayer2ScoreField() {
-			if (player2Score == null) {
-				player2Score = new ConfirmationTextField();
-				player2Score.addFocusListener(GamePanel.this);
-				ComponentUtils.forceSize(player2Score, 50, 25);
-			}
-
-			return player2Score;
-		}
-
-		/**
-		 * This function sets the combo box value to the winner of the match
-		 * based on points.
-		 */
-//		private void setResultsCombo() {
-//
-//			if (match.getPlayer1Points() != null || match.getPlayer2Points() != null) {
-//
-//				Integer p1points = match.getPlayer1Points() == null ? 0 : match.getPlayer1Points();
-//				Integer p2points = match.getPlayer2Points() == null ? 0 : match.getPlayer2Points();
-//
-//				if (p1points.equals(p2points)) {
-//					// Only reset the result if it was not enabled before. This
-//					// prevents the combo box from resetting if the result
-//					// didn't actually change.
-//					if (getResultCombo().isEnabled() == false) {
-//						getResultCombo().setSelectedIndex(0);
-//					}
-//					getResultCombo().setEnabled(true);
-//				}
-//				if (p1points > p2points) {
-//					getResultCombo().setSelectedIndex(1);
-//				}
-//
-//				if (p2points > p1points) {
-//					getResultCombo().setSelectedIndex(2);
-//				}
-//			} else {
-//				getResultCombo().setSelectedIndex(0);
-//			}
-//		}
 
 		public void markInvalid() {
 			if (tournament.isValidResult(match) == false) {
@@ -475,8 +345,6 @@ public class RunewarsRoundPanel extends RoundPanel {
 			}
 			isChanging = true;
 
-			setMatchPointsFromGUI();
-
 			setMatchResultFromGUI();
 
 			tournament.triggerChange();
@@ -487,33 +355,12 @@ public class RunewarsRoundPanel extends RoundPanel {
 			isChanging = false;
 		}
 
-		private void setMatchPointsFromGUI() {
-			// Set player 1 points
-			Integer player1points = null;
-			try {
-				player1points = Integer.valueOf(player1Score.getText());
-			} catch (Exception e) {
-
-			}
-			match.setPlayer1PointsDestroyed(player1points);
-
-			// Set player 2 points
-			Integer player2points = null;
-			try {
-				player2points = Integer.valueOf(player2Score.getText());
-			} catch (Exception e) {
-
-			}
-			match.setPlayer2PointsDestroyed(player2points);
-		}
-
 		private void setMatchResultFromGUI() {
 
 			switch (getResultCombo().getSelectedIndex()) {
 			case 0:
 				match.setGame1Result(null);
 				match.setBye(false);
-				match.setConcede(false);
 				break;
 			case 1:
 				if (match.getPlayer2() == null) {
@@ -521,20 +368,16 @@ public class RunewarsRoundPanel extends RoundPanel {
 				} else {
 					match.setGame1Result(GameResult.PLAYER_1_WINS);
 				}
-				match.setConcede(false);
 				break;
 			case 2:
 				match.setGame1Result(GameResult.PLAYER_2_WINS);
-				match.setConcede(false);
 				break;
 			case 3:
-				match.setGame1Result(GameResult.PLAYER_2_WINS);
-				match.setConcede(true);
-				break;
+			    match.setGame1Result(GameResult.PLAYER_1_MOD_WINS);
+			    break;
 			case 4:
-				match.setGame1Result(GameResult.PLAYER_1_WINS);
-				match.setConcede(true);
-				break;
+			    match.setGame1Result(GameResult.PLAYER_2_MOD_WINS);
+			    break;
 			default:
 				break;
 			}
@@ -546,29 +389,22 @@ public class RunewarsRoundPanel extends RoundPanel {
 				if (match.isBye()) {
 					getResultCombo().setSelectedIndex(1);
 				} else {
-					if(match.isConcede()){
-						if (match.getWinner(1) == match.getPlayer1()) {
-							getResultCombo().setSelectedIndex(4);
-						} else if (match.getWinner(1) == match.getPlayer2()) {
-							getResultCombo().setSelectedIndex(3);
-						}
-					} else {
-						if (match.getWinner(1) == match.getPlayer1()) {
-							getResultCombo().setSelectedIndex(1);
-						} else if (match.getWinner(1) == match.getPlayer2()) {
-							getResultCombo().setSelectedIndex(2);
-						}
+					if (match.getGame1Result() == GameResult.PLAYER_1_WINS) {
+						getResultCombo().setSelectedIndex(1);
+					} else if (match.getGame1Result() == GameResult.PLAYER_2_WINS) {
+						getResultCombo().setSelectedIndex(2);
+					} else if (match.getGame1Result() == GameResult.PLAYER_1_MOD_WINS) {
+					    getResultCombo().setSelectedIndex(3);
+					} else if (match.getGame1Result() == GameResult.PLAYER_2_MOD_WINS) {
+					    getResultCombo().setSelectedIndex(4);
 					}
 				}
 			}
 
-			if (match.getPlayer2() != null) {
-				if (match.getPlayer1Points() != null) {
-					getPlayer1ScoreField().setText(String.valueOf(match.getPlayer1Points()));
-				}
-				if (match.getPlayer2Points() != null) {
-					getPlayer2ScoreField().setText(String.valueOf(match.getPlayer2Points()));
-				}
+			// Special exception for bye matches
+			if (match.getPlayer2() == null) {
+				match.setBye(true);
+				getResultCombo().setSelectedIndex(1);
 			}
 
 			updateGUI();
@@ -577,15 +413,10 @@ public class RunewarsRoundPanel extends RoundPanel {
 		private void updateGUI() {
 			String titleText = null;
 
-			boolean showKillPoints = CryodexController.getOptions().isShowKillPoints();
 			boolean hideCompletedMatches = CryodexController.getOptions().isHideCompleted();
 
 			boolean visible = hideCompletedMatches == false || tournament.isMatchComplete(match) == false;
 
-			getPlayer1ScoreLabel().setVisible(visible && showKillPoints);
-			getPlayer1ScoreField().setVisible(visible && showKillPoints);
-			getPlayer2ScoreLabel().setVisible(visible && showKillPoints);
-			getPlayer2ScoreField().setVisible(visible && showKillPoints);
 			getPlayerTitle().setVisible(visible);
 			getResultCombo().setVisible(visible);
 
@@ -600,9 +431,6 @@ public class RunewarsRoundPanel extends RoundPanel {
 				if (CryodexController.getOptions().isShowTableNumbers()) {
 					titleText = tableNumber + ": " + titleText;
 				}
-
-				getPlayer1ScoreLabel().setText(match.getPlayer1().getName() + " score");
-				getPlayer2ScoreLabel().setText(match.getPlayer2().getName() + " score");
 			}
 
 			getPlayerTitle().setText(titleText);
@@ -616,4 +444,5 @@ public class RunewarsRoundPanel extends RoundPanel {
 			gamePanel.markInvalid();
 		}
 	}
+
 }

@@ -159,8 +159,8 @@ public abstract class ExportController {
 
 				if (tournament.isMatchComplete(m)) {
 					matchString += " - Match Results: ";
-					if (m.getWinner() != null) {
-						matchString += m.getWinner().getName() + " is the winner";
+					if (m.getWinner(1) != null) {
+						matchString += m.getWinner(1).getName() + " is the winner";
 					}
 
 					if (m.getPlayer1Points() != null && m.getPlayer2Points() != null) {

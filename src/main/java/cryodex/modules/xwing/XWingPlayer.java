@@ -101,7 +101,7 @@ public class XWingPlayer implements Comparable<ModulePlayer>, XMLObject, ModuleP
 
 		score = 0;
 		for (Match match : getPlayer().getMatches(t)) {
-			if (match.getWinner() == this.getPlayer()) {
+			if (match.getWinner(1) == this.getPlayer()) {
 				score += XWingConstants.WIN_POINTS;
 			} else if (match.isBye()) {
 				score += XWingConstants.BYE_POINTS;
@@ -146,7 +146,7 @@ public class XWingPlayer implements Comparable<ModulePlayer>, XMLObject, ModuleP
 
 		int numOpponents = 0;
 		for (Match m : matches) {
-			if (m.isBye() == false && m.getWinner() != null) {
+			if (m.isBye() == false && m.getWinner(1) != null) {
 				if (m.getPlayer1() == this.getPlayer()) {
 					sos += ((XWingPlayer) m.getPlayer2().getModuleInfoByModule(t.getModule())).getAverageScore(t);
 					numOpponents++;
@@ -180,7 +180,7 @@ public class XWingPlayer implements Comparable<ModulePlayer>, XMLObject, ModuleP
 
 		score = 0;
 		for (Match match : getPlayer().getMatches(t)) {
-			if (match.getWinner() == this.getPlayer() || match.isBye()) {
+			if (match.getWinner(1) == this.getPlayer() || match.isBye()) {
 				score++;
 			}
 		}
@@ -200,7 +200,7 @@ public class XWingPlayer implements Comparable<ModulePlayer>, XMLObject, ModuleP
 
 		score = 0;
 		for (Match match : getPlayer().getMatches(t)) {
-			if (match.getWinner() != null && match.getWinner() != this.getPlayer()) {
+			if (match.getWinner(1) != null && match.getWinner(1) != this.getPlayer()) {
 				score++;
 			}
 		}
@@ -251,11 +251,11 @@ public class XWingPlayer implements Comparable<ModulePlayer>, XMLObject, ModuleP
 		for (Round r : t.getAllRounds()) {
 			if (r.isSingleElimination()) {
 				for (Match m : r.getMatches()) {
-					if ((m.getPlayer1() == this.getPlayer() || m.getPlayer2() == this.getPlayer()) && (m.getWinner() != null && m.getWinner() != this.getPlayer())) {
+					if ((m.getPlayer1() == this.getPlayer() || m.getPlayer2() == this.getPlayer()) && (m.getWinner(1) != null && m.getWinner(1) != this.getPlayer())) {
 						return r.getMatches().size() * 2;
 					}
 
-					if (r.getMatches().size() == 1 && m.getWinner() != null && m.getWinner() == this.getPlayer()) {
+					if (r.getMatches().size() == 1 && m.getWinner(1) != null && m.getWinner(1) == this.getPlayer()) {
 						return 1;
 					}
 				}
@@ -288,7 +288,7 @@ public class XWingPlayer implements Comparable<ModulePlayer>, XMLObject, ModuleP
 			if (match.isBye()) {
 				movPoints += tournamentPoints + (tournamentPoints / 2);
 				continue;
-			} else if (match.getWinner() == null) {
+			} else if (match.getWinner(1) == null) {
 				continue;
 			}
 
@@ -339,7 +339,7 @@ public class XWingPlayer implements Comparable<ModulePlayer>, XMLObject, ModuleP
 
 				playerLoop: for (XWingPlayer p : players) {
 					for (Match m : p.getPlayer().getMatches(t)) {
-						if (m.getWinner() != null && m.getWinner() == this.getPlayer()) {
+						if (m.getWinner(1) != null && m.getWinner(1) == this.getPlayer()) {
 							continue playerLoop;
 						}
 					}
