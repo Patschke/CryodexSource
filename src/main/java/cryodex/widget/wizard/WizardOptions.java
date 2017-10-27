@@ -24,7 +24,7 @@ public class WizardOptions {
     private int maxPlayers = 0;
     private Module module = null;
     private Map<String,String> additionalOptions;
-    private boolean isRandomPairing;
+    private boolean isRandomPairing = true;
 
     public WizardOptions() {
     	additionalOptions = new HashMap<String, String>();

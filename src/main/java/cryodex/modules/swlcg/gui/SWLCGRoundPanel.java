@@ -384,12 +384,9 @@ public class SWLCGRoundPanel extends RoundPanel {
             switch (game1ResultsCombo.getSelectedIndex()) {
             case 0:
                 match.setGame1Result(null);
-                match.setBye(false);
                 break;
             case 1:
-                if (match.getPlayer2() == null) {
-                    match.setBye(true);
-                } else {
+                if (match.isBye() == false) {
                     match.setGame1Result(GameResult.PLAYER_1_WINS);
                 }
                 break;
@@ -406,12 +403,9 @@ public class SWLCGRoundPanel extends RoundPanel {
             switch (game2ResultsCombo.getSelectedIndex()) {
             case 0:
                 match.setGame2Result(null);
-                match.setBye(false);
                 break;
             case 1:
-                if (match.getPlayer2() == null) {
-                    match.setBye(true);
-                } else {
+                if (match.isBye() == false) {
                     match.setGame2Result(GameResult.PLAYER_1_WINS);
                 }
                 break;
@@ -454,8 +448,7 @@ public class SWLCGRoundPanel extends RoundPanel {
 			}
 
 			// Special exception for bye matches
-			if (match.getPlayer2() == null) {
-				match.setBye(true);
+			if (match.isBye()) {
 				getGame1ResultCombo().setSelectedIndex(1);
 				getGame2ResultCombo().setSelectedIndex(1);
 			}

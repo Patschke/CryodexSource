@@ -16,10 +16,8 @@ public class Match implements XMLObject {
 
     private Player player1;
     private Player player2;
-    // private Player winner;
     private GameResult game2Result;
     private GameResult game1Result;
-    private boolean isBye = false;
     private Integer player1PointsDestroyed;
     private Integer player2PointsDestroyed;
     private boolean isDuplicate;
@@ -43,10 +41,6 @@ public class Match implements XMLObject {
         String player2String = matchElement.getStringFromChild("PLAYER2");
         player2 = CryodexController.getPlayerByID(player2String);
 
-        // String winnerString = matchElement.getStringFromChild("WINNER");
-        // winner = CryodexController.getPlayerByID(winnerString);
-
-        isBye = matchElement.getBooleanFromChild("ISBYE", false);
         isDuplicate = matchElement.getBooleanFromChild("ISDUPLICATE", false);
         isConcede = matchElement.getBooleanFromChild("ISCONCEDE", false);
 
@@ -82,20 +76,8 @@ public class Match implements XMLObject {
         this.player2 = player2;
     }
 
-    // public Player getWinner() {
-    // return winner;
-    // }
-    //
-    // public void setWinner(Player winner) {
-    // this.winner = winner;
-    // }
-
     public boolean isBye() {
-        return isBye;
-    }
-
-    public void setBye(boolean isBye) {
-        this.isBye = isBye;
+        return player2 == null;
     }
 
     public Integer getPlayer1Points() {
@@ -171,7 +153,6 @@ public class Match implements XMLObject {
         player2 = null;
         game2Result = null;
         game1Result = null;
-        isBye = false;
         player1PointsDestroyed = null;
         player2PointsDestroyed = null;
         isDuplicate = false;

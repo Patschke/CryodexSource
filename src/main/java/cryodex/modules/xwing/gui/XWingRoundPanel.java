@@ -516,12 +516,9 @@ public class XWingRoundPanel extends RoundPanel {
             switch (getResultCombo().getSelectedIndex()) {
             case 0:
                 match.setGame1Result(null);
-                match.setBye(false);
                 break;
             case 1:
-                if (match.getPlayer2() == null) {
-                    match.setBye(true);
-                } else {
+                if (match.isBye() == false) {
                     match.setGame1Result(GameResult.PLAYER_1_WINS);
                 }
                 break;
@@ -557,8 +554,7 @@ public class XWingRoundPanel extends RoundPanel {
             }
             
             // Special exception for bye matches
-            if(match.getPlayer2() == null && CryodexController.getOptions().isEnterOnlyPoints()){
-                match.setBye(true);
+            if(match.isBye() && CryodexController.getOptions().isEnterOnlyPoints()){
                 getResultCombo().setSelectedIndex(1);
             }
 

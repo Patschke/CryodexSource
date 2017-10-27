@@ -513,7 +513,10 @@ public abstract class Tournament implements XMLObject {
         return matches;
     }
     
-    public abstract List<Match> getOrderedMatches(List<Player> playerList);
+    public List<Match> getOrderedMatches(List<Player> playerList) {
+        // Random is the default, so jump to this unless it is overridden by the module.
+        return getRandomMatches(playerList);
+    }
 
     public abstract List<Match> getRandomMatches(List<Player> playerList);
     

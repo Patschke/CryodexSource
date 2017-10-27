@@ -422,10 +422,6 @@ public class SwapPanel extends JPanel {
 
 			Match m = new Match(p1, p2);
 
-			if (p2 == null) {
-				m.setBye(true);
-			}
-
 			return m;
 		}
 

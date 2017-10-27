@@ -87,11 +87,6 @@ public class DestinyTournament extends Tournament implements XMLObject {
 	public List<Match> getRandomMatches(List<Player> playerList) {
 		return new DestinyRandomMatchGeneration(this, playerList).generateMatches();
 	}
-    
-    @Override
-    public List<Match> getOrderedMatches(List<Player> playerList) {
-        return null;
-    }
 
 	@Override
 	public TournamentComparator<Player> getRankingComparator() {

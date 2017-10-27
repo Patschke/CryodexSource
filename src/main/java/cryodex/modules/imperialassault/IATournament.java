@@ -86,11 +86,6 @@ public class IATournament extends Tournament implements XMLObject {
 	public List<Match> getRandomMatches(List<Player> playerList) {
 		return new IARandomMatchGeneration(this, playerList).generateMatches();
 	}
-    
-    @Override
-    public List<Match> getOrderedMatches(List<Player> playerList) {
-        return null;
-    }
 
 	@Override
 	public TournamentComparator<Player> getRankingComparator() {

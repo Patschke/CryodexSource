@@ -133,6 +133,8 @@ public class SWLCGExportController extends ExportController {
 						break;
 					case PLAYER_2_WINS: matchString += m.getPlayer2() + " wins Game 1.";
 						break;
+					default: matchString += "error";
+						break;
 					}
 					
 					switch (m.getGame2Result()) {
@@ -142,6 +144,8 @@ public class SWLCGExportController extends ExportController {
 						break;
 					case PLAYER_2_WINS: matchString += m.getPlayer2() + " wins Game 2.";
 						break;
+					default: matchString += "error";
+                        break;
 					}
 				}
 			}
@@ -153,7 +157,6 @@ public class SWLCGExportController extends ExportController {
 
 	@Override
 	public void tcxTeamReport(Tournament tournament) {
-		// TODO Auto-generated method stub
 		
 	}
 }
