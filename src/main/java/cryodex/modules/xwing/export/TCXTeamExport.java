@@ -89,13 +89,13 @@ public class TCXTeamExport {
 			// Add ranking comparator
 			Collections.sort(players, ((XWingTournament) tournament).getRankingComparator());
 
-			XWingPlayer xwingPlayer1 = ((XWingTournament) tournament).getXWingPlayer(players.get(0));
-			XWingPlayer xwingPlayer2 = ((XWingTournament) tournament).getXWingPlayer(players.get(1));
+			XWingPlayer xwingPlayer1 = ((XWingTournament) tournament).getModulePlayer(players.get(0));
+			XWingPlayer xwingPlayer2 = ((XWingTournament) tournament).getModulePlayer(players.get(1));
 
 			top2MOV = xwingPlayer1.getMarginOfVictory(tournament) + xwingPlayer2.getMarginOfVictory(tournament);
 
 			for (Player player : players) {
-				XWingPlayer xwingPlayer = ((XWingTournament) tournament).getXWingPlayer(player);
+				XWingPlayer xwingPlayer = ((XWingTournament) tournament).getModulePlayer(player);
 				averageMOV += xwingPlayer.getMarginOfVictory(tournament);
 				totalScore += xwingPlayer.getScore(tournament);
 			}

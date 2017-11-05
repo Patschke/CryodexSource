@@ -9,5 +9,7 @@ public interface ModulePlayer extends Comparable<ModulePlayer>, XMLObject {
 
 	public void setPlayer(Player p);
 
-	String getModuleName();
+	public String getModuleName();
+	
+	public int getScore(Tournament t);
 }

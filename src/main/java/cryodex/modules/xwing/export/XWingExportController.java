@@ -26,7 +26,7 @@ public class XWingExportController extends ExportController {
 
 		for (Player p : playerList) {
 
-			XWingPlayer xp = ((XWingTournament) tournament).getXWingPlayer(p);
+			XWingPlayer xp = ((XWingTournament) tournament).getModulePlayer(p);
 
 			String name = p.getName();
 			String faction = xp.getFaction() == null ? "" : xp.getFaction().toString();

@@ -47,7 +47,7 @@ public class ArmadaTournament extends Tournament implements XMLObject {
 
         int count = 0;
         for (Player p : playerList) {
-            ArmadaPlayer xp = getArmadaPlayer(p);
+            ArmadaPlayer xp = getModulePlayer(p);
             if (xp.getScore(this) < minScore || count >= maxCount) {
                 getPlayers().remove(p);
             } else {
@@ -78,14 +78,9 @@ public class ArmadaTournament extends Tournament implements XMLObject {
         return new ArmadaRoundPanel(this, matches);
     }
     
-    public ArmadaPlayer getArmadaPlayer(Player p){
+    public ArmadaPlayer getModulePlayer(Player p){
         return (ArmadaPlayer) p.getModuleInfoByModule(getModule());
     }
-    
-	@Override
-	public List<Match> getRandomMatches(List<Player> playerList) {
-		return new ArmadaRandomMatchGeneration(this, playerList).generateMatches();
-	}
 
 	@Override
 	public TournamentComparator<Player> getRankingComparator() {

@@ -1,4 +1,4 @@
-package cryodex.modules.xwing;
+package cryodex.modules;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,7 +8,6 @@ import javax.swing.JOptionPane;
 
 import cryodex.Main;
 import cryodex.Player;
-import cryodex.modules.Match;
 
 /**
  * Generate matches in order of ranking or as close to it as possible. This
@@ -20,15 +19,15 @@ import cryodex.modules.Match;
  * @author cbrown
  * 
  */
-public class XWingOrderedMatchGeneration {
+public class OrderedMatchGeneration {
 
-	private final XWingTournament tournament;
+	private final Tournament tournament;
 	private final List<Player> players;
 
 	private Integer lowScore = null;
 	private List<Match> matchSetAtLowScore = null;
 
-	public XWingOrderedMatchGeneration(XWingTournament tournament,
+	public OrderedMatchGeneration(Tournament tournament,
 			List<Player> players) {
 		this.tournament = tournament;
 		this.players = players;
@@ -39,8 +38,7 @@ public class XWingOrderedMatchGeneration {
 
 		List<Player> tempList = new ArrayList<>();
 		tempList.addAll(players);
-		Collections.sort(tempList, new XWingComparator(tournament,
-				XWingComparator.pairingCompare));
+		Collections.sort(tempList, tournament.getPairingComparator());
 
 		generateMatch(new ArrayList<Match>(), tempList);
 
@@ -92,21 +90,21 @@ public class XWingOrderedMatchGeneration {
 	private void getPlayer2(Player player1, List<Match> matches,
 			List<Player> player2List) {
 		for (Player player2 : player2List) {
-			Match xm = new Match(player1, player2);
-			xm.checkDuplicate(tournament.getAllRounds());
+			Match match = new Match(player1, player2);
+			match.checkDuplicate(tournament.getAllRounds());
 
-			if (xm.isDuplicate() == false) {
-				matches.add(xm);
+			if (match.isDuplicate() == false) {
+				matches.add(match);
 				if (shouldContinue(matches)) {
 					List<Player> player1List = new ArrayList<>();
 					player1List.addAll(player2List);
-					player1List.remove(xm.getPlayer2());
+					player1List.remove(match.getPlayer2());
 
 					generateMatch(matches, player1List);
 				}
 			}
 
-			matches.remove(xm);
+			matches.remove(match);
 
 			if (lowScore != null && lowScore <= 2) {
 				return;
@@ -135,14 +133,13 @@ public class XWingOrderedMatchGeneration {
 	private int getScore(List<Match> matches) {
 
 		// order players
-		Collections.sort(players, new XWingComparator(tournament,
-				XWingComparator.pairingCompare));
+		Collections.sort(players, tournament.getPairingComparator());
 
 		// get list of players in order of matches
-		List<XWingPlayer> playerByMatchOrder = new ArrayList<XWingPlayer>();
+		List<ModulePlayer> playerByMatchOrder = new ArrayList<ModulePlayer>();
 		for (Match xm : matches) {
-			playerByMatchOrder.add((XWingPlayer) xm.getPlayer1().getModuleInfoByModule(tournament.getModule()));
-			playerByMatchOrder.add((XWingPlayer) xm.getPlayer2().getModuleInfoByModule(tournament.getModule()));
+			playerByMatchOrder.add(tournament.getModulePlayer(xm.getPlayer1()));
+			playerByMatchOrder.add(tournament.getModulePlayer(xm.getPlayer2()));
 		}
 
 		int score = 0;

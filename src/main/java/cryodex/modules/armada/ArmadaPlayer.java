@@ -251,7 +251,7 @@ public class ArmadaPlayer implements Comparable<ModulePlayer>, XMLObject, Module
         Collections.sort(players, new ArmadaComparator(t, ArmadaComparator.rankingCompare));
 
         for (int i = 0; i < players.size(); i++) {
-            if (((ArmadaTournament) t).getArmadaPlayer(players.get(i)) == this) {
+            if (((ArmadaTournament) t).getModulePlayer(players.get(i)) == this) {
                 return i + 1;
             }
         }
@@ -343,7 +343,7 @@ public class ArmadaPlayer implements Comparable<ModulePlayer>, XMLObject, Module
             int score = getScore(t);
             List<ArmadaPlayer> players = new ArrayList<ArmadaPlayer>();
             for (Player p : t.getPlayers()) {
-                ArmadaPlayer xp = ((ArmadaTournament) t).getArmadaPlayer(p);
+                ArmadaPlayer xp = ((ArmadaTournament) t).getModulePlayer(p);
                 if (xp != this && xp.getScore(t) == score) {
                     players.add(xp);
                 }

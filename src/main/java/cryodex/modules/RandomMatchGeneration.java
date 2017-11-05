@@ -1,4 +1,4 @@
-package cryodex.modules.l5r;
+package cryodex.modules;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,21 +7,37 @@ import java.util.List;
 import java.util.TreeMap;
 
 import cryodex.Player;
-import cryodex.modules.Match;
 
-public class L5RRandomMatchGeneration {
+public class RandomMatchGeneration {
 
-	private final L5RTournament tournament;
+	private final Tournament tournament;
 	private final List<Player> players;
+	private List<List<Player>> pointGroups;
 
-	public L5RRandomMatchGeneration(L5RTournament tournament,
-			List<Player> players) {
+	public RandomMatchGeneration(Tournament tournament,
+                                 List<Player> players) {
 		this.tournament = tournament;
 		this.players = players;
 	}
 
 	public List<Match> generateMatches() {
 
+		if(players == null || players.isEmpty()){
+			return new ArrayList<Match>();
+		}
+
+		getPointGroups();
+
+		List<Match> matches = null;
+
+		if(pointGroups.isEmpty() == false) {
+			matches = resolvePointGroup(null, 0);
+		}
+
+		return matches;
+	}
+
+	private void getPointGroups(){
 		TreeMap<Integer, List<Player>> playerMap = new TreeMap<Integer, List<Player>>(
 				new Comparator<Integer>() {
 
@@ -31,8 +47,8 @@ public class L5RRandomMatchGeneration {
 					}
 				});
 
-		for (Player xp : players) {
-			Integer points = tournament.getL5RPlayer(xp).getScore(tournament);
+		for (Player p : players) {
+			Integer points = tournament.getModulePlayer(p).getScore(tournament);
 
 			List<Player> pointGroup = playerMap.get(points);
 
@@ -41,23 +57,27 @@ public class L5RRandomMatchGeneration {
 				playerMap.put(points, pointGroup);
 			}
 
-			pointGroup.add(xp);
+			pointGroup.add(p);
 		}
 
-		Integer firstSet = playerMap.keySet().iterator().next();
-
-		List<Match> matches = resolvePointGroup(null, playerMap,
-				playerMap.get(firstSet));
-
-		return matches;
+		pointGroups = new ArrayList<List<Player>>();
+		for(Integer i : playerMap.keySet()){
+			pointGroups.add(playerMap.get(i));
+		}
 	}
 
 	private List<Match> resolvePointGroup(Player carryOverPlayer,
-			TreeMap<Integer, List<Player>> playerMap,
-			List<Player> playerList) {
+			int pointGroupCounter) {
 
+		if(pointGroupCounter >= pointGroups.size()){
+			return new ArrayList<>();
+		}
+
+		// Get the point group players and mix them up
+		List<Player> playerList = pointGroups.get(pointGroupCounter);
 		Collections.shuffle(playerList);
 
+		// Get the player to carry over to the next group
 		Player newCarryOverPlayer = null;
 		int carryOverPlayerIndex = playerList.size();
 		boolean isCarryOver = carryOverPlayer == null ? carryOverPlayerIndex % 2 == 1
@@ -83,28 +103,17 @@ public class L5RRandomMatchGeneration {
 					|| Match.hasDuplicate(returnedMatches) == false) {
 
 				List<Player> nextPointGroup = null;
-
-				boolean next = false;
-				for (Integer points : playerMap.keySet()) {
-
-					if (next) {
-						nextPointGroup = playerMap.get(points);
-						break;
-					}
-
-					if (playerMap.get(points) == playerList) {
-						next = true;
-					}
+				if(pointGroupCounter + 1 < pointGroups.size()){
+					nextPointGroup = pointGroups.get(pointGroupCounter + 1);
 				}
 
 				// If this was the last point group
 				if (nextPointGroup == null) {
-
 					return returnedMatches;
 				} else {
 					// Else, check the next point group
 					List<Match> nextPointGroupMatches = resolvePointGroup(
-							newCarryOverPlayer, playerMap, nextPointGroup);
+							newCarryOverPlayer, pointGroupCounter + 1);
 
 					// Again, continue if the list is good or there are no other
 					// options

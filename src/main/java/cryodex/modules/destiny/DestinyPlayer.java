@@ -122,10 +122,10 @@ public class DestinyPlayer implements Comparable<ModulePlayer>, XMLObject, Modul
 		for (Match m : matches) {
 			if (m.isBye() == false & m.getWinner(1) != null) {
 				if (m.getPlayer1() == this.getPlayer()) {
-					sos += ((DestinyTournament) t).getDestinyPlayer(m.getPlayer2()).getAverageSoS(t);
+					sos += ((DestinyTournament) t).getModulePlayer(m.getPlayer2()).getAverageSoS(t);
 					numOpponents++;
 				} else {
-					sos += ((DestinyTournament) t).getDestinyPlayer(m.getPlayer1()).getAverageSoS(t);
+					sos += ((DestinyTournament) t).getModulePlayer(m.getPlayer1()).getAverageSoS(t);
 					numOpponents++;
 				}
 			}
@@ -167,7 +167,7 @@ public class DestinyPlayer implements Comparable<ModulePlayer>, XMLObject, Modul
         Collections.sort(players, new DestinyComparator(t, DestinyComparator.rankingCompare));
 
         for (int i = 0; i < players.size(); i++) {
-            if (((DestinyTournament) t).getDestinyPlayer(players.get(i)) == this) {
+            if (((DestinyTournament) t).getModulePlayer(players.get(i)) == this) {
                 return i + 1;
             }
         }
@@ -239,7 +239,7 @@ public class DestinyPlayer implements Comparable<ModulePlayer>, XMLObject, Modul
             int score = getScore(t);
             List<DestinyPlayer> players = new ArrayList<DestinyPlayer>();
             for (Player p : t.getPlayers()) {
-                DestinyPlayer xp = ((DestinyTournament) t).getDestinyPlayer(p);
+                DestinyPlayer xp = ((DestinyTournament) t).getModulePlayer(p);
                 if (xp != this && xp.getScore(t) == score) {
                     players.add(xp);
                 }

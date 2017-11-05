@@ -47,7 +47,7 @@ public class DestinyTournament extends Tournament implements XMLObject {
 
         int count = 0;
         for (Player p : playerList) {
-            DestinyPlayer xp = getDestinyPlayer(p);
+            DestinyPlayer xp = getModulePlayer(p);
             if (xp.getScore(this) < minScore || count >= maxCount) {
                 getPlayers().remove(p);
             } else {
@@ -79,14 +79,9 @@ public class DestinyTournament extends Tournament implements XMLObject {
         return new DestinyRoundPanel(this, matches);
     }
 
-    public DestinyPlayer getDestinyPlayer(Player p){
+    public DestinyPlayer getModulePlayer(Player p){
         return (DestinyPlayer) p.getModuleInfoByModule(getModule());
     }
-
-	@Override
-	public List<Match> getRandomMatches(List<Player> playerList) {
-		return new DestinyRandomMatchGeneration(this, playerList).generateMatches();
-	}
 
 	@Override
 	public TournamentComparator<Player> getRankingComparator() {

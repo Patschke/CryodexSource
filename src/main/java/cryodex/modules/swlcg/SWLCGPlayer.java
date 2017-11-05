@@ -142,10 +142,10 @@ public class SWLCGPlayer implements Comparable<ModulePlayer>, XMLObject, ModuleP
 		for (Match m : matches) {
 			if (m.isBye() == false & m.getWinner(1) != null) {
 				if (m.getPlayer1() == this.getPlayer()) {
-					sos += ((SWLCGTournament) t).getSWLCGPlayer(m.getPlayer2()).getAverageSoS(t);
+					sos += ((SWLCGTournament) t).getModulePlayer(m.getPlayer2()).getAverageSoS(t);
 					numOpponents++;
 				} else {
-					sos += ((SWLCGTournament) t).getSWLCGPlayer(m.getPlayer1()).getAverageSoS(t);
+					sos += ((SWLCGTournament) t).getModulePlayer(m.getPlayer1()).getAverageSoS(t);
 					numOpponents++;
 				}
 			}
@@ -187,7 +187,7 @@ public class SWLCGPlayer implements Comparable<ModulePlayer>, XMLObject, ModuleP
         Collections.sort(players, new SWLCGComparator(t, SWLCGComparator.rankingCompare));
 
         for (int i = 0; i < players.size(); i++) {
-            if (((SWLCGTournament) t).getSWLCGPlayer(players.get(i)) == this) {
+            if (((SWLCGTournament) t).getModulePlayer(players.get(i)) == this) {
                 return i + 1;
             }
         }
@@ -259,7 +259,7 @@ public class SWLCGPlayer implements Comparable<ModulePlayer>, XMLObject, ModuleP
             int score = getScore(t);
             List<SWLCGPlayer> players = new ArrayList<SWLCGPlayer>();
             for (Player p : t.getPlayers()) {
-                SWLCGPlayer xp = ((SWLCGTournament) t).getSWLCGPlayer(p);
+                SWLCGPlayer xp = ((SWLCGTournament) t).getModulePlayer(p);
                 if (xp != this && xp.getScore(t) == score) {
                     players.add(xp);
                 }

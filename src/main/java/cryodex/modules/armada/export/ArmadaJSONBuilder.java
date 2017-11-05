@@ -157,7 +157,7 @@ public class ArmadaJSONBuilder {
 			if (addComma) {
 				sb.append(COMMA_NEWLINE);
 			}
-			addPlayer(sb, tournament.getArmadaPlayer(p));
+			addPlayer(sb, tournament.getModulePlayer(p));
 			addComma = true;
 		}
 

@@ -257,7 +257,7 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
 		Collections.sort(players, new EtcComparator(t, EtcComparator.rankingCompare));
 
 		for (int i = 0; i < players.size(); i++) {
-			if (((EtcTournament)t).getEtcPlayer(players.get(i)) == this) {
+			if (((EtcTournament)t).getModulePlayer(players.get(i)) == this) {
 				rank = i + 1;
 				break;
 			}

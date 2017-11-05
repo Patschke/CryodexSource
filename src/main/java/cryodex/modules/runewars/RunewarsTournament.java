@@ -47,7 +47,7 @@ public class RunewarsTournament extends Tournament implements XMLObject {
 
         int count = 0;
         for (Player p : playerList) {
-            RunewarsPlayer xp = getRunewarsPlayer(p);
+            RunewarsPlayer xp = getModulePlayer(p);
             if (xp.getScore(this) < minScore || count >= maxCount) {
                 getPlayers().remove(p);
             } else {
@@ -78,14 +78,9 @@ public class RunewarsTournament extends Tournament implements XMLObject {
         return new RunewarsRoundPanel(this, matches);
     }
     
-    public RunewarsPlayer getRunewarsPlayer(Player p){
+    public RunewarsPlayer getModulePlayer(Player p){
         return (RunewarsPlayer) p.getModuleInfoByModule(getModule());
     }
-    
-	@Override
-	public List<Match> getRandomMatches(List<Player> playerList) {
-		return new RunewarsRandomMatchGeneration(this, playerList).generateMatches();
-	}
 
 	@Override
 	public TournamentComparator<Player> getRankingComparator() {

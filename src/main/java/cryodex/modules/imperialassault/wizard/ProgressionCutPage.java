@@ -124,7 +124,7 @@ public class ProgressionCutPage implements Page {
 
         for (Player p : rankedPlayers) {
         	
-        	IAPlayer xp = mergedTournament.getIAPlayer(p);
+        	IAPlayer xp = mergedTournament.getModulePlayer(p);
         	
             if (playerCount != null && playersToAdd.size() >= playerCount) {
                 break;

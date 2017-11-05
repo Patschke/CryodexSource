@@ -27,7 +27,7 @@ public class SWLCGExportController extends ExportController {
 
 		for (Player p : playerList) {
 
-			SWLCGPlayer xp = ((SWLCGTournament) tournament).getSWLCGPlayer(p);
+			SWLCGPlayer xp = ((SWLCGTournament) tournament).getModulePlayer(p);
 
 			String name = p.getName();
 

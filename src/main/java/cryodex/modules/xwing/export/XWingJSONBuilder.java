@@ -158,7 +158,7 @@ public class XWingJSONBuilder {
 			if (addComma) {
 				sb.append(COMMA_NEWLINE);
 			}
-			addPlayer(sb, ((XWingTournament)tournament).getXWingPlayer(p));
+			addPlayer(sb, ((XWingTournament)tournament).getModulePlayer(p));
 			addComma = true;
 		}
 

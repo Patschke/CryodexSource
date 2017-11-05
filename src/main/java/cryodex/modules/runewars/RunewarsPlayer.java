@@ -254,7 +254,7 @@ public class RunewarsPlayer implements Comparable<ModulePlayer>, XMLObject, Modu
         Collections.sort(players, new RunewarsComparator(t, RunewarsComparator.rankingCompare));
 
         for (int i = 0; i < players.size(); i++) {
-            if (((RunewarsTournament) t).getRunewarsPlayer(players.get(i)) == this) {
+            if (((RunewarsTournament) t).getModulePlayer(players.get(i)) == this) {
                 return i + 1;
             }
         }
@@ -346,7 +346,7 @@ public class RunewarsPlayer implements Comparable<ModulePlayer>, XMLObject, Modu
             int score = getScore(t);
             List<RunewarsPlayer> players = new ArrayList<RunewarsPlayer>();
             for (Player p : t.getPlayers()) {
-                RunewarsPlayer xp = ((RunewarsTournament) t).getRunewarsPlayer(p);
+                RunewarsPlayer xp = ((RunewarsTournament) t).getModulePlayer(p);
                 if (xp != this && xp.getScore(t) == score) {
                     players.add(xp);
                 }

@@ -47,7 +47,7 @@ public class IATournament extends Tournament implements XMLObject {
 
         int count = 0;
         for (Player p : playerList) {
-            IAPlayer xp = getIAPlayer(p);
+            IAPlayer xp = getModulePlayer(p);
             if (xp.getScore(this) < minScore || count >= maxCount) {
                 getPlayers().remove(p);
             } else {
@@ -78,15 +78,10 @@ public class IATournament extends Tournament implements XMLObject {
         return new IARoundPanel(this, matches);
     }
     
-    public IAPlayer getIAPlayer(Player p){
+    public IAPlayer getModulePlayer(Player p){
         return (IAPlayer) p.getModuleInfoByModule(getModule());
     }
-
-	@Override
-	public List<Match> getRandomMatches(List<Player> playerList) {
-		return new IARandomMatchGeneration(this, playerList).generateMatches();
-	}
-
+    
 	@Override
 	public TournamentComparator<Player> getRankingComparator() {
 		return new IAComparator(this, IAComparator.rankingCompare);

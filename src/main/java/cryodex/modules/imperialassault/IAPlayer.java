@@ -142,10 +142,10 @@ public class IAPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePlay
 		for (Match m : matches) {
 			if (m.isBye() == false & m.getWinner(1) != null) {
 				if (m.getPlayer1() == this.getPlayer()) {
-					sos += ((IATournament) t).getIAPlayer(m.getPlayer2()).getAverageSoS(t);
+					sos += ((IATournament) t).getModulePlayer(m.getPlayer2()).getAverageSoS(t);
 					numOpponents++;
 				} else {
-					sos += ((IATournament) t).getIAPlayer(m.getPlayer1()).getAverageSoS(t);
+					sos += ((IATournament) t).getModulePlayer(m.getPlayer1()).getAverageSoS(t);
 					numOpponents++;
 				}
 			}
@@ -187,7 +187,7 @@ public class IAPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePlay
         Collections.sort(players, new IAComparator(t, IAComparator.rankingCompare));
 
         for (int i = 0; i < players.size(); i++) {
-            if (((IATournament) t).getIAPlayer(players.get(i)) == this) {
+            if (((IATournament) t).getModulePlayer(players.get(i)) == this) {
                 return i + 1;
             }
         }
@@ -259,7 +259,7 @@ public class IAPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePlay
             int score = getScore(t);
             List<IAPlayer> players = new ArrayList<IAPlayer>();
             for (Player p : t.getPlayers()) {
-                IAPlayer xp = ((IATournament) t).getIAPlayer(p);
+                IAPlayer xp = ((IATournament) t).getModulePlayer(p);
                 if (xp != this && xp.getScore(t) == score) {
                     players.add(xp);
                 }

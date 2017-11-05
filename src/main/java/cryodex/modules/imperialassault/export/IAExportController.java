@@ -26,7 +26,7 @@ public class IAExportController extends ExportController{
 
 		for (Player p : playerList) {
 
-			IAPlayer xp = ((IATournament) tournament).getIAPlayer(p);
+			IAPlayer xp = ((IATournament) tournament).getModulePlayer(p);
 
 			String name = p.getName();
 

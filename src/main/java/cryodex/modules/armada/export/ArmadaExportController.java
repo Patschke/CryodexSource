@@ -26,7 +26,7 @@ public class ArmadaExportController extends ExportController{
 
 		for (Player p : playerList) {
 
-			ArmadaPlayer xp = ((ArmadaTournament) tournament).getArmadaPlayer(p);
+			ArmadaPlayer xp = ((ArmadaTournament) tournament).getModulePlayer(p);
 
 			String name = p.getName();
 			String faction = xp.getFaction() == null ? "" : xp.getFaction().toString();

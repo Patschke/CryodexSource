@@ -514,11 +514,14 @@ public abstract class Tournament implements XMLObject {
     }
     
     public List<Match> getOrderedMatches(List<Player> playerList) {
-        // Random is the default, so jump to this unless it is overridden by the module.
-        return getRandomMatches(playerList);
+        OrderedMatchGeneration generator = new OrderedMatchGeneration(this, playerList);
+        return generator.generateMatches();
     }
-
-    public abstract List<Match> getRandomMatches(List<Player> playerList);
+    
+    public List<Match> getRandomMatches(List<Player> playerList){
+        RandomMatchGeneration generator = new RandomMatchGeneration(this, playerList);
+        return generator.generateMatches();
+    }
     
     public void generateSingleEliminationMatches(int cutSize) {
 
@@ -757,4 +760,6 @@ public abstract class Tournament implements XMLObject {
         
         return false;
     }
+	
+	public abstract ModulePlayer getModulePlayer(Player p);
 }

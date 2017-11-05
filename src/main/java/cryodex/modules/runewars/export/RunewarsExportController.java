@@ -26,7 +26,7 @@ public class RunewarsExportController extends ExportController{
 
 		for (Player p : playerList) {
 
-			RunewarsPlayer xp = ((RunewarsTournament) tournament).getRunewarsPlayer(p);
+			RunewarsPlayer xp = ((RunewarsTournament) tournament).getModulePlayer(p);
 
 			String name = p.getName();
 			String faction = xp.getFaction() == null ? "" : xp.getFaction().toString();

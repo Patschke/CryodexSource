@@ -124,7 +124,7 @@ public class ProgressionCutPage implements Page {
 
         for (Player p : rankedPlayers) {
         	
-        	RunewarsPlayer xp = mergedTournament.getRunewarsPlayer(p);
+        	RunewarsPlayer xp = mergedTournament.getModulePlayer(p);
         	
             if (playerCount != null && playersToAdd.size() >= playerCount) {
                 break;

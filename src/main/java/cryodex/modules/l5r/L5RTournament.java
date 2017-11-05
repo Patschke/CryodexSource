@@ -47,7 +47,7 @@ public class L5RTournament extends Tournament implements XMLObject {
 
         int count = 0;
         for (Player p : playerList) {
-            L5RPlayer xp = getL5RPlayer(p);
+            L5RPlayer xp = getModulePlayer(p);
             if (xp.getScore(this) < minScore || count >= maxCount) {
                 getPlayers().remove(p);
             } else {
@@ -79,14 +79,9 @@ public class L5RTournament extends Tournament implements XMLObject {
         return new L5RRoundPanel(this, matches);
     }
 
-    public L5RPlayer getL5RPlayer(Player p){
+    public L5RPlayer getModulePlayer(Player p){
         return (L5RPlayer) p.getModuleInfoByModule(getModule());
     }
-
-	@Override
-	public List<Match> getRandomMatches(List<Player> playerList) {
-		return new L5RRandomMatchGeneration(this, playerList).generateMatches();
-	}
 
 	@Override
 	public TournamentComparator<Player> getRankingComparator() {

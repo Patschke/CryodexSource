@@ -57,7 +57,7 @@ public class XWingTournament extends Tournament implements XMLObject {
 		return new XWingRoundPanel(this, matches);
 	}
 
-	public XWingPlayer getXWingPlayer(Player p) {
+	public XWingPlayer getModulePlayer(Player p) {
 		return (XWingPlayer) p.getModuleInfoByModule(getModule());
 	}
 
@@ -70,7 +70,7 @@ public class XWingTournament extends Tournament implements XMLObject {
 
 		int count = 0;
 		for (Player p : playerList) {
-			XWingPlayer xp = getXWingPlayer(p);
+			XWingPlayer xp = getModulePlayer(p);
 			if (xp.getScore(this) < minScore || count >= maxCount) {
 				getPlayers().remove(p);
 			} else {
@@ -79,11 +79,6 @@ public class XWingTournament extends Tournament implements XMLObject {
 		}
 
 		resetRankingTable();
-	}
-
-	@Override
-	public List<Match> getRandomMatches(List<Player> playerList) {
-		return new XWingRandomMatchGeneration(this, playerList).generateMatches();
 	}
 
 	@Override

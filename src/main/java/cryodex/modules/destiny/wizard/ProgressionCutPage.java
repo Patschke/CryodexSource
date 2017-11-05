@@ -124,7 +124,7 @@ public class ProgressionCutPage implements Page {
 
         for (Player p : rankedPlayers) {
         	
-        	DestinyPlayer xp = mergedTournament.getDestinyPlayer(p);
+        	DestinyPlayer xp = mergedTournament.getModulePlayer(p);
         	
             if (playerCount != null && playersToAdd.size() >= playerCount) {
                 break;

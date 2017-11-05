@@ -26,7 +26,7 @@ public class DestinyExportController extends ExportController {
 
 		for (Player p : playerList) {
 
-			DestinyPlayer xp = ((DestinyTournament) tournament).getDestinyPlayer(p);
+			DestinyPlayer xp = ((DestinyTournament) tournament).getModulePlayer(p);
 
 			String name = p.getName();
 

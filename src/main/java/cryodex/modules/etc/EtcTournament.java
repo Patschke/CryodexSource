@@ -78,7 +78,7 @@ public class EtcTournament extends Tournament implements XMLObject {
 		return new EtcRoundPanel(this, matches);
 	}
 
-	public EtcPlayer getEtcPlayer(Player p) {
+	public EtcPlayer getModulePlayer(Player p) {
 		return (EtcPlayer) p.getModuleInfoByModule(getModule());
 	}
 
@@ -91,7 +91,7 @@ public class EtcTournament extends Tournament implements XMLObject {
 
 		int count = 0;
 		for (Player p : playerList) {
-			EtcPlayer xp = getEtcPlayer(p);
+			EtcPlayer xp = getModulePlayer(p);
 			if (xp.getScore(this) < minScore || count >= maxCount) {
 				getPlayers().remove(p);
 			} else {
@@ -101,16 +101,6 @@ public class EtcTournament extends Tournament implements XMLObject {
 
 		resetRankingTable();
 	}
-
-	@Override
-	public List<Match> getRandomMatches(List<Player> playerList) {
-		return new EtcRandomMatchGeneration(this, playerList).generateMatches();
-	}
-	
-	@Override
-    public List<Match> getOrderedMatches(List<Player> playerList) {
-        return new EtcOrderedMatchGeneration(this, playerList).generateMatches();
-    }
 
 	@Override
 	public TournamentComparator<Player> getRankingComparator() {

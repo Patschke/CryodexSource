@@ -26,7 +26,7 @@ public class L5RExportController extends ExportController {
 
 		for (Player p : playerList) {
 
-			L5RPlayer xp = ((L5RTournament) tournament).getL5RPlayer(p);
+			L5RPlayer xp = ((L5RTournament) tournament).getModulePlayer(p);
 
 			String name = p.getName();
 

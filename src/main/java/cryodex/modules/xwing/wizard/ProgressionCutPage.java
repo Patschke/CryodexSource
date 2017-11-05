@@ -124,7 +124,7 @@ public class ProgressionCutPage implements Page {
 
         for (Player p : rankedPlayers) {
         	
-        	XWingPlayer xp = mergedTournament.getXWingPlayer(p);
+        	XWingPlayer xp = mergedTournament.getModulePlayer(p);
         	
             if (playerCount != null && playersToAdd.size() >= playerCount) {
                 break;

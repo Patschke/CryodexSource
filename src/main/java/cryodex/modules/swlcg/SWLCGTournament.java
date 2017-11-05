@@ -47,7 +47,7 @@ public class SWLCGTournament extends Tournament implements XMLObject {
 
         int count = 0;
         for (Player p : playerList) {
-            SWLCGPlayer xp = getSWLCGPlayer(p);
+            SWLCGPlayer xp = getModulePlayer(p);
             if (xp.getScore(this) < minScore || count >= maxCount) {
                 getPlayers().remove(p);
             } else {
@@ -79,14 +79,9 @@ public class SWLCGTournament extends Tournament implements XMLObject {
         return new SWLCGRoundPanel(this, matches);
     }
 
-    public SWLCGPlayer getSWLCGPlayer(Player p){
+    public SWLCGPlayer getModulePlayer(Player p){
         return (SWLCGPlayer) p.getModuleInfoByModule(getModule());
     }
-
-	@Override
-	public List<Match> getRandomMatches(List<Player> playerList) {
-		return new SWLCGRandomMatchGeneration(this, playerList).generateMatches();
-	}
 
 	@Override
 	public TournamentComparator<Player> getRankingComparator() {

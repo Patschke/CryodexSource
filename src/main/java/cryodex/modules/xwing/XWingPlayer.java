@@ -227,7 +227,7 @@ public class XWingPlayer implements Comparable<ModulePlayer>, XMLObject, ModuleP
 		Collections.sort(players, new XWingComparator(t, XWingComparator.rankingCompare));
 
 		for (int i = 0; i < players.size(); i++) {
-			if (((XWingTournament)t).getXWingPlayer(players.get(i)) == this) {
+			if (((XWingTournament)t).getModulePlayer(players.get(i)) == this) {
 				rank = i + 1;
 				break;
 			}
@@ -327,7 +327,7 @@ public class XWingPlayer implements Comparable<ModulePlayer>, XMLObject, ModuleP
 			int score = getScore(t);
 			List<XWingPlayer> players = new ArrayList<XWingPlayer>();
 			for (Player p : t.getPlayers()) {
-				XWingPlayer xp = ((XWingTournament)t).getXWingPlayer(p);
+				XWingPlayer xp = ((XWingTournament)t).getModulePlayer(p);
 				if (xp != this && xp.getScore(t) == score) {
 					players.add(xp);
 				}

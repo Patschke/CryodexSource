@@ -70,7 +70,7 @@ public class CACReport {
 		for (Tournament t : CryodexController.getAllTournaments()) {
 			if (t instanceof XWingTournament) {
 				for(Player p : ((XWingTournament) t).getAllPlayers()){
-					playerList.add(((XWingTournament) t).getXWingPlayer(p));
+					playerList.add(((XWingTournament) t).getModulePlayer(p));
 				}
 			}
 
@@ -130,7 +130,7 @@ public class CACReport {
 
 					for (Player p : playerList) {
 
-						XWingPlayer xp = tournament.getXWingPlayer(p);
+						XWingPlayer xp = tournament.getModulePlayer(p);
 						
 						String name = p.getName();
 

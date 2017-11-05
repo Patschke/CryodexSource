@@ -27,7 +27,7 @@ public class EtcExportController extends ExportController {
 
 		for (Player p : playerList) {
 
-			EtcPlayer xp = ((EtcTournament) tournament).getEtcPlayer(p);
+			EtcPlayer xp = ((EtcTournament) tournament).getModulePlayer(p);
 
 			String name = p.getName();
 			String faction = xp.getFaction() == null ? "" : xp.getFaction().toString();

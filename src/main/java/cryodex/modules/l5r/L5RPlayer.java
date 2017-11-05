@@ -143,10 +143,10 @@ public class L5RPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
         for (Match m : matches) {
             if (m.isBye() == false & m.getWinner(1) != null) {
                 if (m.getPlayer1() == this.getPlayer()) {
-                    sos += ((L5RTournament) t).getL5RPlayer(m.getPlayer2()).getAverageSoS(t);
+                    sos += ((L5RTournament) t).getModulePlayer(m.getPlayer2()).getAverageSoS(t);
                     numOpponents++;
                 } else {
-                    sos += ((L5RTournament) t).getL5RPlayer(m.getPlayer1()).getAverageSoS(t);
+                    sos += ((L5RTournament) t).getModulePlayer(m.getPlayer1()).getAverageSoS(t);
                     numOpponents++;
                 }
             }
@@ -188,7 +188,7 @@ public class L5RPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
         Collections.sort(players, new L5RComparator(t, L5RComparator.rankingCompare));
 
         for (int i = 0; i < players.size(); i++) {
-            if (((L5RTournament) t).getL5RPlayer(players.get(i)) == this) {
+            if (((L5RTournament) t).getModulePlayer(players.get(i)) == this) {
                 return i + 1;
             }
         }
@@ -260,7 +260,7 @@ public class L5RPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
             int score = getScore(t);
             List<L5RPlayer> players = new ArrayList<L5RPlayer>();
             for (Player p : t.getPlayers()) {
-                L5RPlayer xp = ((L5RTournament) t).getL5RPlayer(p);
+                L5RPlayer xp = ((L5RTournament) t).getModulePlayer(p);
                 if (xp != this && xp.getScore(t) == score) {
                     players.add(xp);
                 }
