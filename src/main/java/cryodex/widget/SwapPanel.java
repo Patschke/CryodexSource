@@ -67,13 +67,17 @@ public class SwapPanel extends JPanel {
 	private boolean updating = false;
 	private final JDialog parent;
 
+	private Tournament tournament;
+	
 	public SwapPanel(JDialog parent) {
 		super(new BorderLayout());
 
+		tournament = CryodexController.getActiveTournament();
+		
 		this.parent = parent;
 
 		matches = new ArrayList<>();
-		matches.addAll(CryodexController.getActiveTournament().getSelectedRound().getMatches());
+		matches.addAll(tournament.getSelectedRound().getMatches());
 
 		matchPanels = new ArrayList<>();
 		for (int counter = 0; counter < matches.size(); counter++) {
@@ -139,7 +143,7 @@ public class SwapPanel extends JPanel {
 			List<Player> playerList = new ArrayList<Player>();
 
 			playerList.add(new Player());
-			playerList.addAll(CryodexController.getActiveTournament().getPlayers());
+			playerList.addAll(tournament.getPlayers());
 
 			Collections.sort(playerList);
 
@@ -230,8 +234,6 @@ public class SwapPanel extends JPanel {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 
-					Tournament tournament = CryodexController.getActiveTournament();
-
 					List<Match> matches = new ArrayList<Match>();
 
 					boolean isSingleElimination = tournament.getLatestRound().isSingleElimination();
@@ -299,7 +301,7 @@ public class SwapPanel extends JPanel {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					MatchPanel mp = new MatchPanel(new Match(), matchPanels.size() + 1);
+					MatchPanel mp = new MatchPanel(tournament.getMatch(null, null), matchPanels.size() + 1);
 
 					matchPanels.add(mp);
 
@@ -363,7 +365,7 @@ public class SwapPanel extends JPanel {
 		updating = true;
 
 		List<Player> tempPlayers = new ArrayList<>();
-		tempPlayers.addAll(CryodexController.getActiveTournament().getPlayers());
+		tempPlayers.addAll(tournament.getPlayers());
 
 		for (MatchPanel mp : matchPanels) {
 			tempPlayers.remove(mp.getPlayer1Combo().getSelectedItem());
@@ -420,7 +422,7 @@ public class SwapPanel extends JPanel {
 				return null;
 			}
 
-			Match m = new Match(p1, p2);
+			Match m = tournament.getMatch(p1, p2);
 
 			return m;
 		}

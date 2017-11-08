@@ -146,7 +146,7 @@ public class RandomMatchGeneration {
 			return matches;
 		}
 
-		Match m = new Match();
+		Match m = tournament.getMatch(null, null);
 
 		List<Match> subMatches = new ArrayList<>();
 

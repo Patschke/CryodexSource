@@ -18,7 +18,7 @@ public class EtcMatch extends Match {
 	}
 
 	private String suffix;
-
+	
 	public EtcMatch() {
 
 	}

@@ -2,9 +2,7 @@ package cryodex.modules.imperialassault;
 
 import javax.swing.JCheckBoxMenuItem;
 
-import cryodex.CryodexController;
 import cryodex.CryodexController.Modules;
-import cryodex.MenuBar;
 import cryodex.Player;
 import cryodex.modules.Module;
 import cryodex.modules.ModulePlayer;
@@ -17,7 +15,7 @@ import cryodex.widget.wizard.pages.Page;
 import cryodex.xml.XMLUtils;
 import cryodex.xml.XMLUtils.Element;
 
-public class IAModule implements Module {
+public class IAModule extends Module {
 
 	private static IAModule module;
 
@@ -70,20 +68,6 @@ public class IAModule implements Module {
 		}
 
 		return tournament;
-	}
-	
-	@Override
-	public void initializeTournament(WizardOptions wizardOptions) {
-
-		IATournament tournament = createTournament(wizardOptions);
-		
-		CryodexController.registerTournament(tournament);
-
-		tournament.startTournament();
-
-		MenuBar.getInstance().resetMenuBar();
-
-		CryodexController.saveData();
 	}
 	
 	@Override

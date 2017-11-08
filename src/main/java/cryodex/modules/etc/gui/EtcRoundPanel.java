@@ -334,7 +334,7 @@ public class EtcRoundPanel extends RoundPanel {
             isLoading = false;
         }
 
-        private Match getMatch() {
+        private EtcMatch getMatch() {
             return match;
         }
 
@@ -364,12 +364,12 @@ public class EtcRoundPanel extends RoundPanel {
 
         private String[] getComboValues() {
 
-            if (match.getPlayer2() == null) {
+            if (getMatch().getPlayer2() == null) {
                 String[] values = { "Select a result", "BYE" };
                 return values;
             } else {
                 String generic = CryodexController.getOptions().isEnterOnlyPoints() ? "Enter results" : "Select a result";
-                String[] values = { generic, "WIN - " + match.getPlayer1().getName() + " " + match.getSuffix(), "WIN - " + match.getPlayer2().getName() + " " + match.getSuffix()};
+                String[] values = { generic, "WIN - " + getMatch().getPlayer1().getName() + " " + getMatch().getSuffix(), "WIN - " + getMatch().getPlayer2().getName() + " " + getMatch().getSuffix()};
                 return values;
             }
         }
@@ -421,10 +421,10 @@ public class EtcRoundPanel extends RoundPanel {
 
             boolean enterOnlyPoints = CryodexController.getOptions().isEnterOnlyPoints();
 
-            if (match.getPlayer1Points() != null || match.getPlayer2Points() != null) {
+            if (getMatch().getPlayer1Points() != null || getMatch().getPlayer2Points() != null) {
 
-                Integer p1points = match.getPlayer1Points() == null ? 0 : match.getPlayer1Points();
-                Integer p2points = match.getPlayer2Points() == null ? 0 : match.getPlayer2Points();
+                Integer p1points = getMatch().getPlayer1Points() == null ? 0 : getMatch().getPlayer1Points();
+                Integer p2points = getMatch().getPlayer2Points() == null ? 0 : getMatch().getPlayer2Points();
 
                 if (p1points.equals(p2points)) {
                     // Only reset the result if it was not enabled before. This
@@ -451,7 +451,7 @@ public class EtcRoundPanel extends RoundPanel {
         }
 
         public void markInvalid() {
-            if (tournament.isValidResult(match) == false) {
+            if (tournament.isValidResult(getMatch()) == false) {
                 getPlayerTitle().setForeground(Color.red);
             } else {
                 getPlayerTitle().setForeground(Color.black);
@@ -504,7 +504,7 @@ public class EtcRoundPanel extends RoundPanel {
             } catch (Exception e) {
 
             }
-            match.setPlayer1PointsDestroyed(player1points);
+            getMatch().setPlayer1PointsDestroyed(player1points);
 
             // Set player 2 points
             Integer player2points = null;
@@ -513,22 +513,22 @@ public class EtcRoundPanel extends RoundPanel {
             } catch (Exception e) {
 
             }
-            match.setPlayer2PointsDestroyed(player2points);
+            getMatch().setPlayer2PointsDestroyed(player2points);
         }
         
         private void setMatchResultFromGUI() {
             
             switch (getResultCombo().getSelectedIndex()) {
             case 0:
-                match.setGame1Result(null);
+                getMatch().setGame1Result(null);
                 break;
             case 1:
-                if (match.isBye() == false) {
-                    match.setGame1Result(GameResult.PLAYER_1_WINS);
+                if (getMatch().isBye() == false) {
+                    getMatch().setGame1Result(GameResult.PLAYER_1_WINS);
                 }
                 break;
             case 2:
-                match.setGame1Result(GameResult.PLAYER_2_WINS);
+                getMatch().setGame1Result(GameResult.PLAYER_2_WINS);
                 break;
             default:
                 break;
@@ -537,29 +537,29 @@ public class EtcRoundPanel extends RoundPanel {
 
         private void setGUIFromMatch() {
 
-            if (tournament.isMatchComplete(match)) {
-                if (match.isBye()) {
+            if (tournament.isMatchComplete(getMatch())) {
+                if (getMatch().isBye()) {
                     getResultCombo().setSelectedIndex(1);
                 } else {
-                    if (match.getWinner(1) == match.getPlayer1()) {
+                    if (getMatch().getWinner(1) == getMatch().getPlayer1()) {
                         getResultCombo().setSelectedIndex(1);
-                    } else if (match.getWinner(1) == match.getPlayer2()) {
+                    } else if (getMatch().getWinner(1) == getMatch().getPlayer2()) {
                         getResultCombo().setSelectedIndex(2);
                     }
                 }
             }
 
-            if (match.getPlayer2() != null) {
-                if (match.getPlayer1Points() != null) {
-                    getPlayer1KillPointsField().setText(String.valueOf(match.getPlayer1Points()));
+            if (getMatch().getPlayer2() != null) {
+                if (getMatch().getPlayer1Points() != null) {
+                    getPlayer1KillPointsField().setText(String.valueOf(getMatch().getPlayer1Points()));
                 }
-                if (match.getPlayer2Points() != null) {
-                    getPlayer2KillPointsField().setText(String.valueOf(match.getPlayer2Points()));
+                if (getMatch().getPlayer2Points() != null) {
+                    getPlayer2KillPointsField().setText(String.valueOf(getMatch().getPlayer2Points()));
                 }
             }
             
             // Special exception for bye matches
-            if(match.isBye() && CryodexController.getOptions().isEnterOnlyPoints()){
+            if(getMatch().isBye() && CryodexController.getOptions().isEnterOnlyPoints()){
                 getResultCombo().setSelectedIndex(1);
             }
 
@@ -573,7 +573,7 @@ public class EtcRoundPanel extends RoundPanel {
             boolean enterOnlyPoints = CryodexController.getOptions().isEnterOnlyPoints();
             boolean hideCompletedMatches = CryodexController.getOptions().isHideCompleted();
 
-            boolean visible = hideCompletedMatches == false || tournament.isMatchComplete(match) == false;
+            boolean visible = hideCompletedMatches == false || tournament.isMatchComplete(getMatch()) == false;
 
             getPlayer1KillLabel().setVisible(visible && showKillPoints);
             getPlayer1KillPointsField().setVisible(visible && showKillPoints);
@@ -582,11 +582,11 @@ public class EtcRoundPanel extends RoundPanel {
             getPlayerTitle().setVisible(visible);
             getResultCombo().setVisible(visible);
 
-            if (match.getPlayer2() == null) {
-                titleText = match.getPlayer1().getName() + " " + match.getSuffix() + " has a BYE";
+            if (getMatch().getPlayer2() == null) {
+                titleText = getMatch().getPlayer1().getName() + " has a BYE";
             } else {
-                titleText = match.getPlayer1().getName() + " " + match.getSuffix() + " VS " + match.getPlayer2().getName() + " " + match.getSuffix();
-                if (match.isDuplicate()) {
+                titleText = getMatch().getPlayer1().getName() + " " + getMatch().getSuffix() + " VS " + getMatch().getPlayer2().getName() + " " + getMatch().getSuffix();
+                if (getMatch().isDuplicate()) {
                     titleText = "(Duplicate)" + titleText;
                 }
 
@@ -594,8 +594,8 @@ public class EtcRoundPanel extends RoundPanel {
                     titleText = tableNumber + ": " + titleText;
                 }
 
-                getPlayer1KillLabel().setText(match.getPlayer1().getName() + " " + match.getSuffix() + " kill points");
-                getPlayer2KillLabel().setText(match.getPlayer2().getName() + " " + match.getSuffix() + " kill points");
+                getPlayer1KillLabel().setText(getMatch().getPlayer1().getName() + " " + getMatch().getSuffix() + " kill points");
+                getPlayer2KillLabel().setText(getMatch().getPlayer2().getName() + " " + getMatch().getSuffix() + " kill points");
             }
 
             getPlayerTitle().setText(titleText);
@@ -604,9 +604,9 @@ public class EtcRoundPanel extends RoundPanel {
 
                 getResultCombo().setEnabled(false);
 
-                if (match.getPlayer1Points() != null && match.getPlayer2Points() != null) {
-                    Integer p1points = match.getPlayer1Points();
-                    Integer p2points = match.getPlayer2Points();
+                if (getMatch().getPlayer1Points() != null && getMatch().getPlayer2Points() != null) {
+                    Integer p1points = getMatch().getPlayer1Points();
+                    Integer p2points = getMatch().getPlayer2Points();
 
                     if (p1points.equals(p2points)) {
                         getResultCombo().setEnabled(true);

@@ -23,7 +23,7 @@ public class Match implements XMLObject {
     private boolean isDuplicate;
     private boolean isConcede;
     private String matchLabel;
-
+    
     public Match() {
 
     }

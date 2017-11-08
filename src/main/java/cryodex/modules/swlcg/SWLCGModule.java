@@ -2,9 +2,7 @@ package cryodex.modules.swlcg;
 
 import javax.swing.JCheckBoxMenuItem;
 
-import cryodex.CryodexController;
 import cryodex.CryodexController.Modules;
-import cryodex.MenuBar;
 import cryodex.Player;
 import cryodex.modules.Module;
 import cryodex.modules.ModulePlayer;
@@ -17,7 +15,7 @@ import cryodex.widget.wizard.pages.Page;
 import cryodex.xml.XMLUtils;
 import cryodex.xml.XMLUtils.Element;
 
-public class SWLCGModule implements Module {
+public class SWLCGModule extends Module {
 
 	private static SWLCGModule module;
 
@@ -70,20 +68,6 @@ public class SWLCGModule implements Module {
 		}
 
 		return tournament;
-	}
-	
-	@Override
-	public void initializeTournament(WizardOptions wizardOptions) {
-
-		SWLCGTournament tournament = createTournament(wizardOptions);
-		
-		CryodexController.registerTournament(tournament);
-
-		tournament.startTournament();
-
-		MenuBar.getInstance().resetMenuBar();
-
-		CryodexController.saveData();
 	}
 
 	@Override

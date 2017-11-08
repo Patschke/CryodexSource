@@ -2,9 +2,7 @@ package cryodex.modules.etc;
 
 import javax.swing.JCheckBoxMenuItem;
 
-import cryodex.CryodexController;
 import cryodex.CryodexController.Modules;
-import cryodex.MenuBar;
 import cryodex.Player;
 import cryodex.modules.Module;
 import cryodex.modules.ModulePlayer;
@@ -17,7 +15,7 @@ import cryodex.widget.wizard.pages.Page;
 import cryodex.xml.XMLUtils;
 import cryodex.xml.XMLUtils.Element;
 
-public class EtcModule implements Module {
+public class EtcModule extends Module {
 
 	private static EtcModule module;
 
@@ -71,20 +69,6 @@ public class EtcModule implements Module {
 		}
 
 		return tournament;
-	}
-	
-	@Override
-	public void initializeTournament(WizardOptions wizardOptions) {
-
-		EtcTournament tournament = createTournament(wizardOptions);
-		
-		CryodexController.registerTournament(tournament);
-
-		tournament.startTournament();
-
-		MenuBar.getInstance().resetMenuBar();
-
-		CryodexController.saveData();
 	}
 	
 	@Override

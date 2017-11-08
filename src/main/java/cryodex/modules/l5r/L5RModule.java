@@ -2,9 +2,7 @@ package cryodex.modules.l5r;
 
 import javax.swing.JCheckBoxMenuItem;
 
-import cryodex.CryodexController;
 import cryodex.CryodexController.Modules;
-import cryodex.MenuBar;
 import cryodex.Player;
 import cryodex.modules.Module;
 import cryodex.modules.ModulePlayer;
@@ -17,7 +15,7 @@ import cryodex.widget.wizard.pages.Page;
 import cryodex.xml.XMLUtils;
 import cryodex.xml.XMLUtils.Element;
 
-public class L5RModule implements Module {
+public class L5RModule extends Module {
 
 	private static L5RModule module;
 
@@ -70,20 +68,6 @@ public class L5RModule implements Module {
 		}
 
 		return tournament;
-	}
-	
-	@Override
-	public void initializeTournament(WizardOptions wizardOptions) {
-
-		L5RTournament tournament = createTournament(wizardOptions);
-		
-		CryodexController.registerTournament(tournament);
-
-		tournament.startTournament();
-
-		MenuBar.getInstance().resetMenuBar();
-
-		CryodexController.saveData();
 	}
 
 	@Override

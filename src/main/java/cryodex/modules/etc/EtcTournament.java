@@ -26,137 +26,170 @@ import cryodex.xml.XMLUtils.Element;
 
 public class EtcTournament extends Tournament implements XMLObject {
 
-	private EtcExportController exportController;
-	private Integer playerCount = 6;
-	
-	public EtcTournament(Element tournamentElement) {
-		super();
-		setupTournamentGUI(new EtcRankingTable(this));
-		playerCount = tournamentElement.getIntegerFromChild("PLAYERCOUNT");
-		if(playerCount == null){
-			playerCount = 6;
-		}
+    private EtcExportController exportController;
+    private Integer playerCount = 6;
+
+    public EtcTournament(Element tournamentElement) {
+        super();
+        setupTournamentGUI(new EtcRankingTable(this));
+        playerCount = tournamentElement.getIntegerFromChild("PLAYERCOUNT");
+        if(playerCount == null){
+            playerCount = 6;
+        }
 
         Element roundElement = tournamentElement.getChild("ROUNDS");
         for (Element e : roundElement.getChildren()) {
             getAllRounds().add(new EtcRound(e, this));
         }
+
+        loadXML(tournamentElement);
+
+    }
+
+    public EtcTournament(WizardOptions wizardOptions) {
+        super(wizardOptions);
+        setupTournamentGUI(new EtcRankingTable(this));
+
+        String playersPerTeamString = wizardOptions.getOption(Language.number_of_players_per_team);
+        try{
+            playerCount = Integer.parseInt(playersPerTeamString);
+        } catch (Exception e) {
+            playerCount = 6;
+        }
+    }
+
+    @Override
+    public Icon getIcon() {
+        URL imgURL = EtcTournament.class.getResource("x.png");
+        if (imgURL == null) {
+            System.out.println("Failed to retrieve ETC Icon");
+        }
+        ImageIcon icon = new ImageIcon(imgURL);
+        return icon;
+    }
+
+    @Override
+    public String getModuleName() {
+        return Modules.ETC.getName();
+    }
+
+    @Override
+    public RoundPanel getRoundPanel(List<Match> matches) {
+        return new EtcRoundPanel(this, matches);
+    }
+
+    public EtcPlayer getModulePlayer(Player p) {
+        return (EtcPlayer) p.getModuleInfoByModule(getModule());
+    }
+
+    public void massDropPlayers(int minScore, int maxCount) {
+
+        List<Player> playerList = new ArrayList<Player>();
+        playerList.addAll(getPlayers());
+
+        Collections.sort(playerList, getRankingComparator());
+
+        int count = 0;
+        for (Player p : playerList) {
+            EtcPlayer xp = getModulePlayer(p);
+            if (xp.getScore(this) < minScore || count >= maxCount) {
+                getPlayers().remove(p);
+            } else {
+                count++;
+            }
+        }
+
+        resetRankingTable();
+    }
+
+    @Override
+    public TournamentComparator<Player> getRankingComparator() {
+        return new EtcComparator(this, EtcComparator.rankingCompare);
+    }
+
+    @Override
+    public TournamentComparator<Player> getRankingNoHeadToHeadComparator() {
+        return new EtcComparator(this, EtcComparator.rankingCompareNoHeadToHead);
+    }
+
+    @Override
+    public TournamentComparator<Player> getPairingComparator() {
+        return new EtcComparator(this, EtcComparator.pairingCompare);
+    }
+
+    @Override
+    public int getPointsDefault() {
+        return 100;
+    }
+
+    @Override
+    public ExportController getExportController() {
+        if(exportController == null){
+            exportController = new EtcExportController();
+        }
+        return exportController;
+    }
+
+    public Integer getPlayerCount(){
+        return playerCount;
+    }
+
+    @Override
+    public List<Match> getRandomMatches(List<Player> playerList) {
+
+        List<Match> matches = super.getRandomMatches(playerList);        
+
+        List<Match> finalMatches = multiplyMatchesPerTeamPlayers(matches);
+
+        return finalMatches;
+    }
+    
+    @Override
+    public List<Match> getOrderedMatches(List<Player> playerList) {
+
+        List<Match> matches = super.getOrderedMatches(playerList);
         
-		loadXML(tournamentElement);
-		
-	}
+        List<Match> finalMatches = multiplyMatchesPerTeamPlayers(matches);
 
-	public EtcTournament(WizardOptions wizardOptions) {
-		super(wizardOptions);
-		setupTournamentGUI(new EtcRankingTable(this));
-		
-		String playersPerTeamString = wizardOptions.getOption(Language.number_of_players_per_team);
-		try{
-		    playerCount = Integer.parseInt(playersPerTeamString);
-		} catch (Exception e) {
-		    playerCount = 6;
-		}
-	}
-
-	@Override
-	public Icon getIcon() {
-		URL imgURL = EtcTournament.class.getResource("x.png");
-		if (imgURL == null) {
-			System.out.println("Failed to retrieve ETC Icon");
-		}
-		ImageIcon icon = new ImageIcon(imgURL);
-		return icon;
-	}
-
-	@Override
-	public String getModuleName() {
-		return Modules.ETC.getName();
-	}
-
-	@Override
-	public RoundPanel getRoundPanel(List<Match> matches) {
-		return new EtcRoundPanel(this, matches);
-	}
-
-	public EtcPlayer getModulePlayer(Player p) {
-		return (EtcPlayer) p.getModuleInfoByModule(getModule());
-	}
-
-	public void massDropPlayers(int minScore, int maxCount) {
-
-		List<Player> playerList = new ArrayList<Player>();
-		playerList.addAll(getPlayers());
-
-		Collections.sort(playerList, getRankingComparator());
-
-		int count = 0;
-		for (Player p : playerList) {
-			EtcPlayer xp = getModulePlayer(p);
-			if (xp.getScore(this) < minScore || count >= maxCount) {
-				getPlayers().remove(p);
-			} else {
-				count++;
-			}
-		}
-
-		resetRankingTable();
-	}
-
-	@Override
-	public TournamentComparator<Player> getRankingComparator() {
-		return new EtcComparator(this, EtcComparator.rankingCompare);
-	}
-
-	@Override
-	public TournamentComparator<Player> getRankingNoHeadToHeadComparator() {
-		return new EtcComparator(this, EtcComparator.rankingCompareNoHeadToHead);
-	}
-
-	@Override
-	public TournamentComparator<Player> getPairingComparator() {
-		return new EtcComparator(this, EtcComparator.pairingCompare);
-	}
-
-	@Override
-	public int getPointsDefault() {
-		return 100;
-	}
-
-	@Override
-	public ExportController getExportController() {
-		if(exportController == null){
-			exportController = new EtcExportController();
-		}
-		return exportController;
-	}
-	
-	public Integer getPlayerCount(){
-		return playerCount;
-	}
-	
-	@Override
-	protected List<Match> firstRoundPairings() {
+        return finalMatches;
+    }
+    
+    @Override
+    protected List<Match> firstRoundPairings() {
         List<Match> matches = super.firstRoundPairings();
-		List<Match> finalMatches = new ArrayList<Match>();
-		
-		for(Match im : matches){
-			if(im.isBye()){
-				finalMatches.add(im);
-			} else {
-				for(int i = 1 ; i <= getPlayerCount() ; i++){
-					EtcMatch fm = EtcMatch.copyMatch(im, String.valueOf(i));
-					finalMatches.add(fm);
-				}
-			}
-		}
-		
-		return finalMatches; 
-	}
-	
-	@Override
-	public StringBuilder appendXML(StringBuilder sb) {
-		super.appendXML(sb);
+
+        List<Match> finalMatches = multiplyMatchesPerTeamPlayers(matches);
+
+        return finalMatches; 
+    }
+
+    private List<Match> multiplyMatchesPerTeamPlayers(List<Match> matches){
+
+        List<Match> finalMatches = new ArrayList<Match>();
+
+        for(Match im :  matches){
+            if(im.isBye()){
+                finalMatches.add(im);
+            } else {
+                for(int i = 1 ; i <= getPlayerCount() ; i++){
+                    EtcMatch fm = EtcMatch.copyMatch(im, String.valueOf(i));
+                    finalMatches.add(fm);
+                }
+            }
+        }
+
+        return finalMatches;
+    }
+
+    @Override
+    public Match getMatch(Player player1, Player player2) {
+        return new EtcMatch(player1, player2);
+    }
+
+    @Override
+    public StringBuilder appendXML(StringBuilder sb) {
+        super.appendXML(sb);
         XMLUtils.appendObject(sb, "PLAYERCOUNT", playerCount);
-		return sb;
-	}
+        return sb;
+    }
 }

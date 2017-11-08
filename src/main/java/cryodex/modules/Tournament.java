@@ -78,7 +78,9 @@ public abstract class Tournament implements XMLObject {
 
         for (String s : playerIDs.split(",")) {
             Player p = CryodexController.getPlayerByID(s);
-            addPlayer(p);
+            if(p != null){
+                addPlayer(p);
+            }
         }
 
         if(rounds == null || rounds.isEmpty()){
@@ -346,7 +348,7 @@ public abstract class Tournament implements XMLObject {
         }
 
         for (Player p : firstRoundByePlayers) {
-            matches.add(new Match(p, null));
+            matches.add(getMatch(p, null));
         }
         return matches;
     }
@@ -418,7 +420,7 @@ public abstract class Tournament implements XMLObject {
                     playerMap.remove(groupName);
                 }
             }
-            matches.add(new Match(p1, p2));
+            matches.add(getMatch(p1, p2));
             p2 = null;
         }
         return matches;
@@ -438,7 +440,7 @@ public abstract class Tournament implements XMLObject {
                 players.remove(player2);
             }
 
-            Match match = new Match(player1, player2);
+            Match match = getMatch(player1, player2);
             matches.add(match);
         }
         return matches;
@@ -455,7 +457,7 @@ public abstract class Tournament implements XMLObject {
                 players.remove(0);
             }
 
-            Match match = new Match(player1, player2);
+            Match match = getMatch(player1, player2);
             matches.add(match);
         }
         return matches;
@@ -491,7 +493,7 @@ public abstract class Tournament implements XMLObject {
             } catch (ArrayIndexOutOfBoundsException e) {
                 byeUser = tempList.get(tempList.size() - 1);
             }
-            byeMatch = new Match(byeUser, null);
+            byeMatch = getMatch(byeUser, null);
             tempList.remove(byeUser);
         }
 
@@ -533,7 +535,7 @@ public abstract class Tournament implements XMLObject {
             List<Match> lastRoundMatches = getLatestRound().getMatches();
 
             for (int index = 0; index < lastRoundMatches.size(); index = index + 2) {
-                Match newMatch = new Match(lastRoundMatches.get(index).getWinner(1), lastRoundMatches.get(index + 1).getWinner(1));
+                Match newMatch = getMatch(lastRoundMatches.get(index).getWinner(1), lastRoundMatches.get(index + 1).getWinner(1));
                 matches.add(newMatch);
             }
 
@@ -554,7 +556,7 @@ public abstract class Tournament implements XMLObject {
                     tempList.remove(player2);
                 }
 
-                Match match = new Match(player1, player2);
+                Match match = getMatch(player1, player2);
                 matches.add(match);
             }
 
@@ -760,6 +762,10 @@ public abstract class Tournament implements XMLObject {
         
         return false;
     }
+	
+	public Match getMatch(Player player1, Player player2) {
+	    return new Match(player1, player2);
+	}
 	
 	public abstract ModulePlayer getModulePlayer(Player p);
 }

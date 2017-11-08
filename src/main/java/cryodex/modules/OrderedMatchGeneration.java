@@ -48,7 +48,7 @@ public class OrderedMatchGeneration {
 			matchSetAtLowScore = new ArrayList<>();
 
 			for (int counter = 0; counter < players.size(); counter += 2) {
-				Match m = new Match(players.get(counter),
+				Match m = tournament.getMatch(players.get(counter),
 						players.get(counter + 1));
 				m.checkDuplicate(tournament.getAllRounds());
 				matchSetAtLowScore.add(m);
@@ -90,7 +90,7 @@ public class OrderedMatchGeneration {
 	private void getPlayer2(Player player1, List<Match> matches,
 			List<Player> player2List) {
 		for (Player player2 : player2List) {
-			Match match = new Match(player1, player2);
+			Match match = tournament.getMatch(player1, player2);
 			match.checkDuplicate(tournament.getAllRounds());
 
 			if (match.isDuplicate() == false) {
