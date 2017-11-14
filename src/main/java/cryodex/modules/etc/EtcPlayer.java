@@ -20,427 +20,434 @@ import cryodex.xml.XMLUtils.Element;
 
 public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePlayer {
 
-	public static enum Faction {
-		IMPERIAL, REBEL, SCUM;
-	}
-
-	private Player player;
-	private String seedValue;
-	private String squadId;
-	private Faction faction;
-
-	private Map<String, Integer> integerStatistics = new HashMap<String, Integer>();
-	private Map<String, Double> doubleStatistics = new HashMap<String, Double>();
-
-	public EtcPlayer(Player p) {
-		player = p;
-		seedValue = String.valueOf(Math.random());
-	}
-
-	public EtcPlayer(Player p, Element e) {
-		this.player = p;
-		this.seedValue = e.getStringFromChild("SEEDVALUE");
-		this.squadId = e.getStringFromChild("SQUADID");
-		String factionString = e.getStringFromChild("FACTION");
-
-		if (factionString != null && factionString.isEmpty() == false) {
-			faction = Faction.valueOf(factionString);
-		} else {
-			faction = Faction.IMPERIAL;
-		}
-	}
-
-	@Override
-	public Player getPlayer() {
-		return player;
-	}
-
-	@Override
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
-
-	public String getSeedValue() {
-		return seedValue;
-	}
-
-	public void setSeedValue(String seedValue) {
-		this.seedValue = seedValue;
-	}
-
-	public String getSquadId() {
-		return squadId;
-	}
-
-	public void setSquadId(String squadId) {
-		this.squadId = squadId;
-	}
-
-	public Faction getFaction() {
-		return faction;
-	}
-
-	public void setFaction(Faction faction) {
-		this.faction = faction;
-	}
-
-
-
-	@Override
-	public String toString() {
-		return getPlayer().getName();
-	}
-
-	public int getScore(Tournament t) {
-
-		Integer score = getPlayerStatisticInteger("Score");
-
-//		if(score != null){
-//			return score;
-//		}
-
-		score = 0;
-		
-		for(int i = 0 ; i < t.getRoundCount() ; i++){
-			score +=  getRoundScore(i, t);
-		}
-		
-		putPlayerStatisticInteger("Score", score);
-
-		return score;
-	}
-	
-	public int getRoundScore(int zeroBasedRound, Tournament t){
-		
-		EtcTournament etcT = (EtcTournament) t;
-		
-		Round r = t.getRound(zeroBasedRound);
-		
-		int score = 0;
-		int completeGameCount = 0;
-		
-		for(Match m : r.getMatches()){
-			if(this.getPlayer().equals(m.getPlayer1()) || this.getPlayer().equals(m.getPlayer2())){
-				if(m.getWinner(1) != null || m.isBye()){
-					completeGameCount++;
-					if(this.getPlayer().equals(m.getWinner(1)) || m.isBye()){
-						if(etcT.getPlayerCount() == 6){
-							score++;
-						} else if(etcT.getPlayerCount() == 3){
-							score += 2;
-						}
-					}
-				}
-			}
-		}
-		
-		if(score == 0 && completeGameCount != 0){
-			score = 1;
-		}
-		
-		if(score == 6){
-			score = 5;
-		}
-		
-		return score;
-	}
+    public static enum Faction {
+        IMPERIAL, REBEL, SCUM;
+    }
 
-	public double getAverageScore(Tournament t) {
+    private Player player;
+    private String seedValue;
+    private String squadId;
+    private Faction faction;
+
+    private Map<String, Integer> integerStatistics = new HashMap<String, Integer>();
+    private Map<String, Double> doubleStatistics = new HashMap<String, Double>();
+
+    public EtcPlayer(Player p) {
+        player = p;
+        seedValue = String.valueOf(Math.random());
+    }
+
+    public EtcPlayer(Player p, Element e) {
+        this.player = p;
+        this.seedValue = e.getStringFromChild("SEEDVALUE");
+        this.squadId = e.getStringFromChild("SQUADID");
+        String factionString = e.getStringFromChild("FACTION");
+
+        if (factionString != null && factionString.isEmpty() == false) {
+            faction = Faction.valueOf(factionString);
+        } else {
+            faction = Faction.IMPERIAL;
+        }
+    }
+
+    @Override
+    public Player getPlayer() {
+        return player;
+    }
+
+    @Override
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 
-		Double averageScore = getPlayerStatisticDouble("AverageScore");
+    public String getSeedValue() {
+        return seedValue;
+    }
 
-		if(averageScore != null){
-			return averageScore;
-		}
+    public void setSeedValue(String seedValue) {
+        this.seedValue = seedValue;
+    }
 
-		int score = getScore(t);
-		int matchCount = getPlayer().getCompletedMatches(t).size();
+    public String getSquadId() {
+        return squadId;
+    }
 
-		averageScore = score * 1.0 / matchCount; 
+    public void setSquadId(String squadId) {
+        this.squadId = squadId;
+    }
 
-		putPlayerStatisticDouble("AverageScore", averageScore);
+    public Faction getFaction() {
+        return faction;
+    }
 
-		return averageScore;
-	}
-
-	public double getAverageSoS(Tournament t) {
+    public void setFaction(Faction faction) {
+        this.faction = faction;
+    }
 
-		Double averageSos = getPlayerStatisticDouble("AverageSos");
+    @Override
+    public String toString() {
+        return getPlayer().getName();
+    }
 
-		if(averageSos != null){
-			return averageSos;
-		}
+    public int getScore(Tournament t) {
+
+        Integer score = getPlayerStatisticInteger("Score");
+
+        // if(score != null){
+        // return score;
+        // }
+
+        score = 0;
+
+        for (int i = 0; i < t.getRoundCount(); i++) {
+            score += getRoundScore(i, t);
+        }
+
+        putPlayerStatisticInteger("Score", score);
 
-		double sos = 0.0;
-		List<Match> matches = getPlayer().getCompletedMatches(t);
+        return score;
+    }
 
-		int numOpponents = 0;
-		for (Match m : matches) {
-			if (m.isBye() == false && m.getWinner(1) != null) {
-				if (m.getPlayer1() == this.getPlayer()) {
-					sos += ((EtcPlayer) m.getPlayer2().getModuleInfoByModule(t.getModule())).getAverageScore(t);
-					numOpponents++;
-				} else {
-					sos += ((EtcPlayer) m.getPlayer1().getModuleInfoByModule(t.getModule())).getAverageScore(t);
-					numOpponents++;
-				}
-			}
-		}
+    public int getRoundScore(int zeroBasedRound, Tournament t) {
 
-		// if they don't have any opponents recorded yet, don't divide by 0
-		averageSos = numOpponents>0 ? sos / numOpponents : 0;
-		if (Double.isNaN(averageSos) != true) {
-			BigDecimal bd = new BigDecimal(averageSos);
-			bd = bd.setScale(2, RoundingMode.HALF_UP);
-			averageSos = bd.doubleValue();
-		}
+        EtcTournament etcT = (EtcTournament) t;
 
-		putPlayerStatisticDouble("AverageSos", averageSos);
+        Round r = t.getRound(zeroBasedRound);
+
+        int score = 0;
+        int completeGameCount = 0;
 
-		return averageSos;
-	}
+        for (Match m : r.getMatches()) {
+            if (this.getPlayer().equals(m.getPlayer1()) || this.getPlayer().equals(m.getPlayer2())) {
+                if (m.isBye()) {
+                    if (etcT.getPlayerCount() == 6) {
+                        score += 3;
+                    } else if (etcT.getPlayerCount() == 3) {
+                        score += 2;
+                    }
+                    continue;
+                } else if (m.getWinner(1) != null) {
+                    completeGameCount++;
+                    if (this.getPlayer().equals(m.getWinner(1))) {
+                        score++;
+                    }
+                }
+            }
+        }
+
+        if (score == 0 && completeGameCount != 0) {
+            score = 1;
+        }
 
-	public int getWins(Tournament t) {
+        if (score == 6) {
+            score = 5;
+        }
 
-		Integer score = getPlayerStatisticInteger("Wins");
+        return score;
+    }
 
-		if(score != null){
-			return score;
-		}
+    public double getAverageScore(Tournament t) {
 
-		score = 0;
-		for (Match match : getPlayer().getMatches(t)) {
-			if (match.getWinner(1) == this.getPlayer() || match.isBye()) {
-				score++;
-			}
-		}
+        Double averageScore = getPlayerStatisticDouble("AverageScore");
 
-		putPlayerStatisticInteger("Wins", score);
+        if (averageScore != null) {
+            return averageScore;
+        }
 
-		return score;
-	}
+        int score = getScore(t);
+        int matchCount = getPlayer().getCompletedMatches(t).size();
 
-	public int getLosses(Tournament t) {
+        averageScore = score * 1.0 / matchCount;
 
-		Integer score = getPlayerStatisticInteger("Losses");
+        putPlayerStatisticDouble("AverageScore", averageScore);
 
-		if(score != null){
-			return score;
-		}
+        return averageScore;
+    }
 
-		score = 0;
-		for (Match match : getPlayer().getMatches(t)) {
-			if (match.getWinner(1) != null && match.getWinner(1) != this.getPlayer()) {
-				score++;
-			}
-		}
+    public double getAverageSoS(Tournament t) {
 
-		putPlayerStatisticInteger("Losses", score);
+        Double averageSos = getPlayerStatisticDouble("AverageSos");
 
-		return score;
-	}
+        if (averageSos != null) {
+            return averageSos;
+        }
 
+        double sos = 0.0;
+        List<Match> matches = getPlayer().getCompletedMatches(t);
 
+        int numOpponents = 0;
+        for (Match m : matches) {
+            if (m.isBye() == false && m.getWinner(1) != null) {
+                if (m.getPlayer1() == this.getPlayer()) {
+                    sos += ((EtcPlayer) m.getPlayer2().getModuleInfoByModule(t.getModule())).getAverageScore(t);
+                    numOpponents++;
+                } else {
+                    sos += ((EtcPlayer) m.getPlayer1().getModuleInfoByModule(t.getModule())).getAverageScore(t);
+                    numOpponents++;
+                }
+            }
+        }
 
-	public int getRank(Tournament t) {
+        // if they don't have any opponents recorded yet, don't divide by 0
+        averageSos = numOpponents > 0 ? sos / numOpponents : 0;
+        if (Double.isNaN(averageSos) != true) {
+            BigDecimal bd = new BigDecimal(averageSos);
+            bd = bd.setScale(2, RoundingMode.HALF_UP);
+            averageSos = bd.doubleValue();
+        }
 
-		Integer rank = getPlayerStatisticInteger("Rank");
+        putPlayerStatisticDouble("AverageSos", averageSos);
 
-		if(rank != null){
-			return rank;
-		}
+        return averageSos;
+    }
 
-		rank = 0;
+    public int getWins(Tournament t) {
 
-		List<Player> players = new ArrayList<Player>();
-		players.addAll(t.getPlayers());
-		Collections.sort(players, new EtcComparator(t, EtcComparator.rankingCompare));
+        Integer score = getPlayerStatisticInteger("Wins");
 
-		for (int i = 0; i < players.size(); i++) {
-			if (((EtcTournament)t).getModulePlayer(players.get(i)) == this) {
-				rank = i + 1;
-				break;
-			}
-		}
+        if (score != null) {
+            return score;
+        }
 
-		putPlayerStatisticInteger("Rank", rank);
+        score = 0;
+        for (Match match : getPlayer().getMatches(t)) {
+            if (match.getWinner(1) == this.getPlayer() || match.isBye()) {
+                score++;
+            }
+        }
 
-		return rank;
-	}
+        putPlayerStatisticInteger("Wins", score);
 
-	public int getEliminationRank(Tournament t) {
+        return score;
+    }
 
-		Integer rank = getPlayerStatisticInteger("EliminationRank");
+    public int getLosses(Tournament t) {
 
-		if(rank != null){
-			return rank;
-		}
+        Integer score = getPlayerStatisticInteger("Losses");
 
-		rank = 0;
+        if (score != null) {
+            return score;
+        }
 
-		for (Round r : t.getAllRounds()) {
-			if (r.isSingleElimination()) {
-				for (Match m : r.getMatches()) {
-					if ((m.getPlayer1() == this.getPlayer() || m.getPlayer2() == this.getPlayer()) && (m.getWinner(1) != null && m.getWinner(1) != this.getPlayer())) {
-						return r.getMatches().size() * 2;
-					}
+        score = 0;
+        for (Match match : getPlayer().getMatches(t)) {
+            if (match.getWinner(1) != null && match.getWinner(1) != this.getPlayer()) {
+                score++;
+            }
+        }
 
-					if (r.getMatches().size() == 1 && m.getWinner(1) != null && m.getWinner(1) == this.getPlayer()) {
-						return 1;
-					}
-				}
-			}
-		}
+        putPlayerStatisticInteger("Losses", score);
 
-		putPlayerStatisticInteger("EliminationRank", rank);
+        return score;
+    }
 
-		return rank;
-	}
+    public int getRank(Tournament t) {
 
-	public int getMarginOfVictory(Tournament t) {
+        Integer rank = getPlayerStatisticInteger("Rank");
 
-		Integer movPoints = getPlayerStatisticInteger("MOV");
+        if (rank != null) {
+            return rank;
+        }
 
-		if(movPoints != null){
-			return movPoints;
-		}
+        rank = 0;
 
-		int roundNumber = 0;
+        List<Player> players = new ArrayList<Player>();
+        players.addAll(t.getPlayers());
+        Collections.sort(players, new EtcComparator(t, EtcComparator.rankingCompare));
 
-		movPoints = 0;
+        for (int i = 0; i < players.size(); i++) {
+            if (((EtcTournament) t).getModulePlayer(players.get(i)) == this) {
+                rank = i + 1;
+                break;
+            }
+        }
 
-		for (Match match : getPlayer().getMatches(t)) {
+        putPlayerStatisticInteger("Rank", rank);
 
-			roundNumber++;
+        return rank;
+    }
 
-			Integer tournamentPoints = t.getRoundPoints(roundNumber);
+    public int getEliminationRank(Tournament t) {
 
-			if (match.isBye()) {
-				movPoints += tournamentPoints + (tournamentPoints / 2);
-				continue;
-			} else if (match.getWinner(1) == null) {
-				continue;
-			}
+        Integer rank = getPlayerStatisticInteger("EliminationRank");
 
-			boolean isPlayer1 = match.getPlayer1() == this.getPlayer();
+        if (rank != null) {
+            return rank;
+        }
 
-			int player1Points = match.getPlayer1Points() == null ? 0 : match.getPlayer1Points();
-			int player2Points = match.getPlayer2Points() == null ? 0 : match.getPlayer2Points();
+        rank = 0;
 
-			int diff = player1Points - player2Points;
+        for (Round r : t.getAllRounds()) {
+            if (r.isSingleElimination()) {
+                for (Match m : r.getMatches()) {
+                    if ((m.getPlayer1() == this.getPlayer() || m.getPlayer2() == this.getPlayer())
+                            && (m.getWinner(1) != null && m.getWinner(1) != this.getPlayer())) {
+                        return r.getMatches().size() * 2;
+                    }
 
-			movPoints += isPlayer1 ? tournamentPoints + diff : tournamentPoints - diff;
-		}
+                    if (r.getMatches().size() == 1 && m.getWinner(1) != null && m.getWinner(1) == this.getPlayer()) {
+                        return 1;
+                    }
+                }
+            }
+        }
 
-		putPlayerStatisticInteger("MOV", movPoints);
+        putPlayerStatisticInteger("EliminationRank", rank);
 
-		return movPoints;
-	}
+        return rank;
+    }
 
-	/**
-	 * Returns true if the player has defeated every other person in their score group.
-	 * 
-	 * @param t
-	 * @return
-	 */
-	public boolean isHeadToHeadWinner(Tournament t) {
+    public int getMarginOfVictory(Tournament t) {
 
-		return false;
-	}
+        Integer movPoints = getPlayerStatisticInteger("MOV");
+        
+        if (movPoints != null) {
+            return movPoints;
+        }
+        
+        EtcTournament etcT = (EtcTournament) t;
 
-	public int getRoundDropped(Tournament t) {
+        int roundNumber = 0;
 
-		Integer roundDropped = getPlayerStatisticInteger("RoundDropped");
+        movPoints = 0;
 
-		if(roundDropped != null){
-			return roundDropped;
-		}
+        for (Match match : getPlayer().getMatches(t)) {
 
-		roundDropped = 0;
+            roundNumber++;
 
-		for (int i = t.getAllRounds().size(); i > 0; i--) {
+            Integer tournamentPoints = t.getRoundPoints(roundNumber);
 
-			boolean found = false;
-			Round r = t.getAllRounds().get(i - 1);
-			for (Match m : r.getMatches()) {
-				if (m.getPlayer1() == this.getPlayer()) {
-					found = true;
-					break;
-				} else if (m.isBye() == false && m.getPlayer2() == this.getPlayer()) {
-					found = true;
-					break;
-				}
-			}
+            if (match.isBye()) {
+                if (etcT.getPlayerCount() == 6) {
+                    movPoints += 600;
+                } else if (etcT.getPlayerCount() == 3) {
+                    movPoints += 150 + 150 + 50;
+                }
+                movPoints += tournamentPoints + (tournamentPoints / 2);
+                continue;
+            } else if (match.getWinner(1) == null) {
+                continue;
+            }
 
-			if (found) {
-				roundDropped = i + 1;
-				break;
-			}
-		}
+            boolean isPlayer1 = match.getPlayer1() == this.getPlayer();
 
-		putPlayerStatisticInteger("RoundDropped", roundDropped);
+            int player1Points = match.getPlayer1Points() == null ? 0 : match.getPlayer1Points();
+            int player2Points = match.getPlayer2Points() == null ? 0 : match.getPlayer2Points();
 
-		return roundDropped;
-	}
+            int diff = player1Points - player2Points;
 
-	public String getName() {
-		return getPlayer().getName();
-	}
+            movPoints += isPlayer1 ? tournamentPoints + diff : tournamentPoints - diff;
+        }
 
-	private Integer getPlayerStatisticInteger(String statName){
-		
-		Integer value = integerStatistics.get(statName);
-		
-		return value;
-	}
+        putPlayerStatisticInteger("MOV", movPoints);
 
-	private void putPlayerStatisticInteger(String statName, Integer value){
-		integerStatistics.put(statName, value);
-	}
+        return movPoints;
+    }
 
-	private Double getPlayerStatisticDouble(String statName){
-		Double value = doubleStatistics.get(statName);
-		
-		return value;
-	}
+    /**
+     * Returns true if the player has defeated every other person in their score group.
+     * 
+     * @param t
+     * @return
+     */
+    public boolean isHeadToHeadWinner(Tournament t) {
 
-	private void putPlayerStatisticDouble(String statName, Double value){
-		doubleStatistics.put(statName, value);
-	}
-	
-	private void clearCache(){
-		integerStatistics.clear();
-		doubleStatistics.clear();
-	}
+        return false;
+    }
 
-	@Override
-	public String getModuleName() {
-		return Modules.ETC.getName();
-	}
+    public int getRoundDropped(Tournament t) {
 
-	public String toXML() {
-		StringBuilder sb = new StringBuilder();
+        Integer roundDropped = getPlayerStatisticInteger("RoundDropped");
 
-		appendXML(sb);
+        if (roundDropped != null) {
+            return roundDropped;
+        }
 
-		return sb.toString();
-	}
+        roundDropped = 0;
 
-	@Override
-	public StringBuilder appendXML(StringBuilder sb) {
+        for (int i = t.getAllRounds().size(); i > 0; i--) {
 
-		clearCache();
-		
-		XMLUtils.appendObject(sb, "MODULE", Modules.ETC.getName());
-		XMLUtils.appendObject(sb, "SEEDVALUE", getSeedValue());
-		XMLUtils.appendObject(sb, "SQUADID", getSquadId());
-		XMLUtils.appendObject(sb, "FACTION", getFaction());
+            boolean found = false;
+            Round r = t.getAllRounds().get(i - 1);
+            for (Match m : r.getMatches()) {
+                if (m.getPlayer1() == this.getPlayer()) {
+                    found = true;
+                    break;
+                } else if (m.isBye() == false && m.getPlayer2() == this.getPlayer()) {
+                    found = true;
+                    break;
+                }
+            }
 
-		return sb;
-	}
+            if (found) {
+                roundDropped = i + 1;
+                break;
+            }
+        }
 
-	@Override
-	public int compareTo(ModulePlayer arg0) {
-		return this.getPlayer().getName().toUpperCase().compareTo(arg0.getPlayer().getName().toUpperCase());
-	}
+        putPlayerStatisticInteger("RoundDropped", roundDropped);
+
+        return roundDropped;
+    }
+
+    public String getName() {
+        return getPlayer().getName();
+    }
+
+    private Integer getPlayerStatisticInteger(String statName) {
+
+        Integer value = integerStatistics.get(statName);
+
+        return value;
+    }
+
+    private void putPlayerStatisticInteger(String statName, Integer value) {
+        integerStatistics.put(statName, value);
+    }
+
+    private Double getPlayerStatisticDouble(String statName) {
+        Double value = doubleStatistics.get(statName);
+
+        return value;
+    }
+
+    private void putPlayerStatisticDouble(String statName, Double value) {
+        doubleStatistics.put(statName, value);
+    }
+
+    private void clearCache() {
+        integerStatistics.clear();
+        doubleStatistics.clear();
+    }
+
+    @Override
+    public String getModuleName() {
+        return Modules.ETC.getName();
+    }
+
+    public String toXML() {
+        StringBuilder sb = new StringBuilder();
+
+        appendXML(sb);
+
+        return sb.toString();
+    }
+
+    @Override
+    public StringBuilder appendXML(StringBuilder sb) {
+
+        clearCache();
+
+        XMLUtils.appendObject(sb, "MODULE", Modules.ETC.getName());
+        XMLUtils.appendObject(sb, "SEEDVALUE", getSeedValue());
+        XMLUtils.appendObject(sb, "SQUADID", getSquadId());
+        XMLUtils.appendObject(sb, "FACTION", getFaction());
+
+        return sb;
+    }
+
+    @Override
+    public int compareTo(ModulePlayer arg0) {
+        return this.getPlayer().getName().toUpperCase().compareTo(arg0.getPlayer().getName().toUpperCase());
+    }
 }
