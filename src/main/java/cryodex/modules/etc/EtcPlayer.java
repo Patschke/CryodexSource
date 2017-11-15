@@ -91,7 +91,7 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
 
     public int getScore(Tournament t) {
 
-        Integer score = getPlayerStatisticInteger(t,"Score");
+        Integer score = getPlayerStatisticInteger(t, "Score");
 
         if (score != null) {
             return score;
@@ -103,7 +103,7 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
             score += getRoundScore(i, t);
         }
 
-        putPlayerStatisticInteger(t,"Score", score);
+        putPlayerStatisticInteger(t, "Score", score);
 
         return score;
     }
@@ -136,7 +136,12 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
         }
 
         if (score == 0 && completeGameCount != 0) {
-            score = 1;
+            if (completeGameCount == 6) {
+                score = 1;
+            } else if (completeGameCount == 3) {
+                score = 0;
+            }
+
         }
 
         if (score == 6) {
@@ -148,7 +153,7 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
 
     public double getAverageScore(Tournament t) {
 
-        Double averageScore = getPlayerStatisticDouble(t,"AverageScore");
+        Double averageScore = getPlayerStatisticDouble(t, "AverageScore");
 
         if (averageScore != null) {
             return averageScore;
@@ -159,14 +164,14 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
 
         averageScore = score * 1.0 / matchCount;
 
-        putPlayerStatisticDouble(t,"AverageScore", averageScore);
+        putPlayerStatisticDouble(t, "AverageScore", averageScore);
 
         return averageScore;
     }
 
     public double getAverageSoS(Tournament t) {
 
-        Double averageSos = getPlayerStatisticDouble(t,"AverageSos");
+        Double averageSos = getPlayerStatisticDouble(t, "AverageSos");
 
         if (averageSos != null) {
             return averageSos;
@@ -196,14 +201,14 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
             averageSos = bd.doubleValue();
         }
 
-        putPlayerStatisticDouble(t,"AverageSos", averageSos);
+        putPlayerStatisticDouble(t, "AverageSos", averageSos);
 
         return averageSos;
     }
 
     public int getWins(Tournament t) {
 
-        Integer score = getPlayerStatisticInteger(t,"Wins");
+        Integer score = getPlayerStatisticInteger(t, "Wins");
 
         if (score != null) {
             return score;
@@ -216,14 +221,14 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
             }
         }
 
-        putPlayerStatisticInteger(t,"Wins", score);
+        putPlayerStatisticInteger(t, "Wins", score);
 
         return score;
     }
 
     public int getLosses(Tournament t) {
 
-        Integer score = getPlayerStatisticInteger(t,"Losses");
+        Integer score = getPlayerStatisticInteger(t, "Losses");
 
         if (score != null) {
             return score;
@@ -236,14 +241,14 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
             }
         }
 
-        putPlayerStatisticInteger(t,"Losses", score);
+        putPlayerStatisticInteger(t, "Losses", score);
 
         return score;
     }
 
     public int getRank(Tournament t) {
 
-        Integer rank = getPlayerStatisticInteger(t,"Rank");
+        Integer rank = getPlayerStatisticInteger(t, "Rank");
 
         if (rank != null) {
             return rank;
@@ -262,14 +267,14 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
             }
         }
 
-        putPlayerStatisticInteger(t,"Rank", rank);
+        putPlayerStatisticInteger(t, "Rank", rank);
 
         return rank;
     }
 
     public int getEliminationRank(Tournament t) {
 
-        Integer rank = getPlayerStatisticInteger(t,"EliminationRank");
+        Integer rank = getPlayerStatisticInteger(t, "EliminationRank");
 
         if (rank != null) {
             return rank;
@@ -292,19 +297,19 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
             }
         }
 
-        putPlayerStatisticInteger(t,"EliminationRank", rank);
+        putPlayerStatisticInteger(t, "EliminationRank", rank);
 
         return rank;
     }
 
     public int getMarginOfVictory(Tournament t) {
 
-        Integer movPoints = getPlayerStatisticInteger(t,"MOV");
-        
+        Integer movPoints = getPlayerStatisticInteger(t, "MOV");
+
         if (movPoints != null) {
             return movPoints;
         }
-        
+
         EtcTournament etcT = (EtcTournament) t;
 
         int roundNumber = 0;
@@ -338,7 +343,7 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
             movPoints += isPlayer1 ? tournamentPoints + diff : tournamentPoints - diff;
         }
 
-        putPlayerStatisticInteger(t,"MOV", movPoints);
+        putPlayerStatisticInteger(t, "MOV", movPoints);
 
         return movPoints;
     }
@@ -356,7 +361,7 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
 
     public int getRoundDropped(Tournament t) {
 
-        Integer roundDropped = getPlayerStatisticInteger(t,"RoundDropped");
+        Integer roundDropped = getPlayerStatisticInteger(t, "RoundDropped");
 
         if (roundDropped != null) {
             return roundDropped;
@@ -384,7 +389,7 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
             }
         }
 
-        putPlayerStatisticInteger(t,"RoundDropped", roundDropped);
+        putPlayerStatisticInteger(t, "RoundDropped", roundDropped);
 
         return roundDropped;
     }
