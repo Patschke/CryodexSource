@@ -124,8 +124,6 @@ public class TournamentMenu implements Menu {
 							@Override
 							public void playerSelected(Player p) {
 								CryodexController.getActiveTournament().addPlayer(p);
-
-								CryodexController.getActiveTournament().resetRankingTable();
 							}
 						};
 
@@ -221,6 +219,7 @@ public class TournamentMenu implements Menu {
 						tournament.getTournamentGUI().getRoundTabbedPane().repaint();
 					}
 
+					tournament.triggerChange();
 				}
 			});
 
@@ -253,7 +252,7 @@ public class TournamentMenu implements Menu {
 
 						tournament.getTournamentGUI().getRoundTabbedPane().setSelectedIndex(index - 1);
 
-						CryodexController.saveData();
+						tournament.triggerChange();
 
 						resetMenuBar();
 					}

@@ -262,7 +262,7 @@ public class SwapPanel extends JPanel {
 						tournament.getTournamentGUI().getRoundTabbedPane().addSwissTab(roundNumber, r.getPanel());
 					}
 
-					CryodexController.saveData();
+					tournament.triggerChange();
 				}
 			});
 

@@ -55,7 +55,7 @@ public class IATournament extends Tournament implements XMLObject {
             }
         }
 
-        resetRankingTable();
+        triggerDeepChange();
     }
 
     @Override

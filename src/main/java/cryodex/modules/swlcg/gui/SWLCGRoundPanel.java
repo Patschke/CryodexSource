@@ -418,7 +418,6 @@ public class SWLCGRoundPanel extends RoundPanel {
             default:
                 break;
             }
-            tournament.getTournamentGUI().getRankingTable().resetPlayers();
 
         }
 

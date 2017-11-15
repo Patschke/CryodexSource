@@ -20,432 +20,429 @@ import cryodex.xml.XMLUtils.Element;
 
 public class XWingPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePlayer {
 
-	public static enum Faction {
-		IMPERIAL, REBEL, SCUM;
-	}
+    public static enum Faction {
+        IMPERIAL, REBEL, SCUM;
+    }
+
+    private Player player;
+    private String seedValue;
+    private String squadId;
+    private Faction faction;
 
-	private Player player;
-	private String seedValue;
-	private String squadId;
-	private Faction faction;
+    private Map<String, Integer> integerStatistics = new HashMap<String, Integer>();
+    private Map<String, Double> doubleStatistics = new HashMap<String, Double>();
 
-	private Map<String, Integer> integerStatistics = new HashMap<String, Integer>();
-	private Map<String, Double> doubleStatistics = new HashMap<String, Double>();
+    public XWingPlayer(Player p) {
+        player = p;
+        seedValue = String.valueOf(Math.random());
+    }
 
-	public XWingPlayer(Player p) {
-		player = p;
-		seedValue = String.valueOf(Math.random());
-	}
+    public XWingPlayer(Player p, Element e) {
+        this.player = p;
+        this.seedValue = e.getStringFromChild("SEEDVALUE");
+        this.squadId = e.getStringFromChild("SQUADID");
+        String factionString = e.getStringFromChild("FACTION");
 
-	public XWingPlayer(Player p, Element e) {
-		this.player = p;
-		this.seedValue = e.getStringFromChild("SEEDVALUE");
-		this.squadId = e.getStringFromChild("SQUADID");
-		String factionString = e.getStringFromChild("FACTION");
+        if (factionString != null && factionString.isEmpty() == false) {
+            faction = Faction.valueOf(factionString);
+        } else {
+            faction = Faction.IMPERIAL;
+        }
+    }
+
+    @Override
+    public Player getPlayer() {
+        return player;
+    }
+
+    @Override
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public String getSeedValue() {
+        return seedValue;
+    }
+
+    public void setSeedValue(String seedValue) {
+        this.seedValue = seedValue;
+    }
+
+    public String getSquadId() {
+        return squadId;
+    }
+
+    public void setSquadId(String squadId) {
+        this.squadId = squadId;
+    }
+
+    public Faction getFaction() {
+        return faction;
+    }
+
+    public void setFaction(Faction faction) {
+        this.faction = faction;
+    }
+
+    @Override
+    public String toString() {
+        return getPlayer().getName();
+    }
 
-		if (factionString != null && factionString.isEmpty() == false) {
-			faction = Faction.valueOf(factionString);
-		} else {
-			faction = Faction.IMPERIAL;
-		}
-	}
+    public int getScore(Tournament t) {
 
-	@Override
-	public Player getPlayer() {
-		return player;
-	}
+        Integer score = getPlayerStatisticInteger(t,"Score");
 
-	@Override
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
+        if (score != null) {
+            return score;
+        }
 
-	public String getSeedValue() {
-		return seedValue;
-	}
-
-	public void setSeedValue(String seedValue) {
-		this.seedValue = seedValue;
-	}
+        score = 0;
+        for (Match match : getPlayer().getMatches(t)) {
+            if (match.getWinner(1) == this.getPlayer()) {
+                score += XWingConstants.WIN_POINTS;
+            } else if (match.isBye()) {
+                score += XWingConstants.BYE_POINTS;
+            } else {
+                score += XWingConstants.LOSS_POINTS;
+            }
+        }
 
-	public String getSquadId() {
-		return squadId;
-	}
+        putPlayerStatisticInteger(t,"Score", score);
 
-	public void setSquadId(String squadId) {
-		this.squadId = squadId;
-	}
+        return score;
+    }
 
-	public Faction getFaction() {
-		return faction;
-	}
+    public double getAverageScore(Tournament t) {
 
-	public void setFaction(Faction faction) {
-		this.faction = faction;
-	}
+        Double averageScore = getPlayerStatisticDouble(t,"AverageScore");
 
+        if (averageScore != null) {
+            return averageScore;
+        }
 
+        int score = getScore(t);
+        int matchCount = getPlayer().getCompletedMatches(t).size();
 
-	@Override
-	public String toString() {
-		return getPlayer().getName();
-	}
+        averageScore = score * 1.0 / matchCount;
 
-	public int getScore(Tournament t) {
+        putPlayerStatisticDouble(t,"AverageScore", averageScore);
 
-		Integer score = getPlayerStatisticInteger("Score");
+        return averageScore;
+    }
 
-		if(score != null){
-			return score;
-		}
+    public double getAverageSoS(Tournament t) {
 
-		score = 0;
-		for (Match match : getPlayer().getMatches(t)) {
-			if (match.getWinner(1) == this.getPlayer()) {
-				score += XWingConstants.WIN_POINTS;
-			} else if (match.isBye()) {
-				score += XWingConstants.BYE_POINTS;
-			} else {
-				score += XWingConstants.LOSS_POINTS;
-			}
-		}
+        Double averageSos = getPlayerStatisticDouble(t,"AverageSos");
 
-		putPlayerStatisticInteger("Score", score);
+        if (averageSos != null) {
+            return averageSos;
+        }
 
-		return score;
-	}
+        double sos = 0.0;
+        List<Match> matches = getPlayer().getCompletedMatches(t);
 
-	public double getAverageScore(Tournament t) {
+        int numOpponents = 0;
+        for (Match m : matches) {
+            if (m.isBye() == false && m.getWinner(1) != null) {
+                if (m.getPlayer1() == this.getPlayer()) {
+                    sos += ((XWingPlayer) m.getPlayer2().getModuleInfoByModule(t.getModule())).getAverageScore(t);
+                    numOpponents++;
+                } else {
+                    sos += ((XWingPlayer) m.getPlayer1().getModuleInfoByModule(t.getModule())).getAverageScore(t);
+                    numOpponents++;
+                }
+            }
+        }
 
-		Double averageScore = getPlayerStatisticDouble("AverageScore");
+        // if they don't have any opponents recorded yet, don't divide by 0
+        averageSos = numOpponents > 0 ? sos / numOpponents : 0;
+        if (Double.isNaN(averageSos) != true) {
+            BigDecimal bd = new BigDecimal(averageSos);
+            bd = bd.setScale(2, RoundingMode.HALF_UP);
+            averageSos = bd.doubleValue();
+        }
 
-		if(averageScore != null){
-			return averageScore;
-		}
+        putPlayerStatisticDouble(t,"AverageSos", averageSos);
 
-		int score = getScore(t);
-		int matchCount = getPlayer().getCompletedMatches(t).size();
+        return averageSos;
+    }
 
-		averageScore = score * 1.0 / matchCount; 
+    public int getWins(Tournament t) {
 
-		putPlayerStatisticDouble("AverageScore", averageScore);
+        Integer score = getPlayerStatisticInteger(t,"Wins");
 
-		return averageScore;
-	}
+        if (score != null) {
+            return score;
+        }
 
-	public double getAverageSoS(Tournament t) {
+        score = 0;
+        for (Match match : getPlayer().getMatches(t)) {
+            if (match.getWinner(1) == this.getPlayer() || match.isBye()) {
+                score++;
+            }
+        }
 
-		Double averageSos = getPlayerStatisticDouble("AverageSos");
+        putPlayerStatisticInteger(t,"Wins", score);
 
-		if(averageSos != null){
-			return averageSos;
-		}
+        return score;
+    }
 
-		double sos = 0.0;
-		List<Match> matches = getPlayer().getCompletedMatches(t);
+    public int getLosses(Tournament t) {
 
-		int numOpponents = 0;
-		for (Match m : matches) {
-			if (m.isBye() == false && m.getWinner(1) != null) {
-				if (m.getPlayer1() == this.getPlayer()) {
-					sos += ((XWingPlayer) m.getPlayer2().getModuleInfoByModule(t.getModule())).getAverageScore(t);
-					numOpponents++;
-				} else {
-					sos += ((XWingPlayer) m.getPlayer1().getModuleInfoByModule(t.getModule())).getAverageScore(t);
-					numOpponents++;
-				}
-			}
-		}
+        Integer score = getPlayerStatisticInteger(t,"Losses");
 
-		// if they don't have any opponents recorded yet, don't divide by 0
-		averageSos = numOpponents>0 ? sos / numOpponents : 0;
-		if (Double.isNaN(averageSos) != true) {
-			BigDecimal bd = new BigDecimal(averageSos);
-			bd = bd.setScale(2, RoundingMode.HALF_UP);
-			averageSos = bd.doubleValue();
-		}
+        if (score != null) {
+            return score;
+        }
 
-		putPlayerStatisticDouble("AverageSos", averageSos);
+        score = 0;
+        for (Match match : getPlayer().getMatches(t)) {
+            if (match.getWinner(1) != null && match.getWinner(1) != this.getPlayer()) {
+                score++;
+            }
+        }
 
-		return averageSos;
-	}
+        putPlayerStatisticInteger(t,"Losses", score);
 
-	public int getWins(Tournament t) {
+        return score;
+    }
 
-		Integer score = getPlayerStatisticInteger("Wins");
+    public int getRank(Tournament t) {
 
-		if(score != null){
-			return score;
-		}
+        Integer rank = getPlayerStatisticInteger(t,"Rank");
 
-		score = 0;
-		for (Match match : getPlayer().getMatches(t)) {
-			if (match.getWinner(1) == this.getPlayer() || match.isBye()) {
-				score++;
-			}
-		}
+        if (rank != null) {
+            return rank;
+        }
 
-		putPlayerStatisticInteger("Wins", score);
+        rank = 0;
 
-		return score;
-	}
+        List<Player> players = new ArrayList<Player>();
+        players.addAll(t.getPlayers());
+        Collections.sort(players, new XWingComparator(t, XWingComparator.rankingCompare));
 
-	public int getLosses(Tournament t) {
+        for (int i = 0; i < players.size(); i++) {
+            if (((XWingTournament) t).getModulePlayer(players.get(i)) == this) {
+                rank = i + 1;
+                break;
+            }
+        }
 
-		Integer score = getPlayerStatisticInteger("Losses");
+        putPlayerStatisticInteger(t,"Rank", rank);
 
-		if(score != null){
-			return score;
-		}
+        return rank;
+    }
 
-		score = 0;
-		for (Match match : getPlayer().getMatches(t)) {
-			if (match.getWinner(1) != null && match.getWinner(1) != this.getPlayer()) {
-				score++;
-			}
-		}
+    public int getEliminationRank(Tournament t) {
 
-		putPlayerStatisticInteger("Losses", score);
+        Integer rank = getPlayerStatisticInteger(t,"EliminationRank");
 
-		return score;
-	}
+        if (rank != null) {
+            return rank;
+        }
 
+        rank = 0;
 
+        for (Round r : t.getAllRounds()) {
+            if (r.isSingleElimination()) {
+                for (Match m : r.getMatches()) {
+                    if ((m.getPlayer1() == this.getPlayer() || m.getPlayer2() == this.getPlayer())
+                            && (m.getWinner(1) != null && m.getWinner(1) != this.getPlayer())) {
+                        return r.getMatches().size() * 2;
+                    }
 
-	public int getRank(Tournament t) {
+                    if (r.getMatches().size() == 1 && m.getWinner(1) != null && m.getWinner(1) == this.getPlayer()) {
+                        return 1;
+                    }
+                }
+            }
+        }
 
-		Integer rank = getPlayerStatisticInteger("Rank");
+        putPlayerStatisticInteger(t,"EliminationRank", rank);
 
-		if(rank != null){
-			return rank;
-		}
+        return rank;
+    }
 
-		rank = 0;
+    public int getMarginOfVictory(Tournament t) {
 
-		List<Player> players = new ArrayList<Player>();
-		players.addAll(t.getPlayers());
-		Collections.sort(players, new XWingComparator(t, XWingComparator.rankingCompare));
+        Integer movPoints = getPlayerStatisticInteger(t,"MOV");
 
-		for (int i = 0; i < players.size(); i++) {
-			if (((XWingTournament)t).getModulePlayer(players.get(i)) == this) {
-				rank = i + 1;
-				break;
-			}
-		}
+        if (movPoints != null) {
+            return movPoints;
+        }
 
-		putPlayerStatisticInteger("Rank", rank);
+        int roundNumber = 0;
 
-		return rank;
-	}
+        movPoints = 0;
 
-	public int getEliminationRank(Tournament t) {
+        for (Match match : getPlayer().getMatches(t)) {
 
-		Integer rank = getPlayerStatisticInteger("EliminationRank");
+            roundNumber++;
 
-		if(rank != null){
-			return rank;
-		}
+            Integer tournamentPoints = t.getRoundPoints(roundNumber);
 
-		rank = 0;
+            if (match.isBye()) {
+                movPoints += tournamentPoints + (tournamentPoints / 2);
+                continue;
+            } else if (match.getWinner(1) == null) {
+                continue;
+            }
 
-		for (Round r : t.getAllRounds()) {
-			if (r.isSingleElimination()) {
-				for (Match m : r.getMatches()) {
-					if ((m.getPlayer1() == this.getPlayer() || m.getPlayer2() == this.getPlayer()) && (m.getWinner(1) != null && m.getWinner(1) != this.getPlayer())) {
-						return r.getMatches().size() * 2;
-					}
+            boolean isPlayer1 = match.getPlayer1() == this.getPlayer();
 
-					if (r.getMatches().size() == 1 && m.getWinner(1) != null && m.getWinner(1) == this.getPlayer()) {
-						return 1;
-					}
-				}
-			}
-		}
+            int player1Points = match.getPlayer1Points() == null ? 0 : match.getPlayer1Points();
+            int player2Points = match.getPlayer2Points() == null ? 0 : match.getPlayer2Points();
 
-		putPlayerStatisticInteger("EliminationRank", rank);
+            int diff = player1Points - player2Points;
 
-		return rank;
-	}
+            movPoints += isPlayer1 ? tournamentPoints + diff : tournamentPoints - diff;
+        }
 
-	public int getMarginOfVictory(Tournament t) {
+        putPlayerStatisticInteger(t,"MOV", movPoints);
 
-		Integer movPoints = getPlayerStatisticInteger("MOV");
+        return movPoints;
+    }
 
-		if(movPoints != null){
-			return movPoints;
-		}
+    /**
+     * Returns true if the player has defeated every other person in their score group.
+     * 
+     * @param t
+     * @return
+     */
+    public boolean isHeadToHeadWinner(Tournament t) {
 
-		int roundNumber = 0;
+        Integer h2hWinner = getPlayerStatisticInteger(t,"H2H");
 
-		movPoints = 0;
+        if (h2hWinner != null) {
+            return h2hWinner == 1;
+        }
 
-		for (Match match : getPlayer().getMatches(t)) {
+        h2hWinner = 1;
 
-			roundNumber++;
+        if (t != null) {
+            int score = getScore(t);
+            List<XWingPlayer> players = new ArrayList<XWingPlayer>();
+            for (Player p : t.getPlayers()) {
+                XWingPlayer xp = ((XWingTournament) t).getModulePlayer(p);
+                if (xp != this && xp.getScore(t) == score) {
+                    players.add(xp);
+                }
+            }
 
-			Integer tournamentPoints = t.getRoundPoints(roundNumber);
+            if (players.isEmpty()) {
+                h2hWinner = 0;
+            } else {
 
-			if (match.isBye()) {
-				movPoints += tournamentPoints + (tournamentPoints / 2);
-				continue;
-			} else if (match.getWinner(1) == null) {
-				continue;
-			}
+                playerLoop: for (XWingPlayer p : players) {
+                    for (Match m : p.getPlayer().getMatches(t)) {
+                        if (m.getWinner(1) != null && m.getWinner(1) == this.getPlayer()) {
+                            continue playerLoop;
+                        }
+                    }
+                    h2hWinner = 0;
+                }
+            }
+        }
 
-			boolean isPlayer1 = match.getPlayer1() == this.getPlayer();
+        putPlayerStatisticInteger(t,"H2H", h2hWinner);
 
-			int player1Points = match.getPlayer1Points() == null ? 0 : match.getPlayer1Points();
-			int player2Points = match.getPlayer2Points() == null ? 0 : match.getPlayer2Points();
+        return h2hWinner == 1;
+    }
 
-			int diff = player1Points - player2Points;
+    public int getRoundDropped(Tournament t) {
 
-			movPoints += isPlayer1 ? tournamentPoints + diff : tournamentPoints - diff;
-		}
+        Integer roundDropped = getPlayerStatisticInteger(t, "RoundDropped");
 
-		putPlayerStatisticInteger("MOV", movPoints);
+        if (roundDropped != null) {
+            return roundDropped;
+        }
 
-		return movPoints;
-	}
+        roundDropped = 0;
 
-	/**
-	 * Returns true if the player has defeated every other person in their score group.
-	 * 
-	 * @param t
-	 * @return
-	 */
-	public boolean isHeadToHeadWinner(Tournament t) {
+        for (int i = t.getAllRounds().size(); i > 0; i--) {
 
-		Integer h2hWinner = getPlayerStatisticInteger("H2H");
+            boolean found = false;
+            Round r = t.getAllRounds().get(i - 1);
+            for (Match m : r.getMatches()) {
+                if (m.getPlayer1() == this.getPlayer()) {
+                    found = true;
+                    break;
+                } else if (m.isBye() == false && m.getPlayer2() == this.getPlayer()) {
+                    found = true;
+                    break;
+                }
+            }
 
-		if(h2hWinner != null){
-			return h2hWinner == 1;
-		}
+            if (found) {
+                roundDropped = i + 1;
+                break;
+            }
+        }
 
-		h2hWinner = 1;
+        putPlayerStatisticInteger(t, "RoundDropped", roundDropped);
 
-		if (t != null) {
-			int score = getScore(t);
-			List<XWingPlayer> players = new ArrayList<XWingPlayer>();
-			for (Player p : t.getPlayers()) {
-				XWingPlayer xp = ((XWingTournament)t).getModulePlayer(p);
-				if (xp != this && xp.getScore(t) == score) {
-					players.add(xp);
-				}
-			}
+        return roundDropped;
+    }
 
-			if (players.isEmpty()) {
-				h2hWinner = 0;
-			} else {
+    public String getName() {
+        return getPlayer().getName();
+    }
 
-				playerLoop: for (XWingPlayer p : players) {
-					for (Match m : p.getPlayer().getMatches(t)) {
-						if (m.getWinner(1) != null && m.getWinner(1) == this.getPlayer()) {
-							continue playerLoop;
-						}
-					}
-					h2hWinner = 0;
-				}	
-			}
-		}
+    private Integer getPlayerStatisticInteger(Tournament tournament, String statName) {
 
-		putPlayerStatisticInteger("H2H", h2hWinner);
+        Integer value = integerStatistics.get(tournament.getName() + statName);
 
-		return h2hWinner == 1;
-	}
+        return value;
+    }
 
-	public int getRoundDropped(Tournament t) {
+    private void putPlayerStatisticInteger(Tournament tournament, String statName, Integer value) {
+        integerStatistics.put(tournament.getName() + statName, value);
+    }
 
-		Integer roundDropped = getPlayerStatisticInteger("RoundDropped");
+    private Double getPlayerStatisticDouble(Tournament tournament, String statName) {
+        Double value = doubleStatistics.get(tournament.getName() + statName);
 
-		if(roundDropped != null){
-			return roundDropped;
-		}
+        return value;
+    }
 
-		roundDropped = 0;
+    private void putPlayerStatisticDouble(Tournament tournament, String statName, Double value) {
+        doubleStatistics.put(tournament.getName() + statName, value);
+    }
 
-		for (int i = t.getAllRounds().size(); i > 0; i--) {
+    private void clearCache() {
+        integerStatistics.clear();
+        doubleStatistics.clear();
+    }
 
-			boolean found = false;
-			Round r = t.getAllRounds().get(i - 1);
-			for (Match m : r.getMatches()) {
-				if (m.getPlayer1() == this.getPlayer()) {
-					found = true;
-					break;
-				} else if (m.isBye() == false && m.getPlayer2() == this.getPlayer()) {
-					found = true;
-					break;
-				}
-			}
+    @Override
+    public String getModuleName() {
+        return Modules.XWING.getName();
+    }
 
-			if (found) {
-				roundDropped = i + 1;
-				break;
-			}
-		}
+    public String toXML() {
+        StringBuilder sb = new StringBuilder();
 
-		putPlayerStatisticInteger("RoundDropped", roundDropped);
+        appendXML(sb);
 
-		return roundDropped;
-	}
+        return sb.toString();
+    }
 
-	public String getName() {
-		return getPlayer().getName();
-	}
+    @Override
+    public StringBuilder appendXML(StringBuilder sb) {
 
-	private Integer getPlayerStatisticInteger(String statName){
-		
-		Integer value = integerStatistics.get(statName);
-		
-		return value;
-	}
+        clearCache();
 
-	private void putPlayerStatisticInteger(String statName, Integer value){
-		integerStatistics.put(statName, value);
-	}
+        XMLUtils.appendObject(sb, "MODULE", Modules.XWING.getName());
+        XMLUtils.appendObject(sb, "SEEDVALUE", getSeedValue());
+        XMLUtils.appendObject(sb, "SQUADID", getSquadId());
+        XMLUtils.appendObject(sb, "FACTION", getFaction());
 
-	private Double getPlayerStatisticDouble(String statName){
-		Double value = doubleStatistics.get(statName);
-		
-		return value;
-	}
+        return sb;
+    }
 
-	private void putPlayerStatisticDouble(String statName, Double value){
-		doubleStatistics.put(statName, value);
-	}
-	
-	private void clearCache(){
-		integerStatistics.clear();
-		doubleStatistics.clear();
-	}
-
-	@Override
-	public String getModuleName() {
-		return Modules.XWING.getName();
-	}
-
-	public String toXML() {
-		StringBuilder sb = new StringBuilder();
-
-		appendXML(sb);
-
-		return sb.toString();
-	}
-
-	@Override
-	public StringBuilder appendXML(StringBuilder sb) {
-
-		clearCache();
-		
-		XMLUtils.appendObject(sb, "MODULE", Modules.XWING.getName());
-		XMLUtils.appendObject(sb, "SEEDVALUE", getSeedValue());
-		XMLUtils.appendObject(sb, "SQUADID", getSquadId());
-		XMLUtils.appendObject(sb, "FACTION", getFaction());
-
-		return sb;
-	}
-
-	@Override
-	public int compareTo(ModulePlayer arg0) {
-		return this.getPlayer().getName().toUpperCase().compareTo(arg0.getPlayer().getName().toUpperCase());
-	}
+    @Override
+    public int compareTo(ModulePlayer arg0) {
+        return this.getPlayer().getName().toUpperCase().compareTo(arg0.getPlayer().getName().toUpperCase());
+    }
 }

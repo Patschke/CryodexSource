@@ -91,11 +91,11 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
 
     public int getScore(Tournament t) {
 
-        Integer score = getPlayerStatisticInteger("Score");
+        Integer score = getPlayerStatisticInteger(t,"Score");
 
-        // if(score != null){
-        // return score;
-        // }
+        if (score != null) {
+            return score;
+        }
 
         score = 0;
 
@@ -103,7 +103,7 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
             score += getRoundScore(i, t);
         }
 
-        putPlayerStatisticInteger("Score", score);
+        putPlayerStatisticInteger(t,"Score", score);
 
         return score;
     }
@@ -148,7 +148,7 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
 
     public double getAverageScore(Tournament t) {
 
-        Double averageScore = getPlayerStatisticDouble("AverageScore");
+        Double averageScore = getPlayerStatisticDouble(t,"AverageScore");
 
         if (averageScore != null) {
             return averageScore;
@@ -159,14 +159,14 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
 
         averageScore = score * 1.0 / matchCount;
 
-        putPlayerStatisticDouble("AverageScore", averageScore);
+        putPlayerStatisticDouble(t,"AverageScore", averageScore);
 
         return averageScore;
     }
 
     public double getAverageSoS(Tournament t) {
 
-        Double averageSos = getPlayerStatisticDouble("AverageSos");
+        Double averageSos = getPlayerStatisticDouble(t,"AverageSos");
 
         if (averageSos != null) {
             return averageSos;
@@ -196,14 +196,14 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
             averageSos = bd.doubleValue();
         }
 
-        putPlayerStatisticDouble("AverageSos", averageSos);
+        putPlayerStatisticDouble(t,"AverageSos", averageSos);
 
         return averageSos;
     }
 
     public int getWins(Tournament t) {
 
-        Integer score = getPlayerStatisticInteger("Wins");
+        Integer score = getPlayerStatisticInteger(t,"Wins");
 
         if (score != null) {
             return score;
@@ -216,14 +216,14 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
             }
         }
 
-        putPlayerStatisticInteger("Wins", score);
+        putPlayerStatisticInteger(t,"Wins", score);
 
         return score;
     }
 
     public int getLosses(Tournament t) {
 
-        Integer score = getPlayerStatisticInteger("Losses");
+        Integer score = getPlayerStatisticInteger(t,"Losses");
 
         if (score != null) {
             return score;
@@ -236,14 +236,14 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
             }
         }
 
-        putPlayerStatisticInteger("Losses", score);
+        putPlayerStatisticInteger(t,"Losses", score);
 
         return score;
     }
 
     public int getRank(Tournament t) {
 
-        Integer rank = getPlayerStatisticInteger("Rank");
+        Integer rank = getPlayerStatisticInteger(t,"Rank");
 
         if (rank != null) {
             return rank;
@@ -262,14 +262,14 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
             }
         }
 
-        putPlayerStatisticInteger("Rank", rank);
+        putPlayerStatisticInteger(t,"Rank", rank);
 
         return rank;
     }
 
     public int getEliminationRank(Tournament t) {
 
-        Integer rank = getPlayerStatisticInteger("EliminationRank");
+        Integer rank = getPlayerStatisticInteger(t,"EliminationRank");
 
         if (rank != null) {
             return rank;
@@ -292,14 +292,14 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
             }
         }
 
-        putPlayerStatisticInteger("EliminationRank", rank);
+        putPlayerStatisticInteger(t,"EliminationRank", rank);
 
         return rank;
     }
 
     public int getMarginOfVictory(Tournament t) {
 
-        Integer movPoints = getPlayerStatisticInteger("MOV");
+        Integer movPoints = getPlayerStatisticInteger(t,"MOV");
         
         if (movPoints != null) {
             return movPoints;
@@ -323,7 +323,6 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
                 } else if (etcT.getPlayerCount() == 3) {
                     movPoints += 150 + 150 + 50;
                 }
-                movPoints += tournamentPoints + (tournamentPoints / 2);
                 continue;
             } else if (match.getWinner(1) == null) {
                 continue;
@@ -339,7 +338,7 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
             movPoints += isPlayer1 ? tournamentPoints + diff : tournamentPoints - diff;
         }
 
-        putPlayerStatisticInteger("MOV", movPoints);
+        putPlayerStatisticInteger(t,"MOV", movPoints);
 
         return movPoints;
     }
@@ -357,7 +356,7 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
 
     public int getRoundDropped(Tournament t) {
 
-        Integer roundDropped = getPlayerStatisticInteger("RoundDropped");
+        Integer roundDropped = getPlayerStatisticInteger(t,"RoundDropped");
 
         if (roundDropped != null) {
             return roundDropped;
@@ -385,7 +384,7 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
             }
         }
 
-        putPlayerStatisticInteger("RoundDropped", roundDropped);
+        putPlayerStatisticInteger(t,"RoundDropped", roundDropped);
 
         return roundDropped;
     }
@@ -394,25 +393,25 @@ public class EtcPlayer implements Comparable<ModulePlayer>, XMLObject, ModulePla
         return getPlayer().getName();
     }
 
-    private Integer getPlayerStatisticInteger(String statName) {
+    private Integer getPlayerStatisticInteger(Tournament tournament, String statName) {
 
-        Integer value = integerStatistics.get(statName);
-
-        return value;
-    }
-
-    private void putPlayerStatisticInteger(String statName, Integer value) {
-        integerStatistics.put(statName, value);
-    }
-
-    private Double getPlayerStatisticDouble(String statName) {
-        Double value = doubleStatistics.get(statName);
+        Integer value = integerStatistics.get(tournament.getName() + statName);
 
         return value;
     }
 
-    private void putPlayerStatisticDouble(String statName, Double value) {
-        doubleStatistics.put(statName, value);
+    private void putPlayerStatisticInteger(Tournament tournament, String statName, Integer value) {
+        integerStatistics.put(tournament.getName() + statName, value);
+    }
+
+    private Double getPlayerStatisticDouble(Tournament tournament, String statName) {
+        Double value = doubleStatistics.get(tournament.getName() + statName);
+
+        return value;
+    }
+
+    private void putPlayerStatisticDouble(Tournament tournament, String statName, Double value) {
+        doubleStatistics.put(tournament.getName() + statName, value);
     }
 
     private void clearCache() {

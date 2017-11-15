@@ -22,7 +22,7 @@ import cryodex.xml.XMLUtils.Element;
 
 public abstract class Tournament implements XMLObject {
 
-	public enum InitialSeedingEnum {
+    public enum InitialSeedingEnum {
         RANDOM, BY_GROUP, IN_ORDER;
     }
 
@@ -36,14 +36,14 @@ public abstract class Tournament implements XMLObject {
     private List<String> dependentTournaments;
     private Module module;
     private boolean isRandomPairing = true;
-    
-    public Tournament(){
-    	this(null);
+
+    public Tournament() {
+        this(null);
     }
-    
-	public Tournament(WizardOptions wizardOptions) {
-		
-		// Initialize
+
+    public Tournament(WizardOptions wizardOptions) {
+
+        // Initialize
         this.players = new ArrayList<>();
         this.rounds = new ArrayList<>();
         this.dependentTournaments = new ArrayList<>();
@@ -55,35 +55,35 @@ public abstract class Tournament implements XMLObject {
         this.points = null;
         this.startAsSingleElimination = false;
         this.isRandomPairing = true;
-		
-        if(wizardOptions != null){
+
+        if (wizardOptions != null) {
             // Load values
             this.name = wizardOptions.getName();
             this.seedingEnum = wizardOptions.getInitialSeedingEnum();
             this.points = wizardOptions.getPoints();
             this.startAsSingleElimination = wizardOptions.isSingleElimination();
             this.isRandomPairing = wizardOptions.isRandomPairing();
-            
-            if(wizardOptions.getPlayerList() != null){
+
+            if (wizardOptions.getPlayerList() != null) {
                 this.players.addAll(wizardOptions.getPlayerList());
             }
         }
 
         module = Modules.getModuleByName(getModuleName());
     }
-	
-	public void loadXML(Element tournamentElement){
+
+    public void loadXML(Element tournamentElement) {
 
         String playerIDs = tournamentElement.getStringFromChild("PLAYERS");
 
         for (String s : playerIDs.split(",")) {
             Player p = CryodexController.getPlayerByID(s);
-            if(p != null){
-                addPlayer(p);
+            if (p != null) {
+                getPlayers().add(p);
             }
         }
 
-        if(rounds == null || rounds.isEmpty()){
+        if (rounds == null || rounds.isEmpty()) {
             Element roundElement = tournamentElement.getChild("ROUNDS");
             for (Element e : roundElement.getChildren()) {
                 rounds.add(new Round(e, this));
@@ -113,7 +113,7 @@ public abstract class Tournament implements XMLObject {
                 points.add(new Integer(s));
             }
         }
-        
+
         isRandomPairing = tournamentElement.getBooleanFromChild("ISRANDOMPAIRING", true);
 
         int counter = 1;
@@ -127,13 +127,13 @@ public abstract class Tournament implements XMLObject {
 
         }
 
-        getTournamentGUI().getRankingTable().setPlayers(getAllPlayers());		
-	}
-	
-	public void setupTournamentGUI(RankingTable rankingTable){
-		tournamentGUI = new TournamentGUI(rankingTable);
-	}
-	
+        triggerDeepChange();
+    }
+
+    public void setupTournamentGUI(RankingTable rankingTable) {
+        tournamentGUI = new TournamentGUI(rankingTable);
+    }
+
     public int getRoundNumber(Round round) {
         int count = 0;
         for (Round r : rounds) {
@@ -181,12 +181,12 @@ public abstract class Tournament implements XMLObject {
     public List<Player> getPlayers() {
         return players;
     }
-    
+
     public Set<Player> getAllPlayers() {
         // TreeSets and Head To Head comparisons can have problems.
         // Do not use them together.
         Set<Player> allPlayers = new TreeSet<Player>(getRankingNoHeadToHeadComparator());
-        
+
         for (Round r : getAllRounds()) {
             for (Match m : r.getMatches()) {
                 if (m.isBye()) {
@@ -232,9 +232,10 @@ public abstract class Tournament implements XMLObject {
     public boolean generateNextRound() {
 
         // All matches must have a result filled in
-    	String incompleteMatches = getLatestRound().isComplete(this);
+        String incompleteMatches = getLatestRound().isComplete(this);
         if (incompleteMatches != null) {
-            JOptionPane.showMessageDialog(Main.getInstance(), "<HTML>Current round is not complete. Please complete all matches before continuing<br>" + incompleteMatches);
+            JOptionPane.showMessageDialog(Main.getInstance(),
+                    "<HTML>Current round is not complete. Please complete all matches before continuing<br>" + incompleteMatches);
             return false;
         }
 
@@ -246,7 +247,7 @@ public abstract class Tournament implements XMLObject {
                 JOptionPane.showMessageDialog(Main.getInstance(), "Final tournament complete. No more rounds will be generated.");
                 return false;
             }
-            
+
             String invalidMatches = getLatestRound().isValid(this);
             if (invalidMatches != null) {
                 JOptionPane.showMessageDialog(Main.getInstance(),
@@ -262,7 +263,8 @@ public abstract class Tournament implements XMLObject {
             String invalidMatches = getLatestRound().isValid(this);
             if (invalidMatches != null) {
                 JOptionPane.showMessageDialog(Main.getInstance(),
-                        "<HTML>At least one tournamnt result is not correct. Check if points are backwards or a result should be a modified win or tie.<br>" + invalidMatches);
+                        "<HTML>At least one tournamnt result is not correct. Check if points are backwards or a result should be a modified win or tie.<br>"
+                                + invalidMatches);
                 return false;
             }
 
@@ -271,7 +273,6 @@ public abstract class Tournament implements XMLObject {
         return true;
     }
 
-    
     public void cancelRound(int roundNumber) {
         if (rounds.size() >= roundNumber) {
             // If we are generating a past round. Clear all existing rounds that
@@ -289,7 +290,6 @@ public abstract class Tournament implements XMLObject {
         }
     }
 
-    
     public void generateRound(int roundNumber) {
 
         // if trying to skip a round...stop it
@@ -319,9 +319,9 @@ public abstract class Tournament implements XMLObject {
             getTournamentGUI().getRoundTabbedPane().addSwissTab(roundNumber, r.getPanel());
         }
 
-        getTournamentGUI().getRankingTable().setPlayers(getAllPlayers());
+        triggerDeepChange();
     }
-    
+
     protected List<Match> firstRoundPairings() {
         List<Match> matches;
         List<Player> nonPairedPlayers = new ArrayList<>();
@@ -335,16 +335,16 @@ public abstract class Tournament implements XMLObject {
         }
         nonPairedPlayers.removeAll(firstRoundByePlayers);
 
-        switch(seedingEnum) {
-            case IN_ORDER:
-                matches = initialSeedingInOrder(nonPairedPlayers);
-                break;
-            case BY_GROUP:
-                matches = initialSeedingByGroup(nonPairedPlayers);
-                break;
-            default:
-                matches = initialSeedingRandom(nonPairedPlayers);
-                break;
+        switch (seedingEnum) {
+        case IN_ORDER:
+            matches = initialSeedingInOrder(nonPairedPlayers);
+            break;
+        case BY_GROUP:
+            matches = initialSeedingByGroup(nonPairedPlayers);
+            break;
+        default:
+            matches = initialSeedingRandom(nonPairedPlayers);
+            break;
         }
 
         for (Player p : firstRoundByePlayers) {
@@ -397,7 +397,7 @@ public abstract class Tournament implements XMLObject {
                 playerMap.remove(biggestGroup);
             }
 
-            //ready player two
+            // ready player two
             List<String> keys = new ArrayList<>(playerMap.keySet());
             Collections.shuffle(keys);
             for (String key : keys) {
@@ -406,7 +406,7 @@ public abstract class Tournament implements XMLObject {
                 }
             }
 
-            //can't find a player 2, take one from own team
+            // can't find a player 2, take one from own team
             if (p2 == null) {
                 for (Map.Entry<String, List<Player>> entry : playerMap.entrySet()) {
                     p2 = entry.getValue().get(0);
@@ -497,7 +497,7 @@ public abstract class Tournament implements XMLObject {
             tempList.remove(byeUser);
         }
 
-        if(isRandomPairing){
+        if (isRandomPairing) {
             matches = getRandomMatches(tempList);
         } else {
             matches = getOrderedMatches(tempList);
@@ -514,17 +514,17 @@ public abstract class Tournament implements XMLObject {
 
         return matches;
     }
-    
+
     public List<Match> getOrderedMatches(List<Player> playerList) {
         OrderedMatchGeneration generator = new OrderedMatchGeneration(this, playerList);
         return generator.generateMatches();
     }
-    
-    public List<Match> getRandomMatches(List<Player> playerList){
+
+    public List<Match> getRandomMatches(List<Player> playerList) {
         RandomMatchGeneration generator = new RandomMatchGeneration(this, playerList);
         return generator.generateMatches();
     }
-    
+
     public void generateSingleEliminationMatches(int cutSize) {
 
         List<Match> matches = new ArrayList<>();
@@ -590,7 +590,6 @@ public abstract class Tournament implements XMLObject {
         CryodexController.saveData();
     }
 
-    
     public StringBuilder appendXML(StringBuilder sb) {
 
         String playerString = "";
@@ -623,55 +622,49 @@ public abstract class Tournament implements XMLObject {
         return sb;
     }
 
-    
     public void startTournament() {
         generateRound(1);
     }
 
-    
     public void addPlayer(Player p) {
         getPlayers().add(p);
+        triggerDeepChange();
     }
 
-    
     public void dropPlayer(Player p) {
 
         getPlayers().remove(p);
-
-        resetRankingTable();
+        triggerDeepChange();
     }
 
-
-    
     public void massDropPlayers(List<Player> playersToDrop) {
 
         for (Player p : playersToDrop) {
             dropPlayer(p);
         }
 
-        resetRankingTable();
-    }
-    
-    public abstract void massDropPlayers(int minScore, int maxCount);
-    
-    public void resetRankingTable() {
-        getTournamentGUI().getRankingTable().setPlayers(getAllPlayers());
+        triggerDeepChange();
     }
 
+    public abstract void massDropPlayers(int minScore, int maxCount);
+
+    private void resetRankingTable() {
+        getTournamentGUI().getRankingTable().setPlayers(getAllPlayers());
+    }
 
     public int getRoundPoints(int roundNumber) {
 
         int tournamentPoints = getPointsDefault();
 
         try {
-			if (getPoints() != null && getPoints().isEmpty() == false) {
+            if (getPoints() != null && getPoints().isEmpty() == false) {
 
-			    tournamentPoints = getPoints().size() >= roundNumber ? getPoints().get(roundNumber - 1) : getPoints().get(getPoints().size() - 1);
-			}
-		} catch (Exception e) {
-			// If a problem occurs then stick to 100. Lets be honest, it's rarely anything else.
-			e.printStackTrace();
-		}
+                tournamentPoints = getPoints().size() >= roundNumber ? getPoints().get(roundNumber - 1) : getPoints().get(getPoints().size() - 1);
+            }
+        } catch (Exception e) {
+            // If a problem occurs then stick to 100. Lets be honest, it's rarely anything else.
+            e.printStackTrace();
+        }
 
         return tournamentPoints;
     }
@@ -681,7 +674,7 @@ public abstract class Tournament implements XMLObject {
             dependentTournaments.add(t.getName());
         }
     }
-    
+
     public abstract int getPointsDefault();
 
     public List<Tournament> getDependentTournaments() {
@@ -700,50 +693,55 @@ public abstract class Tournament implements XMLObject {
 
         return dependentList;
     }
-    
-    public InitialSeedingEnum getSeedingEnum(){
-    	return seedingEnum;
+
+    public InitialSeedingEnum getSeedingEnum() {
+        return seedingEnum;
     }
 
     public void triggerChange() {
-        getTournamentGUI().getRankingTable().resetPlayers();
         CryodexController.saveData();
+        getTournamentGUI().getRankingTable().resetPlayers();
     }
 
-    public Module getModule(){
+    public void triggerDeepChange() {
+        CryodexController.saveData();
+        resetRankingTable();
+    }
+
+    public Module getModule() {
         return module;
     }
 
-	public abstract Icon getIcon();
+    public abstract Icon getIcon();
 
-	public abstract String getModuleName();
+    public abstract String getModuleName();
 
-	public abstract RoundPanel getRoundPanel(List<Match> matches);
-	
-	public abstract TournamentComparator<Player> getRankingComparator();
-	
-	public abstract TournamentComparator<Player> getRankingNoHeadToHeadComparator();
-	
-	public abstract TournamentComparator<Player> getPairingComparator();
-	
-	public abstract ExportController getExportController();
-	
-	public Round getLatestRound() {
+    public abstract RoundPanel getRoundPanel(List<Match> matches);
+
+    public abstract TournamentComparator<Player> getRankingComparator();
+
+    public abstract TournamentComparator<Player> getRankingNoHeadToHeadComparator();
+
+    public abstract TournamentComparator<Player> getPairingComparator();
+
+    public abstract ExportController getExportController();
+
+    public Round getLatestRound() {
         if (rounds == null || rounds.isEmpty()) {
             return null;
         } else {
             return rounds.get(rounds.size() - 1);
         }
     }
-	
-	public boolean isMatchComplete(Match m){
+
+    public boolean isMatchComplete(Match m) {
 
         boolean winnerChosen = m.getWinner(1) != null;
-        
+
         return m.isBye() || winnerChosen;
-	}
-	
-	public boolean isValidResult(Match m) {
+    }
+
+    public boolean isValidResult(Match m) {
         Integer player1Points = m.getPlayer1Points() == null ? 0 : m.getPlayer1Points();
         Integer player2Points = m.getPlayer2Points() == null ? 0 : m.getPlayer2Points();
 
@@ -759,13 +757,13 @@ public abstract class Tournament implements XMLObject {
                 || (player1Points == player2Points && m.getWinner(1) != null)) {
             return true;
         }
-        
+
         return false;
     }
-	
-	public Match getMatch(Player player1, Player player2) {
-	    return new Match(player1, player2);
-	}
-	
-	public abstract ModulePlayer getModulePlayer(Player p);
+
+    public Match getMatch(Player player1, Player player2) {
+        return new Match(player1, player2);
+    }
+
+    public abstract ModulePlayer getModulePlayer(Player p);
 }

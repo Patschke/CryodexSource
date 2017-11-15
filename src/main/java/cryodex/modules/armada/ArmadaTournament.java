@@ -55,7 +55,7 @@ public class ArmadaTournament extends Tournament implements XMLObject {
             }
         }
 
-        resetRankingTable();
+        triggerDeepChange();
     }
 
     @Override

@@ -99,7 +99,7 @@ public class EtcTournament extends Tournament implements XMLObject {
             }
         }
 
-        resetRankingTable();
+        triggerDeepChange();
     }
 
     @Override

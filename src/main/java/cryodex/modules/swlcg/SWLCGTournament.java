@@ -55,7 +55,7 @@ public class SWLCGTournament extends Tournament implements XMLObject {
             }
         }
 
-        resetRankingTable();
+        triggerDeepChange();
     }
 
     @Override

@@ -55,7 +55,7 @@ public class RunewarsTournament extends Tournament implements XMLObject {
             }
         }
 
-        resetRankingTable();
+        triggerDeepChange();
     }
 
     @Override

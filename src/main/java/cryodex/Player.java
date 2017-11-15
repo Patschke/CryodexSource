@@ -132,14 +132,13 @@ public class Player implements Comparable<Player>, XMLObject {
 
         if (t != null) {
 
-            rounds: for (Round r : t.getAllRounds()) {
+            for (Round r : t.getAllRounds()) {
                 if (r.isSingleElimination()) {
                     continue;
                 }
                 for (Match m : r.getMatches()) {
                     if (m.getPlayer1() == this || (m.getPlayer2() != null && m.getPlayer2() == this)) {
                         matches.add(m);
-                        continue rounds;
                     }
                 }
             }
