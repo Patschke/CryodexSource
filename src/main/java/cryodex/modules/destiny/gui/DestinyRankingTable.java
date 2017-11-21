@@ -64,7 +64,7 @@ public class DestinyRankingTable extends RankingTable {
 
         @Override
         public Object getValueAt(int arg0, int arg1) {
-            DestinyPlayer user = (DestinyPlayer) getData().get(arg0).getModuleInfoByModule(getTournament().getModule());
+            DestinyPlayer user = (DestinyPlayer) getTournament().getModulePlayer(getData().get(arg0));
             Object value = null;
             switch (arg1) {
             case 0:

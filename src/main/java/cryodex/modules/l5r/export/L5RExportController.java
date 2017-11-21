@@ -66,8 +66,8 @@ public class L5RExportController extends ExportController {
 				String matchString = "";
 				if (m.getPlayer2() != null) {
 
-					L5RPlayer xp1 = (L5RPlayer) m.getPlayer1().getModuleInfoByModule(tournament.getModule());
-					L5RPlayer xp2 = (L5RPlayer) m.getPlayer2().getModuleInfoByModule(tournament.getModule());
+					L5RPlayer xp1 = (L5RPlayer) tournament.getModulePlayer(m.getPlayer1());
+					L5RPlayer xp2 = (L5RPlayer) tournament.getModulePlayer(m.getPlayer2());
 
 					matchString += "<table class=\"print-friendly\" width=100%><tr><th><h4>Round " + roundNumber
 							+ " - Table " + (index + 1) + "</h4></th><th vAlign=bottom align=left><h4>"

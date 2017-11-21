@@ -46,8 +46,8 @@ public class SWLCGComparator extends TournamentComparator<Player> {
 
 		int result = 0;
 
-		SWLCGPlayer o1 = (SWLCGPlayer) p1.getModuleInfoByModule(t.getModule());
-		SWLCGPlayer o2 = (SWLCGPlayer) p2.getModuleInfoByModule(t.getModule());
+		SWLCGPlayer o1 = (SWLCGPlayer) t.getModulePlayer(p1);
+		SWLCGPlayer o2 = (SWLCGPlayer) t.getModulePlayer(p2);
 		
 		switch (option) {
 		case SCORE:

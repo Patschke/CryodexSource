@@ -57,7 +57,7 @@ public class SWLCGRankingTable extends RankingTable {
 
 		@Override
 		public Object getValueAt(int arg0, int arg1) {
-			SWLCGPlayer user = (SWLCGPlayer) getData().get(arg0).getModuleInfoByModule(getTournament().getModule());
+			SWLCGPlayer user = (SWLCGPlayer) getTournament().getModulePlayer(getData().get(arg0));
 			Object value = null;
 			switch (arg1) {
 			case 0:

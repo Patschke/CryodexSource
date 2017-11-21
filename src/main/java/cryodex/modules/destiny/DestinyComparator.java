@@ -46,8 +46,8 @@ public class DestinyComparator extends TournamentComparator<Player> {
 
 		int result = 0;
 
-		DestinyPlayer o1 = (DestinyPlayer) p1.getModuleInfoByModule(t.getModule());
-		DestinyPlayer o2 = (DestinyPlayer) p2.getModuleInfoByModule(t.getModule());
+		DestinyPlayer o1 = (DestinyPlayer) t.getModulePlayer(p1);
+		DestinyPlayer o2 = (DestinyPlayer) t.getModulePlayer(p2);
 		
 		switch (option) {
 		case SCORE:

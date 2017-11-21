@@ -64,7 +64,7 @@ public class EtcRankingTable extends RankingTable {
 
         @Override
         public Object getValueAt(int arg0, int arg1) {
-            EtcPlayer user = (EtcPlayer) getData().get(arg0).getModuleInfoByModule(getTournament().getModule());
+            EtcPlayer user = (EtcPlayer) getTournament().getModulePlayer(getData().get(arg0));
             Object value = null;
             switch (arg1) {
             case 0:

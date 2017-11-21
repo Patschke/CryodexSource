@@ -48,8 +48,8 @@ public class EtcComparator extends TournamentComparator<Player> {
 
 		int result = 0;
 
-		EtcPlayer o1 = (EtcPlayer) p1.getModuleInfoByModule(t.getModule());
-		EtcPlayer o2 = (EtcPlayer) p2.getModuleInfoByModule(t.getModule());
+		EtcPlayer o1 = (EtcPlayer) t.getModulePlayer(p1);
+		EtcPlayer o2 = (EtcPlayer) t.getModulePlayer(p2);
 		
 		switch (option) {
 		case SCORE:

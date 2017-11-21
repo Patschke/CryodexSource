@@ -48,8 +48,8 @@ public class ArmadaComparator extends TournamentComparator<Player> {
 
 		int result = 0;
 
-		ArmadaPlayer o1 = (ArmadaPlayer) p1.getModuleInfoByModule(t.getModule());
-		ArmadaPlayer o2 = (ArmadaPlayer) p2.getModuleInfoByModule(t.getModule());
+		ArmadaPlayer o1 = (ArmadaPlayer) t.getModulePlayer(p1);
+		ArmadaPlayer o2 = (ArmadaPlayer) t.getModulePlayer(p2);
 		
 		switch (option) {
 		case SCORE:

@@ -60,7 +60,7 @@ public class XWingRankingTable extends RankingTable {
 
 		@Override
 		public Object getValueAt(int arg0, int arg1) {
-			XWingPlayer user = (XWingPlayer) getData().get(arg0).getModuleInfoByModule(getTournament().getModule());
+			XWingPlayer user = (XWingPlayer) getTournament().getModulePlayer(getData().get(arg0));
 			Object value = null;
 			switch (arg1) {
 			case 0:

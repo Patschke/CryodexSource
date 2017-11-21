@@ -48,8 +48,8 @@ public class XWingComparator extends TournamentComparator<Player> {
 
 		int result = 0;
 
-		XWingPlayer o1 = (XWingPlayer) p1.getModuleInfoByModule(t.getModule());
-		XWingPlayer o2 = (XWingPlayer) p2.getModuleInfoByModule(t.getModule());
+		XWingPlayer o1 = (XWingPlayer) t.getModulePlayer(p1);
+		XWingPlayer o2 = (XWingPlayer) t.getModulePlayer(p2);
 		
 		switch (option) {
 		case SCORE:

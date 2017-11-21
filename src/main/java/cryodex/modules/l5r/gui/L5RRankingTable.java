@@ -64,7 +64,7 @@ public class L5RRankingTable extends RankingTable {
 
         @Override
         public Object getValueAt(int arg0, int arg1) {
-            L5RPlayer user = (L5RPlayer) getData().get(arg0).getModuleInfoByModule(getTournament().getModule());
+            L5RPlayer user = (L5RPlayer) getTournament().getModulePlayer(getData().get(arg0));
             Object value = null;
             switch (arg1) {
             case 0:

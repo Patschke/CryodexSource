@@ -64,7 +64,7 @@ public class IARankingTable extends RankingTable {
 
         @Override
         public Object getValueAt(int arg0, int arg1) {
-            IAPlayer user = (IAPlayer) getData().get(arg0).getModuleInfoByModule(getTournament().getModule());
+            IAPlayer user = (IAPlayer) getTournament().getModulePlayer(getData().get(arg0));
             Object value = null;
             switch (arg1) {
             case 0:

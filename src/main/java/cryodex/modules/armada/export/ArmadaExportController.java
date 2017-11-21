@@ -66,8 +66,8 @@ public class ArmadaExportController extends ExportController{
 				String matchString = "";
 				if (m.getPlayer2() != null) {
 
-					ArmadaPlayer xp1 = (ArmadaPlayer) m.getPlayer1().getModuleInfoByModule(tournament.getModule());
-					ArmadaPlayer xp2 = (ArmadaPlayer) m.getPlayer2().getModuleInfoByModule(tournament.getModule());
+					ArmadaPlayer xp1 = (ArmadaPlayer) tournament.getModulePlayer(m.getPlayer1());
+					ArmadaPlayer xp2 = (ArmadaPlayer) tournament.getModulePlayer(m.getPlayer2());
 
 					matchString += "<table class=\"print-friendly\" width=100%><tr><th><h4>Round " + roundNumber
 							+ " - Table " + (index + 1) + "</h4></th><th vAlign=bottom align=left><h4>"

@@ -46,8 +46,8 @@ public class IAComparator extends TournamentComparator<Player> {
 
 		int result = 0;
 
-		IAPlayer o1 = (IAPlayer) p1.getModuleInfoByModule(t.getModule());
-		IAPlayer o2 = (IAPlayer) p2.getModuleInfoByModule(t.getModule());
+		IAPlayer o1 = (IAPlayer) t.getModulePlayer(p1);
+		IAPlayer o2 = (IAPlayer) t.getModulePlayer(p2);
 		
 		switch (option) {
 		case SCORE:

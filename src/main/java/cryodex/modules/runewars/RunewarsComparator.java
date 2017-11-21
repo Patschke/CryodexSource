@@ -48,8 +48,8 @@ public class RunewarsComparator extends TournamentComparator<Player> {
 
 		int result = 0;
 
-		RunewarsPlayer o1 = (RunewarsPlayer) p1.getModuleInfoByModule(t.getModule());
-		RunewarsPlayer o2 = (RunewarsPlayer) p2.getModuleInfoByModule(t.getModule());
+		RunewarsPlayer o1 = (RunewarsPlayer) t.getModulePlayer(p1);
+		RunewarsPlayer o2 = (RunewarsPlayer) t.getModulePlayer(p2);
 		
 		switch (option) {
 		case SCORE:

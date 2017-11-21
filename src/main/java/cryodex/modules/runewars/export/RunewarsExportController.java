@@ -22,20 +22,19 @@ public class RunewarsExportController extends ExportController{
 		playerList.addAll(tournament.getAllPlayers());
 		Collections.sort(playerList, new RunewarsComparator(tournament, RunewarsComparator.rankingCompare));
 
-		String content = "<table border=\"1\"><tr><th>Rank</th><th>Name</th><th>Faction</th><th>Score</th><th>MoV</th><th>SoS</th></tr>";
+		String content = "<table border=\"1\"><tr><th>Rank</th><th>Name</th><th>Score</th><th>MoV</th><th>SoS</th></tr>";
 
 		for (Player p : playerList) {
 
 			RunewarsPlayer xp = ((RunewarsTournament) tournament).getModulePlayer(p);
 
 			String name = p.getName();
-			String faction = xp.getFaction() == null ? "" : xp.getFaction().toString();
 
 			if (activePlayers.contains(p) == false) {
 				name = "(D#" + xp.getRoundDropped(tournament) + ")" + name;
 			}
 
-			content += "<tr><td>" + xp.getRank(tournament) + "</td><td>" + name + "</td><td>" + faction + "</td><td>"
+			content += "<tr><td>" + xp.getRank(tournament) + "</td><td>" + name + "</td><td>"
 					+ xp.getScore(tournament) + "</td><td>" + xp.getMarginOfVictory(tournament) + "</td><td>"
 					+ xp.getAverageSoS(tournament) + "</td></tr>";
 		}
@@ -66,8 +65,8 @@ public class RunewarsExportController extends ExportController{
 				String matchString = "";
 				if (m.getPlayer2() != null) {
 
-					RunewarsPlayer xp1 = (RunewarsPlayer) m.getPlayer1().getModuleInfoByModule(tournament.getModule());
-					RunewarsPlayer xp2 = (RunewarsPlayer) m.getPlayer2().getModuleInfoByModule(tournament.getModule());
+					RunewarsPlayer xp1 = (RunewarsPlayer) tournament.getModulePlayer(m.getPlayer1());
+					RunewarsPlayer xp2 = (RunewarsPlayer) tournament.getModulePlayer(m.getPlayer2());
 
 					matchString += "<table class=\"print-friendly\" width=100%><tr><th><h4>Round " + roundNumber
 							+ " - Table " + (index + 1) + "</h4></th><th vAlign=bottom align=left><h4>"

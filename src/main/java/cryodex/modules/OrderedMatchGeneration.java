@@ -36,6 +36,8 @@ public class OrderedMatchGeneration {
 
 	public List<Match> generateMatches() {
 
+	    Collections.sort(players, tournament.getPairingComparator());
+	    
 		List<Player> tempList = new ArrayList<>();
 		tempList.addAll(players);
 		Collections.sort(tempList, tournament.getPairingComparator());
@@ -132,14 +134,11 @@ public class OrderedMatchGeneration {
 
 	private int getScore(List<Match> matches) {
 
-		// order players
-		Collections.sort(players, tournament.getPairingComparator());
-
 		// get list of players in order of matches
-		List<ModulePlayer> playerByMatchOrder = new ArrayList<ModulePlayer>();
+		List<Player> playerByMatchOrder = new ArrayList<Player>();
 		for (Match xm : matches) {
-			playerByMatchOrder.add(tournament.getModulePlayer(xm.getPlayer1()));
-			playerByMatchOrder.add(tournament.getModulePlayer(xm.getPlayer2()));
+			playerByMatchOrder.add(xm.getPlayer1());
+			playerByMatchOrder.add(xm.getPlayer2());
 		}
 
 		int score = 0;

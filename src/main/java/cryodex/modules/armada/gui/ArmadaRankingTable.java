@@ -64,7 +64,7 @@ public class ArmadaRankingTable extends RankingTable {
 
         @Override
         public Object getValueAt(int arg0, int arg1) {
-            ArmadaPlayer user = (ArmadaPlayer) getData().get(arg0).getModuleInfoByModule(getTournament().getModule());
+            ArmadaPlayer user = (ArmadaPlayer) getTournament().getModulePlayer(getData().get(arg0));
             Object value = null;
             switch (arg1) {
             case 0:

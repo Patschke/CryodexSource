@@ -67,8 +67,8 @@ public class SWLCGExportController extends ExportController {
 				String matchString = "";
 				if (m.getPlayer2() != null) {
 
-					SWLCGPlayer xp1 = (SWLCGPlayer) m.getPlayer1().getModuleInfoByModule(tournament.getModule());
-					SWLCGPlayer xp2 = (SWLCGPlayer) m.getPlayer2().getModuleInfoByModule(tournament.getModule());
+					SWLCGPlayer xp1 = (SWLCGPlayer) tournament.getModulePlayer(m.getPlayer1());
+					SWLCGPlayer xp2 = (SWLCGPlayer) tournament.getModulePlayer(m.getPlayer2());
 
 					matchString += "<table class=\"print-friendly\" width=100%><tr><th><h4>Round " + roundNumber
 							+ " - Table " + (index + 1) + "</h4></th><th vAlign=bottom align=left><h4>"

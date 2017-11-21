@@ -1,6 +1,8 @@
 package cryodex.modules;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 
 import cryodex.CryodexController;
 import cryodex.Player;
@@ -171,8 +173,22 @@ public class Match implements XMLObject {
             if (r.isSingleElimination()) {
                 continue;
             }
+            
+            TreeSet<Match> uniqueMatchSet = new TreeSet<Match>(new Comparator<Match>() {
 
-            for (Match match : r.getMatches()) {
+                @Override
+                public int compare(Match o1, Match o2) {
+                    if(o1.getPlayer1() == o2.getPlayer1() && o1.getPlayer2() == o2.getPlayer2()){
+                        return 0;
+                    }
+                    
+                    return o1.getPlayer1().compareTo(o2.getPlayer1());
+                }
+            });
+
+            uniqueMatchSet.addAll(r.getMatches());
+            
+            for (Match match : uniqueMatchSet) {
                 if (match.getPlayer2() == null || match == this) {
                     continue;
                 }

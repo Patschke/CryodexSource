@@ -64,7 +64,7 @@ public class RunewarsRankingTable extends RankingTable {
 
         @Override
         public Object getValueAt(int arg0, int arg1) {
-            RunewarsPlayer user = (RunewarsPlayer) getData().get(arg0).getModuleInfoByModule(getTournament().getModule());
+            RunewarsPlayer user = (RunewarsPlayer) getTournament().getModulePlayer(getData().get(arg0));
             Object value = null;
             switch (arg1) {
             case 0:

@@ -66,8 +66,8 @@ public class XWingExportController extends ExportController {
 				String matchString = "";
 				if (m.getPlayer2() != null) {
 
-					XWingPlayer xp1 = (XWingPlayer) m.getPlayer1().getModuleInfoByModule(tournament.getModule());
-					XWingPlayer xp2 = (XWingPlayer) m.getPlayer2().getModuleInfoByModule(tournament.getModule());
+					XWingPlayer xp1 = (XWingPlayer) tournament.getModulePlayer(m.getPlayer1());
+					XWingPlayer xp2 = (XWingPlayer) tournament.getModulePlayer(m.getPlayer2());
 
 					matchString += "<table class=\"print-friendly\" width=100%><tr><th><h4>Round " + roundNumber
 							+ " - Table " + (index + 1) + "</h4></th><th vAlign=bottom align=left><h4>"

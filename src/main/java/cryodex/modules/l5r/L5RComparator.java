@@ -46,8 +46,8 @@ public class L5RComparator extends TournamentComparator<Player> {
 
 		int result = 0;
 
-		L5RPlayer o1 = (L5RPlayer) p1.getModuleInfoByModule(t.getModule());
-		L5RPlayer o2 = (L5RPlayer) p2.getModuleInfoByModule(t.getModule());
+		L5RPlayer o1 = (L5RPlayer) t.getModulePlayer(p1);
+		L5RPlayer o2 = (L5RPlayer) t.getModulePlayer(p2);
 		
 		switch (option) {
 		case SCORE:
