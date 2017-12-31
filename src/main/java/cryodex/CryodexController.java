@@ -23,6 +23,7 @@ import cryodex.modules.armada.ArmadaModule;
 import cryodex.modules.destiny.DestinyModule;
 import cryodex.modules.etc.EtcModule;
 import cryodex.modules.imperialassault.IAModule;
+import cryodex.modules.krayt.KraytModule;
 import cryodex.modules.l5r.L5RModule;
 import cryodex.modules.runewars.RunewarsModule;
 import cryodex.modules.swlcg.SWLCGModule;
@@ -38,7 +39,7 @@ public class CryodexController {
 		XWING("X-Wing", XWingModule.getInstance()), IA("Imperial Assault", IAModule.getInstance()), ARMADA("Armada",
 				ArmadaModule.getInstance()), DESTINY("Destiny", DestinyModule.getInstance()), SWLCG("Star Wars LCG",
 						SWLCGModule.getInstance()), RUNEWARS("RuneWars", RunewarsModule.getInstance()), L5R("Legends of the Five Rings", L5RModule.getInstance()), ETC(
-								"Special Event: X-Wing ETC", EtcModule.getInstance());
+								"Special Event: X-Wing ETC", EtcModule.getInstance()), KRAYT("Krayt Cup", KraytModule.getInstance());
 
 		Module module;
 		String name;
