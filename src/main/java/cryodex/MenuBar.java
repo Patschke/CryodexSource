@@ -88,8 +88,8 @@ public class MenuBar extends JMenuBar {
                 public void actionPerformed(ActionEvent e) {
                     JOptionPane.showMessageDialog(Main.getInstance(),
                             "Import format is CSV with quotation marks. Legal columns are as follows.\n\n"
-                                    + "\"Name\",\"First Name\",\"Last Name\",\"Email Address\",\"Group\",\"Squad\"\n"
-                                    + "\"Chris Brown\",\"Chris\",\"Brown\",\"chris.brown.spe@gmail.com\",\"Fort Wayne\",\"584074\"");
+                                    + "\"Name\",\"First Name\",\"Last Name\",\"Email Address\",\"Group\",\"Squad\",\"Faction\"\n"
+                                    + "\"Chris Brown\",\"Chris\",\"Brown\",\"chris.brown.spe@gmail.com\",\"Fort Wayne\",\"584074\",\"REBEL\"");
 
                     PlayerImport.importPlayers();
                 }

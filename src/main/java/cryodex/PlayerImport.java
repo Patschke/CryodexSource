@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.swing.JFileChooser;
 
 import cryodex.modules.xwing.XWingPlayer;
+import cryodex.modules.xwing.XWingPlayer.Faction;
 
 public class PlayerImport {
 
@@ -44,6 +45,7 @@ public class PlayerImport {
 				Integer emailAddress = headerMap.get("\"Email Address\"");
                 Integer group = headerMap.get("\"Group\"");
                 Integer squad = headerMap.get("\"Squad\"");
+                Integer factionColummn = headerMap.get("\"Faction\"");
 				
 				List<Player> players = new ArrayList<Player>();
 
@@ -70,6 +72,13 @@ public class PlayerImport {
 					
 					XWingPlayer xp = new XWingPlayer(p);
 					xp.setSquadId(getString(squad, playerLine));
+					
+					try {
+                        Faction faction = Faction.valueOf(getString(factionColummn, playerLine));
+                        xp.setFaction(faction);
+                    } catch (Exception e) {
+                        // Do nothing on failure
+                    }
 					
 					p.getModuleInfo().add(xp);
 					
