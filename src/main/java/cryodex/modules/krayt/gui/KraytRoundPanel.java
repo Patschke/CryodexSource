@@ -377,6 +377,8 @@ public class KraytRoundPanel extends RoundPanel {
                 String[] pnsa = (String[]) playerNames.toArray(new String[playerNames.size()]);
                 
                 subPlayer1Combo = new JComboBox<String>(pnsa);
+                
+                subPlayer1Combo.addActionListener(GamePanel.this);
             }
             
             return subPlayer1Combo;
@@ -396,6 +398,8 @@ public class KraytRoundPanel extends RoundPanel {
                 String[] pnsa = (String[]) playerNames.toArray(new String[playerNames.size()]);
                 
                 subPlayer2Combo = new JComboBox<String>(pnsa);
+                
+                subPlayer2Combo.addActionListener(GamePanel.this);
             }
             
             return subPlayer2Combo;

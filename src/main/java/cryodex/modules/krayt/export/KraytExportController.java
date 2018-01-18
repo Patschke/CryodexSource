@@ -31,8 +31,11 @@ public class KraytExportController extends ExportController {
 
         String content = "<table border=\"1\"><tr><th>Rank</th><th>Name</th><th>Score</th><th>MoV</th><th>SoS</th></tr>";
 
+        int rankCounter = 0;
         for (Player p : playerList) {
 
+            rankCounter++;
+            
             KraytPlayer xp = ((KraytTournament) tournament).getModulePlayer(p);
 
             String name = p.getName();
@@ -41,7 +44,7 @@ public class KraytExportController extends ExportController {
                 name = "(D#" + xp.getRoundDropped(tournament) + ")" + name;
             }
 
-            content += "<tr><td>" + xp.getRank(tournament) + "</td><td>" + name + "</td><td>" + xp.getScore(tournament)
+            content += "<tr><td>" + rankCounter + "</td><td>" + name + "</td><td>" + xp.getScore(tournament)
                     + "</td><td>" + xp.getMarginOfVictory(tournament) + "</td><td>" + xp.getAverageSoS(tournament) + "</td></tr>";
         }
 
@@ -100,8 +103,12 @@ public class KraytExportController extends ExportController {
 
         String content = "<table border=\"1\"><tr><th>Rank</th><th>Name</th><th>Group</th><th>Faction</th><th>Score</th><th>MoV</th><th>SoS</th></tr>";
 
+        int rankingCounter = 0;
+        
         for (Player p : playerList) {
 
+            rankingCounter++;
+            
             KraytPlayer xp = ((KraytTournament) tournament).getModulePlayer(p);
 
             String name = p.getName();
@@ -109,7 +116,7 @@ public class KraytExportController extends ExportController {
             String group = p.getGroupName();
 
 
-            content += "<tr><td>" + xp.getRank(tournament) + "</td><td>" + name + "</td><td>" + group + "</td><td>" + faction + "</td><td>" + xp.getScore(tournament)
+            content += "<tr><td>" + rankingCounter + "</td><td>" + name + "</td><td>" + group + "</td><td>" + faction + "</td><td>" + xp.getScore(tournament)
                     + "</td><td>" + xp.getMarginOfVictory(tournament) + "</td><td>" + xp.getAverageSoS(tournament) + "</td></tr>";
         }
 
