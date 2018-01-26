@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import cryodex.CryodexController;
 import cryodex.Player;
@@ -225,5 +226,45 @@ public class KraytExportController extends ExportController {
     public void tcxTeamReport(Tournament tournament) {
         // TODO Auto-generated method stub
 
+    }
+    
+    @Override
+    public String printPairings(List<Match> matches) {
+        List<String> matchStrings = new ArrayList<String>();
+
+        Map<Player, Match> tableNumberMap = new HashMap<Player, Match>();
+        
+        for (Match m : matches) {
+            if(tableNumberMap.containsKey(m.getPlayer1()) == false){
+                tableNumberMap.put(m.getPlayer1(), m);
+            }
+        }
+        
+        int counter = 1;
+        String matchString = null;
+        for (Match m : tableNumberMap.values()) {
+            
+            if (m.getPlayer2() == null) {
+                matchString = m.getPlayer1().getName() + " has a bye";
+                matchStrings.add(matchString);
+            } else {
+                matchString = m.getPlayer1().getName() + " vs " + m.getPlayer2() + " at table " + counter;
+                matchStrings.add(matchString);
+                matchString = m.getPlayer2().getName() + " vs " + m.getPlayer1() + " at table " + counter;
+                matchStrings.add(matchString);
+            }
+            
+            counter++;
+        }
+
+        String content = "";
+
+        Collections.sort(matchStrings);
+
+        for (String s : matchStrings) {
+            content += "<div>" + s + "</div>";
+        }
+
+        return content;
     }
 }
