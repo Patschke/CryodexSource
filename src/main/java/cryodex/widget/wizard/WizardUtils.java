@@ -32,6 +32,7 @@ public class WizardUtils {
 
                 wizardOptionsList.add(newWizardOption);
 
+                newWizardOption.setModule(wizardOptions.getModule());
                 newWizardOption.setName(wizardOptions.getName() + " " + i);
                 newWizardOption.setPlayerList(new ArrayList<Player>());
             }
