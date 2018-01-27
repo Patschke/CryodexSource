@@ -79,6 +79,10 @@ public class KraytTournament extends Tournament implements XMLObject {
     }
 
     public KraytPlayer getModulePlayer(Player p) {
+        if(p == null){
+            System.out.println("error");
+        }
+        System.out.println(p);
         return (KraytPlayer) p.getModuleInfoByModule(getModule());
     }
 

@@ -603,6 +603,20 @@ public class KraytRoundPanel extends RoundPanel {
                 if (getMatch().getPlayer2Points() != null) {
                     getPlayer2KillPointsField().setText(String.valueOf(getMatch().getPlayer2Points()));
                 }
+                
+                String subPlayer1 = match.getSubplayer1();
+                if(subPlayer1 == null){
+                    getSubPlayer1Combo().setSelectedIndex(0);
+                } else {
+                    getSubPlayer1Combo().setSelectedItem(subPlayer1);    
+                }
+                
+                String subPlayer2 = match.getSubplayer2();
+                if(subPlayer2 == null){
+                    getSubPlayer2Combo().setSelectedIndex(0);
+                } else {
+                    getSubPlayer2Combo().setSelectedItem(subPlayer2);    
+                }
             }
             
             // Special exception for bye matches
@@ -610,19 +624,7 @@ public class KraytRoundPanel extends RoundPanel {
                 getResultCombo().setSelectedIndex(1);
             }
 
-            String subPlayer1 = match.getSubplayer1();
-            if(subPlayer1 == null){
-                getSubPlayer1Combo().setSelectedIndex(0);
-            } else {
-                getSubPlayer1Combo().setSelectedItem(subPlayer1);    
-            }
             
-            String subPlayer2 = match.getSubplayer2();
-            if(subPlayer2 == null){
-                getSubPlayer2Combo().setSelectedIndex(0);
-            } else {
-                getSubPlayer2Combo().setSelectedItem(subPlayer2);    
-            }
             
             updateGUI();
         }

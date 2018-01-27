@@ -14,6 +14,7 @@ public class KraytMatch extends Match {
 		copy.setPlayer1PointsDestroyed(m.getPlayer1Points());
 		copy.setPlayer2PointsDestroyed(m.getPlayer2Points());
 		copy.setSuffix(suffix);
+		copy.setDuplicate(m.isDuplicate());
 		return copy;
 	}
 
