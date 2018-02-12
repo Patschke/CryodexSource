@@ -184,8 +184,15 @@ public class WizardUtils {
             mergeTournament.getAllRounds().addAll(t.getAllRounds());
         }
 
+        
         List<Player> tempPlayers = new ArrayList<Player>();
         tempPlayers.addAll(wizardOptions.getPlayerList());
+
+        // Creating the event starts the cache. We need to clear it now that all the rounds have been added.
+        for (Player p : tempPlayers){
+            mergeTournament.getModulePlayer(p).clearCache();
+        }
+        
         Collections.sort(tempPlayers, mergeTournament.getRankingComparator());
         return tempPlayers;
     }

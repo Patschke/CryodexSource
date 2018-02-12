@@ -22,7 +22,6 @@ import cryodex.CryodexController;
 import cryodex.Main;
 import cryodex.Player;
 import cryodex.modules.Match;
-import cryodex.modules.Match.GameResult;
 import cryodex.modules.Menu;
 import cryodex.modules.Round;
 import cryodex.modules.Tournament;

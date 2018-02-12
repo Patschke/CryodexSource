@@ -120,7 +120,7 @@ public abstract class ModulePlayer implements Comparable<ModulePlayer>, XMLObjec
     /**
      * Removes all values from the cache to force recalculation.
      */
-    protected void clearCache() {
+    public void clearCache() {
         integerStatistics.clear();
         doubleStatistics.clear();
     }

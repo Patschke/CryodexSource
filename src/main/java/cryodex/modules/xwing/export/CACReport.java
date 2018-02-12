@@ -10,6 +10,7 @@ import java.util.TreeSet;
 
 import cryodex.CryodexController;
 import cryodex.Player;
+import cryodex.modules.Match;
 import cryodex.modules.Tournament;
 import cryodex.modules.xwing.XWingComparator;
 import cryodex.modules.xwing.XWingPlayer;
@@ -61,9 +62,9 @@ public class CACReport {
 	public static String generateCACReport() {
 
 		StringBuilder sb = new StringBuilder();
-		List<XWingPlayer> imperials = new ArrayList<XWingPlayer>();
-		List<XWingPlayer> rebels = new ArrayList<XWingPlayer>();
-		List<XWingPlayer> sav = new ArrayList<XWingPlayer>();
+		List<CACPlayer> imperials = new ArrayList<CACPlayer>();
+		List<CACPlayer> rebels = new ArrayList<CACPlayer>();
+		List<CACPlayer> sav = new ArrayList<CACPlayer>();
 
 		TreeSet<XWingPlayer> playerList = new TreeSet<XWingPlayer>();
 
@@ -75,19 +76,25 @@ public class CACReport {
 			}
 
 		}
+		
+		Map<XWingPlayer, CACPlayer> playerData = new HashMap<XWingPlayer, CACPlayer>();
+
+        for (XWingPlayer p : playerList) {
+            playerData.put(p, new CACPlayer(p));
+        }
 
 		for (XWingPlayer p : playerList) {
-//			p.clearKillMap();
 			Faction f = p.getFaction() == null ? Faction.IMPERIAL : p.getFaction();
+			CACPlayer cacPlayer = playerData.get(p);
 			switch (f) {
 			case IMPERIAL:
-				imperials.add(p);
+				imperials.add(cacPlayer);
 				break;
 			case REBEL:
-				rebels.add(p);
+				rebels.add(cacPlayer);
 				break;
 			case SCUM:
-				sav.add(p);
+				sav.add(cacPlayer);
 				break;
 			}
 		}
@@ -99,18 +106,13 @@ public class CACReport {
 		appendKillResults(sav, KillLabel.mostFeared, sb);
 		appendKillResults(sav, KillLabel.lawlessness, sb);
 
-		// //Overall Ranking
-		getCACRankings(sb, playerList);
+		//Overall Ranking
+		getCACRankings(sb, playerList, playerData);
 
 		return sb.toString();
 	}
 
-	private static void getCACRankings(StringBuilder sb, TreeSet<XWingPlayer> pl) {
-		Map<XWingPlayer, CACPlayer> playerData = new HashMap<XWingPlayer, CACPlayer>();
-
-		for (XWingPlayer p : pl) {
-			playerData.put(p, new CACPlayer(p));
-		}
+	private static void getCACRankings(StringBuilder sb, TreeSet<XWingPlayer> pl, Map<XWingPlayer, CACPlayer> playerData) {
 
 		for (Tournament t : CryodexController.getAllTournaments()) {
 			if (t instanceof XWingTournament) {
@@ -138,7 +140,7 @@ public class CACReport {
 							name = "(D#" + xp.getRoundDropped(tournament) + ")"
 									+ name;
 						}
-						CACPlayer cp = playerData.get(p);
+						CACPlayer cp = playerData.get(xp);
 						content += "<tr><td>" + xp.getRank(tournament)
 								+ "</td><td>" + name + "</td><td>"
 								+ xp.getScore(tournament) + "</td><td>"
@@ -157,69 +159,9 @@ public class CACReport {
 
 	}
 
-	public static class CACPlayer implements Comparable<CACPlayer> {
 
-		private Integer points = 0;
-		private Integer mov = 0;
-		private final XWingPlayer player;
 
-		public CACPlayer(XWingPlayer p) {
-			this.player = p;
-			calculateStats();
-		}
-
-		private void calculateStats() {
-
-			for (Tournament t : CryodexController.getAllTournaments()) {
-				if (t instanceof XWingTournament) {
-					XWingTournament tournament = (XWingTournament) t;
-
-					points += player.getScore(tournament);
-					mov += player.getMarginOfVictory(tournament);
-				}
-			}
-		}
-
-		public Integer getPoints() {
-			return points;
-		}
-
-		public Integer getMOV() {
-			return mov;
-		}
-
-		public XWingPlayer getPlayer() {
-			return player;
-		}
-
-		@Override
-		public int compareTo(CACPlayer o2) {
-			CACPlayer o1 = this;
-			int result = compareInt(o1.getPoints(), o2.getPoints());
-
-			if (result == 0) {
-				result = compareInt(o1.getMOV(), o2.getMOV());
-			}
-
-			if (result == 0) {
-				result = o1.getPlayer().compareTo(o2.getPlayer());
-			}
-
-			return result;
-		}
-
-		private int compareInt(int a, int b) {
-			if (a == b) {
-				return 0;
-			} else if (a > b) {
-				return -1;
-			} else {
-				return 1;
-			}
-		}
-	}
-
-	public static void appendKillResults(List<XWingPlayer> playerList,
+	public static void appendKillResults(List<CACPlayer> playerList,
 			KillLabel kl, StringBuilder sb) {
 		int counter = 0;
 
@@ -228,29 +170,29 @@ public class CACReport {
 		sb.append("<h3>").append(kl.label).append("</h3>");
 		while (counter < RESULTS_TO_SHOW && playerList.size() > counter) {
 
-//			XWingPlayer p = playerList.get(counter);
+		    CACPlayer p = playerList.get(counter);
 
-//			Map<Faction, Integer> killMap = null;//p.getKillMap();
+			Map<Faction, Integer> killMap = p.getKillMap();
 
 			Integer killCount = 0;
 
 			if (kl.getFaction1() != null) {
-//				killCount += killMap.get(kl.getFaction1());
+				killCount += killMap.get(kl.getFaction1());
 			}
 
 			if (kl.getFaction2() != null) {
-//				killCount += killMap.get(kl.getFaction2());
+				killCount += killMap.get(kl.getFaction2());
 			}
 
 			sb.append(counter + 1).append(") ")
-					.append(playerList.get(counter).getName()).append(" - ")
+					.append(playerList.get(counter).getPlayer().getName()).append(" - ")
 					.append(killCount).append("<br>");
 			counter++;
 		}
 	}
 
 	public static class FactionKillComparator implements
-			Comparator<XWingPlayer> {
+			Comparator<CACPlayer> {
 
 		private final KillLabel killLabel;
 
@@ -259,25 +201,136 @@ public class CACReport {
 		}
 
 		@Override
-		public int compare(XWingPlayer o1, XWingPlayer o2) {
+		public int compare(CACPlayer o1, CACPlayer o2) {
 
-//			Map<Faction, Integer> killMap1 = null;//o1.getKillMap();
-//			Map<Faction, Integer> killMap2 = null;//o2.getKillMap();
+			Map<Faction, Integer> killMap1 = o1.getKillMap();
+			Map<Faction, Integer> killMap2 = o2.getKillMap();
 
 			Integer killCount1 = 0;
 			Integer killCount2 = 0;
 
 			if (killLabel.getFaction1() != null) {
-//				killCount1 += killMap1.get(killLabel.getFaction1());
-//				killCount2 += killMap2.get(killLabel.getFaction1());
+				killCount1 += killMap1.get(killLabel.getFaction1());
+				killCount2 += killMap2.get(killLabel.getFaction1());
 			}
 
 			if (killLabel.getFaction2() != null) {
-//				killCount1 += killMap1.get(killLabel.getFaction2());
-//				killCount2 += killMap2.get(killLabel.getFaction2());
+				killCount1 += killMap1.get(killLabel.getFaction2());
+				killCount2 += killMap2.get(killLabel.getFaction2());
 			}
 
 			return killCount1.compareTo(killCount2) * -1;
 		}
 	}
+	
+	   public static class CACPlayer implements Comparable<CACPlayer> {
+
+	        private Integer points = 0;
+	        private Integer mov = 0;
+	        private final XWingPlayer player;
+	        private Map<Faction,Integer> killMap;
+
+	        public CACPlayer(XWingPlayer p) {
+	            this.player = p;
+	            calculateStats();
+	        }
+
+	        private void calculateStats() {
+
+	            for (Tournament t : CryodexController.getAllTournaments()) {
+	                if (t instanceof XWingTournament) {
+	                    XWingTournament tournament = (XWingTournament) t;
+
+	                    points += player.getScore(tournament);
+	                    mov += player.getMarginOfVictory(tournament);
+	                    addToKillMap(tournament);
+	                }
+	            }
+	        }
+
+	        /**
+	         * Add all of the points killed by faction to the kill map for special event category totals.
+	         * 
+	         * @param t
+	         */
+	        private void addToKillMap(XWingTournament t){
+	            
+	            if(killMap == null){
+	                killMap = new HashMap<Faction,Integer>();
+	                for(Faction f : Faction.values()){
+	                    killMap.put(f, 0);
+	                }
+	            }
+	            
+	            for(Match m : player.getPlayer().getMatches(t)){
+	                
+	                if(m.isBye()){
+	                    continue;
+	                }
+	                
+	                Faction f = null;
+	                Integer points = null;
+	                
+	                if(m.getPlayer1() == player.getPlayer()){
+	                    points = m.getPlayer1Points();
+	                    f = t.getModulePlayer(m.getPlayer2()).getFaction();
+	                } else {
+                        points = m.getPlayer2Points();
+                        f = t.getModulePlayer(m.getPlayer1()).getFaction();
+	                }
+	                
+	                if(f != null && points != null){
+	                    
+	                    Integer currentPoints = 0;
+	                    if(killMap.containsKey(f)){
+	                        currentPoints = killMap.get(f);
+	                    }
+	                    
+	                    killMap.put(f, currentPoints + points);
+	                }
+	            }
+	        }
+	        
+	        public Map<Faction,Integer> getKillMap(){
+	            return killMap;
+	        }
+	        
+	        public Integer getPoints() {
+	            return points;
+	        }
+
+	        public Integer getMOV() {
+	            return mov;
+	        }
+
+	        public XWingPlayer getPlayer() {
+	            return player;
+	        }
+
+	        @Override
+	        public int compareTo(CACPlayer o2) {
+	            CACPlayer o1 = this;
+	            int result = compareInt(o1.getPoints(), o2.getPoints());
+
+	            if (result == 0) {
+	                result = compareInt(o1.getMOV(), o2.getMOV());
+	            }
+
+	            if (result == 0) {
+	                result = o1.getPlayer().compareTo(o2.getPlayer());
+	            }
+
+	            return result;
+	        }
+
+	        private int compareInt(int a, int b) {
+	            if (a == b) {
+	                return 0;
+	            } else if (a > b) {
+	                return -1;
+	            } else {
+	                return 1;
+	            }
+	        }
+	    }
 }

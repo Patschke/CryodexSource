@@ -91,7 +91,7 @@ public class XWingExportController extends ExportController {
 							+ "<div style=\"vertical-align: top; height: 100%;\"><input type=\"checkbox\">I wish to drop</input></div>"
 							+ "</td></tr></table>";
 
-					matchString += "<hr>";
+					matchString += "<br><br><hr>";
 
 					content += matchString;
 				}
