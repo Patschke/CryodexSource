@@ -46,6 +46,11 @@ public class SWLCGExportController extends ExportController {
 		return content;
 	}
 
+    @Override
+    public String getValueLabel() {
+        return "Points Destroyed";
+    }
+
 	public void exportTournamentSlipsWithStats(Tournament tournament, List<Match> matches, int roundNumber) {
 
 		int slipsPerPage = 6;
@@ -83,16 +88,16 @@ public class SWLCGExportController extends ExportController {
 							+ "</td><td class=\"smallFont\">" + xp2.getAverageSoS(tournament)
 							+ "</td><td class=\"smallFont\">" + xp2.getExtendedStrengthOfSchedule(tournament) + "</td></tr></table>"
 							+ "</td><td class=\"smallFont\">"
-							+ "<div style=\"vertical-align: bottom; height: 100%;\">Points Killed ____________</div>"
+							+ "<div style=\"vertical-align: bottom; height: 100%;\">" + getValueLabel() + " ____________</div>"
 							+ "</br>"
 							+ "<div style=\"vertical-align: top; height: 100%;\"><input type=\"checkbox\">I wish to drop</input></div>"
 							+ "</td><td class=\"smallFont\">"
-							+ "<div style=\"vertical-align: bottom; height: 100%;\">Points Killed ____________</div>"
+							+ "<div style=\"vertical-align: bottom; height: 100%;\">" + getValueLabel() + " ____________</div>"
 							+ "</br>"
 							+ "<div style=\"vertical-align: top; height: 100%;\"><input type=\"checkbox\">I wish to drop</input></div>"
 							+ "</td></tr></table>";
 
-					matchString += "<hr>";
+					matchString += "<br><br><hr>";
 
 					content += matchString;
 				}

@@ -20,6 +20,8 @@ public abstract class ExportController {
     
     public abstract void tcxTeamReport(Tournament tournament);
     
+    public abstract String getValueLabel();
+    
 	public void playerList(List<Player> players) {
 		Set<Player> sortedPlayers = new TreeSet<Player>();
 		sortedPlayers.addAll(players);
@@ -53,20 +55,20 @@ public abstract class ExportController {
 
 				String matchString = "";
 				if (m.getPlayer2() != null) {
-					matchString += "<table class=\"print-friendly\" width=100%><tr><td><h4>Round " + roundNumber
+					matchString += "<table class=\"print-friendly\" width=100%><tr><td><h4>" + tournament.getName() + " - Round " + roundNumber
 							+ " - Table " + (index + 1) + "</h4></td><td vAlign=bottom align=left><h4>"
 							+ m.getPlayer1().getName() + "</h4></td><td vAlign=bottom align=left><h4>"
 							+ m.getPlayer2().getName() + "</h4></td></tr><tr><td>" + "</td><td class=\"smallFont\">"
-							+ "<div style=\"vertical-align: bottom; height: 100%;\">Points Killed ____________</div>"
+							+ "<div style=\"vertical-align: bottom; height: 100%;\">" + getValueLabel() + " ____________</div>"
 							+ "</br>"
 							+ "<div style=\"vertical-align: top; height: 100%;\"><input type=\"checkbox\">I wish to drop</input></div>"
 							+ "</td><td class=\"smallFont\">"
-							+ "<div style=\"vertical-align: bottom; height: 100%;\">Points Killed ____________</div>"
+							+ "<div style=\"vertical-align: bottom; height: 100%;\">" + getValueLabel() + " ____________</div>"
 							+ "</br>"
 							+ "<div style=\"vertical-align: top; height: 100%;\"><input type=\"checkbox\">I wish to drop</input></div>"
 							+ "</td></tr></table>";
 
-					matchString += "<br><br><br><br><hr>";
+					matchString += "<br><br><br><hr>";
 
 					content += matchString;
 				}

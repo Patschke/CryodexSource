@@ -1,0 +1,2453 @@
+{
+"name": "Portland System Open",
+"players": [
+{
+"name": "Gordon Pinkerton",
+"email": "",
+"list-id": "",
+"mov": 1770,
+"score": 10,
+"sos": 0.63,
+"dropped": 11,
+"rank": {"swiss": 1}
+},
+{
+"name": "Taylor Seidlitz",
+"email": "",
+"list-id": "",
+"mov": 1501,
+"score": 8,
+"sos": 0.62,
+"dropped": 11,
+"rank": {"swiss": 2}
+},
+{
+"name": "Chris Norris",
+"email": "",
+"list-id": "",
+"mov": 1260,
+"score": 7,
+"sos": 0.56,
+"dropped": 10,
+"rank": {"swiss": 0}
+},
+{
+"name": "Blair Bunke",
+"email": "",
+"list-id": "",
+"mov": 1148,
+"score": 7,
+"sos": 0.55,
+"dropped": 9,
+"rank": {"swiss": 0}
+},
+{
+"name": "Andrew Bunn",
+"email": "",
+"list-id": "",
+"mov": 1059,
+"score": 7,
+"sos": 0.52,
+"dropped": 10,
+"rank": {"swiss": 0}
+},
+{
+"name": "Benjamin Gaetke",
+"email": "",
+"list-id": "",
+"mov": 1033,
+"score": 6,
+"sos": 0.47,
+"dropped": 9,
+"rank": {"swiss": 0}
+},
+{
+"name": "Ee Ern Low",
+"email": "",
+"list-id": "",
+"mov": 1007,
+"score": 6,
+"sos": 0.64,
+"dropped": 9,
+"rank": {"swiss": 0}
+},
+{
+"name": "Calen Wong",
+"email": "",
+"list-id": "",
+"mov": 996,
+"score": 6,
+"sos": 0.66,
+"dropped": 9,
+"rank": {"swiss": 0}
+},
+{
+"name": "Michael Pinto",
+"email": "",
+"list-id": "",
+"mov": 755,
+"score": 5,
+"sos": 0.55,
+"dropped": 8,
+"rank": {"swiss": 0}
+},
+{
+"name": "David Tam",
+"email": "",
+"list-id": "",
+"mov": 797,
+"score": 4,
+"sos": 0.49,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "James Kelly",
+"email": "",
+"list-id": "",
+"mov": 787,
+"score": 4,
+"sos": 0.52,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Jeffrey Raiford",
+"email": "",
+"list-id": "",
+"mov": 780,
+"score": 4,
+"sos": 0.55,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Christopher Constans",
+"email": "",
+"list-id": "",
+"mov": 778,
+"score": 4,
+"sos": 0.58,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Bryan Schnetter",
+"email": "",
+"list-id": "",
+"mov": 758,
+"score": 4,
+"sos": 0.39,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Kainoa Pestana",
+"email": "",
+"list-id": "",
+"mov": 755,
+"score": 4,
+"sos": 0.54,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Timothy Pansch",
+"email": "",
+"list-id": "",
+"mov": 743,
+"score": 4,
+"sos": 0.53,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Ryan Moore",
+"email": "",
+"list-id": "",
+"mov": 736,
+"score": 4,
+"sos": 0.42,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Joshua Mattison",
+"email": "",
+"list-id": "",
+"mov": 711,
+"score": 4,
+"sos": 0.54,
+"dropped": 6,
+"rank": {"swiss": 0}
+},
+{
+"name": "Bradley Ho",
+"email": "",
+"list-id": "",
+"mov": 702,
+"score": 4,
+"sos": 0.58,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Andy Devlin",
+"email": "",
+"list-id": "",
+"mov": 692,
+"score": 4,
+"sos": 0.65,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Sean Cathcart",
+"email": "",
+"list-id": "",
+"mov": 679,
+"score": 4,
+"sos": 0.57,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Justin Clapper",
+"email": "",
+"list-id": "",
+"mov": 674,
+"score": 4,
+"sos": 0.53,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Jackson Bogart",
+"email": "",
+"list-id": "",
+"mov": 670,
+"score": 4,
+"sos": 0.57,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Dave Tryon",
+"email": "",
+"list-id": "",
+"mov": 670,
+"score": 4,
+"sos": 0.54,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Lyle Hayhurst",
+"email": "",
+"list-id": "",
+"mov": 654,
+"score": 4,
+"sos": 0.44,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Ian Oliver",
+"email": "",
+"list-id": "",
+"mov": 652,
+"score": 4,
+"sos": 0.5,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Tom Wiggin",
+"email": "",
+"list-id": "",
+"mov": 720,
+"score": 3,
+"sos": 0.55,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Zachery Johnson",
+"email": "",
+"list-id": "",
+"mov": 684,
+"score": 3,
+"sos": 0.52,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Vincent Cave",
+"email": "",
+"list-id": "",
+"mov": 662,
+"score": 3,
+"sos": 0.47,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "James McNulty",
+"email": "",
+"list-id": "",
+"mov": 634,
+"score": 3,
+"sos": 0.54,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Ben Oelgart",
+"email": "",
+"list-id": "",
+"mov": 623,
+"score": 3,
+"sos": 0.42,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Daniel Sanders",
+"email": "",
+"list-id": "",
+"mov": 570,
+"score": 3,
+"sos": 0.53,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Bradley Riley",
+"email": "",
+"list-id": "",
+"mov": 548,
+"score": 3,
+"sos": 0.47,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Thomas Shaw",
+"email": "",
+"list-id": "",
+"mov": 542,
+"score": 3,
+"sos": 0.44,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Darren Rennick",
+"email": "",
+"list-id": "",
+"mov": 537,
+"score": 3,
+"sos": 0.49,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Geoffrey Frost",
+"email": "",
+"list-id": "",
+"mov": 534,
+"score": 3,
+"sos": 0.6,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Brian Allen",
+"email": "wowshumer@gmail.com",
+"list-id": "",
+"mov": 510,
+"score": 3,
+"sos": 0.42,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Troy Zweber",
+"email": "",
+"list-id": "",
+"mov": 501,
+"score": 3,
+"sos": 0.55,
+"dropped": 6,
+"rank": {"swiss": 0}
+},
+{
+"name": "Kenneth Scher",
+"email": "",
+"list-id": "",
+"mov": 511,
+"score": 2,
+"sos": 0.63,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Justin Hunt",
+"email": "",
+"list-id": "",
+"mov": 482,
+"score": 2,
+"sos": 0.46,
+"dropped": 5,
+"rank": {"swiss": 0}
+},
+{
+"name": "Charles Tryon",
+"email": "",
+"list-id": "",
+"mov": 437,
+"score": 2,
+"sos": 0.5,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "David Hansen",
+"email": "",
+"list-id": "",
+"mov": 429,
+"score": 2,
+"sos": 0.51,
+"dropped": 5,
+"rank": {"swiss": 0}
+},
+{
+"name": "Joshua Jabin",
+"email": "",
+"list-id": "",
+"mov": 402,
+"score": 2,
+"sos": 0.47,
+"dropped": 6,
+"rank": {"swiss": 0}
+},
+{
+"name": "Braven Garnica",
+"email": "",
+"list-id": "",
+"mov": 400,
+"score": 2,
+"sos": 0.55,
+"dropped": 7,
+"rank": {"swiss": 0}
+},
+{
+"name": "Paul Nelson",
+"email": "",
+"list-id": "",
+"mov": 336,
+"score": 1,
+"sos": 0.4,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Tim \"Diablo\" Nakayama",
+"email": "",
+"list-id": "",
+"mov": 330,
+"score": 1,
+"sos": 0.33,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Cody Campbell",
+"email": "",
+"list-id": "",
+"mov": 321,
+"score": 1,
+"sos": 0.39,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Robert Cardwell",
+"email": "",
+"list-id": "",
+"mov": 292,
+"score": 1,
+"sos": 0.5,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Tsudoi Wada",
+"email": "",
+"list-id": "",
+"mov": 288,
+"score": 1,
+"sos": 0.44,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Bryan Tull",
+"email": "",
+"list-id": "",
+"mov": 285,
+"score": 1,
+"sos": 0.42,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Emmanuel Gambliel",
+"email": "",
+"list-id": "",
+"mov": 283,
+"score": 1,
+"sos": 0.28,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Kristopher Erickson",
+"email": "",
+"list-id": "",
+"mov": 282,
+"score": 1,
+"sos": 0.22,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Patrick Gollmann",
+"email": "",
+"list-id": "",
+"mov": 281,
+"score": 1,
+"sos": 0.63,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Milo Beall",
+"email": "",
+"list-id": "",
+"mov": 274,
+"score": 1,
+"sos": 0.57,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Joel Fadenrech",
+"email": "",
+"list-id": "",
+"mov": 274,
+"score": 1,
+"sos": 0.56,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Patrick Boyle",
+"email": "",
+"list-id": "",
+"mov": 273,
+"score": 1,
+"sos": 0.43,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Jason Isbell",
+"email": "",
+"list-id": "",
+"mov": 264,
+"score": 1,
+"sos": 0.44,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Kevin Sekac",
+"email": "",
+"list-id": "",
+"mov": 262,
+"score": 1,
+"sos": 0.33,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Bryan Greer",
+"email": "",
+"list-id": "",
+"mov": 259,
+"score": 1,
+"sos": 0.38,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Ben Rampley",
+"email": "",
+"list-id": "",
+"mov": 250,
+"score": 1,
+"sos": 0.61,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Brett Knight",
+"email": "",
+"list-id": "",
+"mov": 249,
+"score": 1,
+"sos": 0.28,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Foster Robertson",
+"email": "",
+"list-id": "",
+"mov": 243,
+"score": 1,
+"sos": 0.56,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Michael Kosteva",
+"email": "",
+"list-id": "",
+"mov": 240,
+"score": 1,
+"sos": 0.33,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Alexander Baird",
+"email": "",
+"list-id": "",
+"mov": 229,
+"score": 1,
+"sos": 0.22,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Matthew Morresey",
+"email": "",
+"list-id": "",
+"mov": 228,
+"score": 1,
+"sos": 0.44,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Alex Babakitis",
+"email": "",
+"list-id": "",
+"mov": 227,
+"score": 1,
+"sos": 0.5,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Kirk Smith",
+"email": "",
+"list-id": "",
+"mov": 226,
+"score": 1,
+"sos": 0.36,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Doug Odell",
+"email": "",
+"list-id": "",
+"mov": 220,
+"score": 1,
+"sos": 0.5,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "David Londono",
+"email": "",
+"list-id": "",
+"mov": 205,
+"score": 1,
+"sos": 0.33,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Jacob Beck",
+"email": "",
+"list-id": "",
+"mov": 200,
+"score": 1,
+"sos": 0.5,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Brandon Christenson",
+"email": "",
+"list-id": "",
+"mov": 198,
+"score": 1,
+"sos": 0.62,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "George Irwin",
+"email": "",
+"list-id": "",
+"mov": 182,
+"score": 1,
+"sos": 0.17,
+"dropped": 3,
+"rank": {"swiss": 0}
+},
+{
+"name": "Jonas Malapas",
+"email": "",
+"list-id": "",
+"mov": 178,
+"score": 1,
+"sos": 0.67,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Alexander Yuen",
+"email": "",
+"list-id": "",
+"mov": 176,
+"score": 1,
+"sos": 0.39,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Jason Stoltz",
+"email": "",
+"list-id": "",
+"mov": 175,
+"score": 1,
+"sos": 0.54,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Derrick Record",
+"email": "",
+"list-id": "",
+"mov": 160,
+"score": 1,
+"sos": 0.44,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Eric Whitehouse",
+"email": "",
+"list-id": "",
+"mov": 159,
+"score": 1,
+"sos": 0.49,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Jonathan Gomes",
+"email": "",
+"list-id": "",
+"mov": 140,
+"score": 1,
+"sos": 0.33,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Michael Riehl",
+"email": "",
+"list-id": "",
+"mov": 211,
+"score": 0,
+"sos": 0.33,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Aaron Brooks",
+"email": "",
+"list-id": "",
+"mov": 204,
+"score": 0,
+"sos": 0.44,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "John Percefull",
+"email": "",
+"list-id": "",
+"mov": 199,
+"score": 0,
+"sos": 0.44,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Justin Abbott",
+"email": "",
+"list-id": "",
+"mov": 197,
+"score": 0,
+"sos": 0.39,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Shane Frassato",
+"email": "",
+"list-id": "",
+"mov": 114,
+"score": 0,
+"sos": 0.69,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Ben Clements",
+"email": "",
+"list-id": "",
+"mov": 91,
+"score": 0,
+"sos": 0.39,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Joon Kim",
+"email": "",
+"list-id": "",
+"mov": 88,
+"score": 0,
+"sos": 0.72,
+"dropped": 3,
+"rank": {"swiss": 0}
+},
+{
+"name": "Thomas Rupert",
+"email": "",
+"list-id": "",
+"mov": 74,
+"score": 0,
+"sos": 0.39,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Kyle McRay",
+"email": "",
+"list-id": "",
+"mov": 35,
+"score": 0,
+"sos": 0.48,
+"dropped": 4,
+"rank": {"swiss": 0}
+},
+{
+"name": "Mikah Jerome",
+"email": "",
+"list-id": "",
+"mov": 29,
+"score": 0,
+"sos": 0.67,
+"dropped": 3,
+"rank": {"swiss": 0}
+},
+{
+"name": "Geoff Hayes",
+"email": "",
+"list-id": "",
+"mov": 26,
+"score": 0,
+"sos": 0.5,
+"dropped": 3,
+"rank": {"swiss": 0}
+},
+{
+"name": "Derrick Miller",
+"email": "",
+"list-id": "",
+"mov": 0,
+"score": 0,
+"sos": 1.0,
+"dropped": 2,
+"rank": {"swiss": 0}
+},
+{
+"name": "Steven Warner",
+"email": "",
+"list-id": "",
+"mov": 0,
+"score": 0,
+"sos": 0.88,
+"dropped": 2,
+"rank": {"swiss": 0}
+},
+{
+"name": "Eric McAvoy",
+"email": "",
+"list-id": "",
+"mov": 0,
+"score": 0,
+"sos": 0.33,
+"dropped": 4,
+"rank": {"swiss": 0}
+}
+],
+"rounds": [
+{
+"round-type": "swiss",
+"round-number": 1,
+"matches": [
+{
+"player1": "Darren Rennick",
+"player1points": 47,
+"player2": "Paul Nelson",
+"player2points": 39,
+"result": "win"
+},
+{
+"player1": "Cody Campbell",
+"player1points": 100,
+"player2": "Kyle McRay",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Tim \"Diablo\" Nakayama",
+"player1points": 44,
+"player2": "David Hansen",
+"player2points": 75,
+"result": "win"
+},
+{
+"player1": "Doug Odell",
+"player1points": 0,
+"player2": "Jeffrey Raiford",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Alex Babakitis",
+"player1points": 58,
+"player2": "Sean Cathcart",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Brian Allen",
+"player1points": 0,
+"player2": "Zachery Johnson",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Steven Warner",
+"player1points": 0,
+"player2": "Blair Bunke",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Andy Devlin",
+"player1points": 50,
+"player2": "Bryan Schnetter",
+"player2points": 25,
+"result": "win"
+},
+{
+"player1": "Kirk Smith",
+"player1points": 0,
+"player2": "Ee Ern Low",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Michael Riehl",
+"player1points": 69,
+"player2": "Matthew Morresey",
+"player2points": 70,
+"result": "win"
+},
+{
+"player1": "Kristopher Erickson",
+"player1points": 24,
+"player2": "Tsudoi Wada",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Aaron Brooks",
+"player1points": 74,
+"player2": "Alexander Yuen",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Derrick Miller",
+"player1points": 0,
+"player2": "Gordon Pinkerton",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "James Kelly",
+"player1points": 100,
+"player2": "Mikah Jerome",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Jacob Beck",
+"player1points": 100,
+"player2": "Joshua Jabin",
+"player2points": 49,
+"result": "win"
+},
+{
+"player1": "Benjamin Gaetke",
+"player1points": 37,
+"player2": "Kenneth Scher",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Eric Whitehouse",
+"player1points": 0,
+"player2": "Taylor Seidlitz",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Jonas Malapas",
+"player1points": 100,
+"player2": "Ben Oelgart",
+"player2points": 50,
+"result": "win"
+},
+{
+"player1": "Andrew Bunn",
+"player1points": 53,
+"player2": "Patrick Gollmann",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Derrick Record",
+"player1points": 0,
+"player2": "Milo Beall",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Jonathan Gomes",
+"player1points": 0,
+"player2": "David Tam",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Emmanuel Gambliel",
+"player1points": 51,
+"player2": "Jason Stoltz",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Ben Clements",
+"player1points": 49,
+"player2": "George Irwin",
+"player2points": 99,
+"result": "win"
+},
+{
+"player1": "Alexander Baird",
+"player1points": 53,
+"player2": "Joel Fadenrech",
+"player2points": 77,
+"result": "win"
+},
+{
+"player1": "David Londono",
+"player1points": 0,
+"player2": "Christopher Constans",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Bradley Ho",
+"player1points": 100,
+"player2": "James McNulty",
+"player2points": 41,
+"result": "win"
+},
+{
+"player1": "Justin Abbott",
+"player1points": 0,
+"player2": "Vincent Cave",
+"player2points": 28,
+"result": "win"
+},
+{
+"player1": "Michael Kosteva",
+"player1points": 73,
+"player2": "Justin Clapper",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Lyle Hayhurst",
+"player1points": 100,
+"player2": "Ben Rampley",
+"player2points": 38,
+"result": "win"
+},
+{
+"player1": "Chris Norris",
+"player1points": 73,
+"player2": "Calen Wong",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Robert Cardwell",
+"player1points": 22,
+"player2": "Bryan Tull",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Kevin Sekac",
+"player1points": 100,
+"player2": "John Percefull",
+"player2points": 23,
+"result": "win"
+},
+{
+"player1": "Brandon Christenson",
+"player1points": 100,
+"player2": "Bryan Greer",
+"player2points": 49,
+"result": "win"
+},
+{
+"player1": "Ian Oliver",
+"player1points": 100,
+"player2": "Joon Kim",
+"player2points": 56,
+"result": "win"
+},
+{
+"player1": "Eric McAvoy",
+"player1points": 0,
+"player2": "Braven Garnica",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Kainoa Pestana",
+"player1points": 60,
+"player2": "Shane Frassato",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Joshua Mattison",
+"player1points": 100,
+"player2": "Michael Pinto",
+"player2points": 26,
+"result": "win"
+},
+{
+"player1": "Ryan Moore",
+"player1points": 55,
+"player2": "Jackson Bogart",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Troy Zweber",
+"player1points": 100,
+"player2": "Jason Isbell",
+"player2points": 33,
+"result": "win"
+},
+{
+"player1": "Charles Tryon",
+"player1points": 25,
+"player2": "Dave Tryon",
+"player2points": 50,
+"result": "win"
+},
+{
+"player1": "Daniel Sanders",
+"player1points": 100,
+"player2": "Thomas Rupert",
+"player2points": 16,
+"result": "win"
+},
+{
+"player1": "Foster Robertson",
+"player1points": 100,
+"player2": "Brett Knight",
+"player2points": 50,
+"result": "win"
+},
+{
+"player1": "Geoff Hayes",
+"player1points": 26,
+"player2": "Thomas Shaw",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Geoffrey Frost",
+"player1points": 61,
+"player2": "Justin Hunt",
+"player2points": 59,
+"result": "win"
+},
+{
+"player1": "Tom Wiggin",
+"player1points": 100,
+"player2": "Timothy Pansch",
+"player2points": 53,
+"result": "win"
+},
+{
+"player1": "Bradley Riley",
+"player1points": 100,
+"player2": "Patrick Boyle",
+"player2points": 0,
+"result": "win"
+}
+]
+},
+{
+"round-type": "swiss",
+"round-number": 2,
+"matches": [
+{
+"player1": "Christopher Constans",
+"player1points": 82,
+"player2": "Tom Wiggin",
+"player2points": 67,
+"result": "win"
+},
+{
+"player1": "David Hansen",
+"player1points": 55,
+"player2": "Blair Bunke",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Gordon Pinkerton",
+"player1points": 100,
+"player2": "Ian Oliver",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Troy Zweber",
+"player1points": 100,
+"player2": "Jacob Beck",
+"player2points": 33,
+"result": "win"
+},
+{
+"player1": "Sean Cathcart",
+"player1points": 100,
+"player2": "Alexander Yuen",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Vincent Cave",
+"player1points": 35,
+"player2": "James Kelly",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Jason Stoltz",
+"player1points": 26,
+"player2": "Taylor Seidlitz",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Patrick Gollmann",
+"player1points": 68,
+"player2": "Zachery Johnson",
+"player2points": 82,
+"result": "win"
+},
+{
+"player1": "David Tam",
+"player1points": 75,
+"player2": "Cody Campbell",
+"player2points": 69,
+"result": "win"
+},
+{
+"player1": "Braven Garnica",
+"player1points": 100,
+"player2": "Thomas Shaw",
+"player2points": 73,
+"result": "win"
+},
+{
+"player1": "Daniel Sanders",
+"player1points": 100,
+"player2": "Kevin Sekac",
+"player2points": 42,
+"result": "win"
+},
+{
+"player1": "Tsudoi Wada",
+"player1points": 25,
+"player2": "Dave Tryon",
+"player2points": 57,
+"result": "win"
+},
+{
+"player1": "Robert Cardwell",
+"player1points": 26,
+"player2": "Jackson Bogart",
+"player2points": 28,
+"result": "win"
+},
+{
+"player1": "Darren Rennick",
+"player1points": 24,
+"player2": "Ben Rampley",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Joshua Mattison",
+"player1points": 72,
+"player2": "Andy Devlin",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Joel Fadenrech",
+"player1points": 55,
+"player2": "Jeffrey Raiford",
+"player2points": 55,
+"result": "win"
+},
+{
+"player1": "Milo Beall",
+"player1points": 26,
+"player2": "Justin Clapper",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Brandon Christenson",
+"player1points": 47,
+"player2": "Calen Wong",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "George Irwin",
+"player1points": 32,
+"player2": "Kenneth Scher",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Bradley Ho",
+"player1points": 62,
+"player2": "Matthew Morresey",
+"player2points": 29,
+"result": "win"
+},
+{
+"player1": "Kainoa Pestana",
+"player1points": 100,
+"player2": "Foster Robertson",
+"player2points": 52,
+"result": "win"
+},
+{
+"player1": "Geoffrey Frost",
+"player1points": 100,
+"player2": "Bradley Riley",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Jonas Malapas",
+"player1points": 28,
+"player2": "Ee Ern Low",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Bryan Greer",
+"player1points": 100,
+"player2": "Thomas Rupert",
+"player2points": 43,
+"result": "win"
+},
+{
+"player1": "James McNulty",
+"player1points": 100,
+"player2": "Emmanuel Gambliel",
+"player2points": 32,
+"result": "win"
+},
+{
+"player1": "Brian Allen",
+"player1points": 100,
+"player2": "Bryan Tull",
+"player2points": 51,
+"result": "win"
+},
+{
+"player1": "Aaron Brooks",
+"player1points": 70,
+"player2": "Ryan Moore",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Kyle McRay",
+"player1points": 0,
+"player2": "Chris Norris",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Charles Tryon",
+"player1points": 60,
+"player2": "Kristopher Erickson",
+"player2points": 48,
+"result": "win"
+},
+{
+"player1": "Paul Nelson",
+"player1points": 32,
+"player2": "Michael Pinto",
+"player2points": 73,
+"result": "win"
+},
+{
+"player1": "Ben Oelgart",
+"player1points": 100,
+"player2": "Geoff Hayes",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Joon Kim",
+"player1points": 32,
+"player2": "Andrew Bunn",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Mikah Jerome",
+"player1points": 29,
+"player2": "Timothy Pansch",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Brett Knight",
+"player1points": 28,
+"player2": "Justin Abbott",
+"player2points": 28,
+"result": "win"
+},
+{
+"player1": "Derrick Record",
+"player1points": 100,
+"player2": "David Londono",
+"player2points": 40,
+"result": "win"
+},
+{
+"player1": "Ben Clements",
+"player1points": 0,
+"player2": "Eric Whitehouse",
+"player2points": 59,
+"result": "win"
+},
+{
+"player1": "Michael Kosteva",
+"player1points": 41,
+"player2": "Michael Riehl",
+"player2points": 23,
+"result": "win"
+},
+{
+"player1": "John Percefull",
+"player1points": 25,
+"player2": "Bryan Schnetter",
+"player2points": 49,
+"result": "win"
+},
+{
+"player1": "Shane Frassato",
+"player1points": 55,
+"player2": "Benjamin Gaetke",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Jason Isbell",
+"player1points": 100,
+"player2": "Kirk Smith",
+"player2points": 26,
+"result": "win"
+},
+{
+"player1": "Jonathan Gomes",
+"player1points": 0,
+"player2": "Doug Odell",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Alex Babakitis",
+"player1points": 100,
+"player2": "Alexander Baird",
+"player2points": 53,
+"result": "win"
+},
+{
+"player1": "Joshua Jabin",
+"player1points": 100,
+"player2": "Lyle Hayhurst",
+"player2points": 17,
+"result": "win"
+},
+{
+"player1": "Justin Hunt",
+"player1points": 75,
+"player2": "Tim \"Diablo\" Nakayama",
+"player2points": 61,
+"result": "win"
+},
+{
+"player1": "Patrick Boyle",
+"player1points": 100,
+"player2": "Eric McAvoy",
+"player2points": 0,
+"result": "win"
+}
+]
+},
+{
+"round-type": "swiss",
+"round-number": 3,
+"matches": [
+{
+"player1": "Geoffrey Frost",
+"player1points": 0,
+"player2": "Christopher Constans",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "David Tam",
+"player1points": 58,
+"player2": "Bradley Ho",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Jackson Bogart",
+"player1points": 52,
+"player2": "Kainoa Pestana",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Daniel Sanders",
+"player1points": 58,
+"player2": "Blair Bunke",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Ee Ern Low",
+"player1points": 81,
+"player2": "Jeffrey Raiford",
+"player2points": 71,
+"result": "win"
+},
+{
+"player1": "Zachery Johnson",
+"player1points": 72,
+"player2": "Andy Devlin",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Calen Wong",
+"player1points": 33,
+"player2": "Troy Zweber",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Taylor Seidlitz",
+"player1points": 100,
+"player2": "Braven Garnica",
+"player2points": 53,
+"result": "win"
+},
+{
+"player1": "Gordon Pinkerton",
+"player1points": 100,
+"player2": "Justin Clapper",
+"player2points": 31,
+"result": "win"
+},
+{
+"player1": "Kenneth Scher",
+"player1points": 25,
+"player2": "Dave Tryon",
+"player2points": 62,
+"result": "win"
+},
+{
+"player1": "Ben Rampley",
+"player1points": 36,
+"player2": "James Kelly",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Sean Cathcart",
+"player1points": 69,
+"player2": "Matthew Morresey",
+"player2points": 29,
+"result": "win"
+},
+{
+"player1": "Patrick Gollmann",
+"player1points": 48,
+"player2": "Brian Allen",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "James McNulty",
+"player1points": 100,
+"player2": "Jacob Beck",
+"player2points": 16,
+"result": "win"
+},
+{
+"player1": "Justin Hunt",
+"player1points": 100,
+"player2": "Alex Babakitis",
+"player2points": 22,
+"result": "win"
+},
+{
+"player1": "Joshua Jabin",
+"player1points": 100,
+"player2": "Jason Isbell",
+"player2points": 57,
+"result": "win"
+},
+{
+"player1": "Alexander Yuen",
+"player1points": 50,
+"player2": "Thomas Shaw",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Cody Campbell",
+"player1points": 27,
+"player2": "Ben Oelgart",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Andrew Bunn",
+"player1points": 74,
+"player2": "Patrick Boyle",
+"player2points": 47,
+"result": "win"
+},
+{
+"player1": "Bryan Greer",
+"player1points": 53,
+"player2": "Joshua Mattison",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Michael Pinto",
+"player1points": 100,
+"player2": "Milo Beall",
+"player2points": 48,
+"result": "win"
+},
+{
+"player1": "Bradley Riley",
+"player1points": 28,
+"player2": "Robert Cardwell",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Brandon Christenson",
+"player1points": 0,
+"player2": "Chris Norris",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Jason Stoltz",
+"player1points": 0,
+"player2": "Tom Wiggin",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Ian Oliver",
+"player1points": 100,
+"player2": "Derrick Record",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Charles Tryon",
+"player1points": 100,
+"player2": "Michael Kosteva",
+"player2points": 49,
+"result": "win"
+},
+{
+"player1": "Jonas Malapas",
+"player1points": 0,
+"player2": "Benjamin Gaetke",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Eric Whitehouse",
+"player1points": 0,
+"player2": "Timothy Pansch",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Bryan Schnetter",
+"player1points": 100,
+"player2": "Joel Fadenrech",
+"player2points": 50,
+"result": "win"
+},
+{
+"player1": "Ryan Moore",
+"player1points": 100,
+"player2": "Foster Robertson",
+"player2points": 41,
+"result": "win"
+},
+{
+"player1": "Brett Knight",
+"player1points": 70,
+"player2": "Darren Rennick",
+"player2points": 71,
+"result": "win"
+},
+{
+"player1": "David Hansen",
+"player1points": 57,
+"player2": "Kevin Sekac",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Doug Odell",
+"player1points": 20,
+"player2": "Vincent Cave",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Tsudoi Wada",
+"player1points": 44,
+"player2": "Bryan Tull",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Kirk Smith",
+"player1points": 100,
+"player2": "Ben Clements",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "David Londono",
+"player1points": 100,
+"player2": "Kyle McRay",
+"player2points": 35,
+"result": "win"
+},
+{
+"player1": "Shane Frassato",
+"player1points": 19,
+"player2": "Lyle Hayhurst",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Alexander Baird",
+"player1points": 0,
+"player2": "John Percefull",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Aaron Brooks",
+"player1points": 20,
+"player2": "Jonathan Gomes",
+"player2points": 60,
+"result": "win"
+},
+{
+"player1": "Tim \"Diablo\" Nakayama",
+"player1points": 100,
+"player2": "Justin Abbott",
+"player2points": 25,
+"result": "win"
+},
+{
+"player1": "Michael Riehl",
+"player1points": 30,
+"player2": "Kristopher Erickson",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Emmanuel Gambliel",
+"player1points": 100,
+"player2": "Eric McAvoy",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Paul Nelson",
+"player1points": 85,
+"player2": "Thomas Rupert",
+"player2points": 0,
+"result": "win"
+}
+]
+},
+{
+"round-type": "swiss",
+"round-number": 4,
+"matches": [
+{
+"player1": "Dave Tryon",
+"player1points": 0,
+"player2": "Gordon Pinkerton",
+"player2points": 50,
+"result": "win"
+},
+{
+"player1": "Bradley Ho",
+"player1points": 27,
+"player2": "Taylor Seidlitz",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "James Kelly",
+"player1points": 58,
+"player2": "Blair Bunke",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Ee Ern Low",
+"player1points": 100,
+"player2": "Christopher Constans",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Sean Cathcart",
+"player1points": 75,
+"player2": "Andy Devlin",
+"player2points": 70,
+"result": "win"
+},
+{
+"player1": "Kainoa Pestana",
+"player1points": 100,
+"player2": "Troy Zweber",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Calen Wong",
+"player1points": 100,
+"player2": "Geoffrey Frost",
+"player2points": 73,
+"result": "win"
+},
+{
+"player1": "Chris Norris",
+"player1points": 27,
+"player2": "Tom Wiggin",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Charles Tryon",
+"player1points": 47,
+"player2": "Bradley Riley",
+"player2points": 99,
+"result": "win"
+},
+{
+"player1": "Justin Hunt",
+"player1points": 53,
+"player2": "Jackson Bogart",
+"player2points": 61,
+"result": "win"
+},
+{
+"player1": "Timothy Pansch",
+"player1points": 100,
+"player2": "Justin Clapper",
+"player2points": 71,
+"result": "win"
+},
+{
+"player1": "Vincent Cave",
+"player1points": 43,
+"player2": "Benjamin Gaetke",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Darren Rennick",
+"player1points": 55,
+"player2": "Joshua Mattison",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Zachery Johnson",
+"player1points": 0,
+"player2": "Ian Oliver",
+"player2points": 64,
+"result": "win"
+},
+{
+"player1": "James McNulty",
+"player1points": 57,
+"player2": "Brian Allen",
+"player2points": 16,
+"result": "win"
+},
+{
+"player1": "Jeffrey Raiford",
+"player1points": 100,
+"player2": "Ryan Moore",
+"player2points": 53,
+"result": "win"
+},
+{
+"player1": "Joshua Jabin",
+"player1points": 27,
+"player2": "Ben Oelgart",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Lyle Hayhurst",
+"player1points": 100,
+"player2": "Bryan Schnetter",
+"player2points": 34,
+"result": "win"
+},
+{
+"player1": "Thomas Shaw",
+"player1points": 13,
+"player2": "Andrew Bunn",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "David Hansen",
+"player1points": 42,
+"player2": "Daniel Sanders",
+"player2points": 56,
+"result": "win"
+},
+{
+"player1": "David Tam",
+"player1points": 100,
+"player2": "Braven Garnica",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Kenneth Scher",
+"player1points": 32,
+"player2": "Michael Pinto",
+"player2points": 100,
+"result": "win"
+}
+]
+},
+{
+"round-type": "swiss",
+"round-number": 5,
+"matches": [
+{
+"player1": "Taylor Seidlitz",
+"player1points": 56,
+"player2": "Ee Ern Low",
+"player2points": 73,
+"result": "win"
+},
+{
+"player1": "Gordon Pinkerton",
+"player1points": 100,
+"player2": "Sean Cathcart",
+"player2points": 37,
+"result": "win"
+},
+{
+"player1": "Blair Bunke",
+"player1points": 81,
+"player2": "Kainoa Pestana",
+"player2points": 31,
+"result": "win"
+},
+{
+"player1": "Dave Tryon",
+"player1points": 26,
+"player2": "Calen Wong",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Michael Pinto",
+"player1points": 100,
+"player2": "Jeffrey Raiford",
+"player2points": 69,
+"result": "win"
+},
+{
+"player1": "Joshua Mattison",
+"player1points": 100,
+"player2": "Ben Oelgart",
+"player2points": 27,
+"result": "win"
+},
+{
+"player1": "James Kelly",
+"player1points": 100,
+"player2": "Troy Zweber",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Timothy Pansch",
+"player1points": 100,
+"player2": "Bradley Ho",
+"player2points": 41,
+"result": "win"
+},
+{
+"player1": "Daniel Sanders",
+"player1points": 0,
+"player2": "Chris Norris",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Christopher Constans",
+"player1points": 100,
+"player2": "Ian Oliver",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Bradley Riley",
+"player1points": 27,
+"player2": "Jackson Bogart",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Lyle Hayhurst",
+"player1points": 27,
+"player2": "Benjamin Gaetke",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Andrew Bunn",
+"player1points": 68,
+"player2": "David Tam",
+"player2points": 32,
+"result": "win"
+},
+{
+"player1": "Andy Devlin",
+"player1points": 100,
+"player2": "James McNulty",
+"player2points": 69,
+"result": "win"
+},
+{
+"player1": "Vincent Cave",
+"player1points": 100,
+"player2": "Joshua Jabin",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Zachery Johnson",
+"player1points": 26,
+"player2": "Thomas Shaw",
+"player2points": 32,
+"result": "win"
+},
+{
+"player1": "Justin Clapper",
+"player1points": 100,
+"player2": "Kenneth Scher",
+"player2points": 53,
+"result": "win"
+},
+{
+"player1": "Tom Wiggin",
+"player1points": 41,
+"player2": "Geoffrey Frost",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Ryan Moore",
+"player1points": 100,
+"player2": "Braven Garnica",
+"player2points": 20,
+"result": "win"
+},
+{
+"player1": "Bryan Schnetter",
+"player1points": 100,
+"player2": "Charles Tryon",
+"player2points": 25,
+"result": "win"
+},
+{
+"player1": "Darren Rennick",
+"player1points": 0,
+"result": "bye"
+}
+]
+},
+{
+"round-type": "swiss",
+"round-number": 6,
+"matches": [
+{
+"player1": "Blair Bunke",
+"player1points": 100,
+"player2": "Ee Ern Low",
+"player2points": 58,
+"result": "win"
+},
+{
+"player1": "Gordon Pinkerton",
+"player1points": 100,
+"player2": "Timothy Pansch",
+"player2points": 31,
+"result": "win"
+},
+{
+"player1": "Taylor Seidlitz",
+"player1points": 100,
+"player2": "James Kelly",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Benjamin Gaetke",
+"player1points": 100,
+"player2": "Sean Cathcart",
+"player2points": 55,
+"result": "win"
+},
+{
+"player1": "Andrew Bunn",
+"player1points": 47,
+"player2": "Andy Devlin",
+"player2points": 32,
+"result": "win"
+},
+{
+"player1": "Michael Pinto",
+"player1points": 100,
+"player2": "Christopher Constans",
+"player2points": 63,
+"result": "win"
+},
+{
+"player1": "Chris Norris",
+"player1points": 10,
+"player2": "Jackson Bogart",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Calen Wong",
+"player1points": 100,
+"player2": "Kainoa Pestana",
+"player2points": 49,
+"result": "win"
+},
+{
+"player1": "Daniel Sanders",
+"player1points": 56,
+"player2": "Ian Oliver",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Jeffrey Raiford",
+"player1points": 100,
+"player2": "Thomas Shaw",
+"player2points": 26,
+"result": "win"
+},
+{
+"player1": "Dave Tryon",
+"player1points": 100,
+"player2": "Ben Oelgart",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Vincent Cave",
+"player1points": 76,
+"player2": "Justin Clapper",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Bradley Ho",
+"player1points": 100,
+"player2": "Geoffrey Frost",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "David Tam",
+"player1points": 69,
+"player2": "James McNulty",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Bradley Riley",
+"player1points": 41,
+"player2": "Ryan Moore",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Lyle Hayhurst",
+"player1points": 70,
+"player2": "Darren Rennick",
+"player2points": 69,
+"result": "win"
+},
+{
+"player1": "Bryan Schnetter",
+"player1points": 100,
+"player2": "Braven Garnica",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Zachery Johnson",
+"player1points": 100,
+"player2": "Kenneth Scher",
+"player2points": 32,
+"result": "win"
+},
+{
+"player1": "Charles Tryon",
+"player1points": 26,
+"player2": "Tom Wiggin",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Brian Allen",
+"player1points": 0,
+"result": "bye"
+}
+]
+},
+{
+"round-type": "swiss",
+"round-number": 7,
+"matches": [
+{
+"player1": "Michael Pinto",
+"player1points": 0,
+"player2": "Calen Wong",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Taylor Seidlitz",
+"player1points": 0,
+"result": "bye"
+},
+{
+"player1": "Benjamin Gaetke",
+"player1points": 0,
+"result": "bye"
+},
+{
+"player1": "Ee Ern Low",
+"player1points": 0,
+"result": "bye"
+},
+{
+"player1": "Blair Bunke",
+"player1points": 0,
+"result": "bye"
+},
+{
+"player1": "Andrew Bunn",
+"player1points": 0,
+"result": "bye"
+},
+{
+"player1": "Chris Norris",
+"player1points": 0,
+"result": "bye"
+},
+{
+"player1": "Gordon Pinkerton",
+"player1points": 0,
+"result": "bye"
+}
+]
+},
+{
+"round-type": "swiss",
+"round-number": 8,
+"matches": [
+{
+"player1": "Calen Wong",
+"player1points": 31,
+"player2": "Gordon Pinkerton",
+"player2points": 100,
+"result": "win"
+},
+{
+"player1": "Blair Bunke",
+"player1points": 32,
+"player2": "Andrew Bunn",
+"player2points": 55,
+"result": "win"
+},
+{
+"player1": "Taylor Seidlitz",
+"player1points": 100,
+"player2": "Benjamin Gaetke",
+"player2points": 26,
+"result": "win"
+},
+{
+"player1": "Chris Norris",
+"player1points": 100,
+"player2": "Ee Ern Low",
+"player2points": 0,
+"result": "win"
+}
+]
+},
+{
+"round-type": "swiss",
+"round-number": 9,
+"matches": [
+{
+"player1": "Gordon Pinkerton",
+"player1points": 100,
+"player2": "Chris Norris",
+"player2points": 0,
+"result": "win"
+},
+{
+"player1": "Andrew Bunn",
+"player1points": 0,
+"player2": "Taylor Seidlitz",
+"player2points": 100,
+"result": "win"
+}
+]
+},
+{
+"round-type": "swiss",
+"round-number": 10,
+"matches": [
+{
+"player1": "Gordon Pinkerton",
+"player1points": 100,
+"player2": "Taylor Seidlitz",
+"player2points": 0,
+"result": "win"
+}
+]
+}
+]
+}

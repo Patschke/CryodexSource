@@ -44,6 +44,11 @@ public class DestinyExportController extends ExportController {
 
 		return content;
 	}
+	
+	@Override
+	public String getValueLabel() {
+	    return "Winner";
+	}
 
 	public void exportTournamentSlipsWithStats(Tournament tournament, List<Match> matches, int roundNumber) {
 
@@ -69,7 +74,7 @@ public class DestinyExportController extends ExportController {
 					DestinyPlayer xp1 = (DestinyPlayer) tournament.getModulePlayer(m.getPlayer1());
 					DestinyPlayer xp2 = (DestinyPlayer) tournament.getModulePlayer(m.getPlayer2());
 
-					matchString += "<table class=\"print-friendly\" width=100%><tr><th><h4>Round " + roundNumber
+					matchString += "<table class=\"print-friendly\" width=100%><tr><th><h4>" + tournament.getName() + " - Round " + roundNumber
 							+ " - Table " + (index + 1) + "</h4></th><th vAlign=bottom align=left><h4>"
 							+ m.getPlayer1().getName() + "</h4></th><th vAlign=bottom align=left><h4>" + xp2.getName()
 							+ "</h4></th></tr><tr><td><table class=\"print-friendly\" border=\"1\"><tr><th>Name</th><th>Rank</td><th>Score</th><th>MoV</th><th>SoS</th></tr><tr>"
@@ -82,16 +87,16 @@ public class DestinyExportController extends ExportController {
 							+ "</td><td class=\"smallFont\">" + xp2.getAverageSoS(tournament)
 							+ "</td><td class=\"smallFont\">" + xp2.getExtendedStrengthOfSchedule(tournament) + "</td></tr></table>"
 							+ "</td><td class=\"smallFont\">"
-							+ "<div style=\"vertical-align: bottom; height: 100%;\">Points Killed ____________</div>"
+							+ "<div style=\"vertical-align: bottom; height: 100%;\">Winner ____________</div>"
 							+ "</br>"
 							+ "<div style=\"vertical-align: top; height: 100%;\"><input type=\"checkbox\">I wish to drop</input></div>"
 							+ "</td><td class=\"smallFont\">"
-							+ "<div style=\"vertical-align: bottom; height: 100%;\">Points Killed ____________</div>"
+							+ "<div style=\"vertical-align: bottom; height: 100%;\">Winner ____________</div>"
 							+ "</br>"
 							+ "<div style=\"vertical-align: top; height: 100%;\"><input type=\"checkbox\">I wish to drop</input></div>"
 							+ "</td></tr></table>";
 
-					matchString += "<hr>";
+					matchString += "<br><br><br><hr>";
 
 					content += matchString;
 				}
