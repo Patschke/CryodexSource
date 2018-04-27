@@ -78,7 +78,7 @@ public class GameSelectPage implements Page{
 		
 		TournamentWizard.getInstance().getWizardOptions().setModule(m);
 		
-		TournamentWizard.getInstance().setCurrentPage(m.getMainWizardPage());
+		TournamentWizard.getInstance().setCurrentPage(m.getWizardController().getMainPage());
 	}
 
 	@Override

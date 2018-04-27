@@ -8,10 +8,10 @@ import cryodex.modules.Module;
 import cryodex.modules.ModulePlayer;
 import cryodex.modules.RegistrationPanel;
 import cryodex.modules.Tournament;
+import cryodex.modules.WizardController;
 import cryodex.modules.xwing.gui.XWingRegistrationPanel;
-import cryodex.modules.xwing.wizard.MainPage;
+import cryodex.modules.xwing.wizard.XWingWizardController;
 import cryodex.widget.wizard.WizardOptions;
-import cryodex.widget.wizard.pages.Page;
 import cryodex.xml.XMLUtils;
 import cryodex.xml.XMLUtils.Element;
 
@@ -108,7 +108,7 @@ public class XWingModule extends Module {
 	}
 
 	@Override
-	public Page getMainWizardPage() {
-		return new MainPage();
+	public WizardController getWizardController() {
+		return new XWingWizardController();
 	}
 }

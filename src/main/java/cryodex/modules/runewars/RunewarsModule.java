@@ -8,10 +8,10 @@ import cryodex.modules.Module;
 import cryodex.modules.ModulePlayer;
 import cryodex.modules.RegistrationPanel;
 import cryodex.modules.Tournament;
+import cryodex.modules.WizardController;
 import cryodex.modules.runewars.gui.RunewarsRegistrationPanel;
-import cryodex.modules.runewars.wizard.MainPage;
+import cryodex.modules.runewars.wizard.RunewarsWizardController;
 import cryodex.widget.wizard.WizardOptions;
-import cryodex.widget.wizard.pages.Page;
 import cryodex.xml.XMLUtils;
 import cryodex.xml.XMLUtils.Element;
 
@@ -106,8 +106,8 @@ public class RunewarsModule extends Module {
 		this.viewMenuItem = viewMenuItem;
 	}
 
-	@Override
-	public Page getMainWizardPage() {
-		return new MainPage();
-	}
+    @Override
+    public WizardController getWizardController() {
+        return new RunewarsWizardController();
+    }
 }

@@ -1,4 +1,4 @@
-package cryodex.modules.xwing.wizard;
+package cryodex.widget.wizard.pages;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -16,18 +17,23 @@ import cryodex.CryodexController;
 import cryodex.Language;
 import cryodex.Player;
 import cryodex.modules.Tournament;
+import cryodex.modules.WizardController;
 import cryodex.widget.ComponentUtils;
 import cryodex.widget.DoubleList;
 import cryodex.widget.wizard.TournamentWizard;
-import cryodex.widget.wizard.pages.Page;
 
 public class PlayerSelectionPage implements Page {
 
         private DoubleList<Player> playerList;
         private JCheckBox removeCurrentlyPlaying;
-
+        private JCheckBox showActive;
+        private WizardController wizardController;
         private JPanel pagePanel;
 
+        public PlayerSelectionPage(WizardController wizardController) {
+            this.wizardController = wizardController;
+        }
+        
         @Override
         public JPanel getPanel() {
 
@@ -52,40 +58,56 @@ public class PlayerSelectionPage implements Page {
 
                     @Override
                     public void actionPerformed(ActionEvent arg0) {
-                        if (removeCurrentlyPlaying.isSelected()) {
-                            List<Tournament> tournaments = CryodexController.getAllTournaments();
-                            List<Player> players1 = playerList.getList1Values();
-                            List<Player> players2 = playerList.getList2Values();
-                            for (Tournament t : tournaments) {
-                                players1.removeAll(t.getPlayers());
-                                players2.removeAll(t.getPlayers());
-                            }
-                            playerList.setValues(players1, players2);
-                        } else {
-                            List<Tournament> tournaments = CryodexController.getAllTournaments();
-                            List<Player> players = new ArrayList<Player>();
-
-                            for (Tournament t : tournaments) {
-                                for (Player p : t.getPlayers()) {
-                                    if (players.contains(p) == false) {
-                                        players.add(p);
-                                    }
-                                }
-                            }
-
-                            List<Player> players1 = playerList.getList1Values();
-                            players1.addAll(players);
-                            List<Player> players2 = playerList.getList2Values();
-                            playerList.setValues(players1, players2);
-                        }
+                        filterPlayers();
                     }
                 });
+                
+                showActive = new JCheckBox(Language.show_only_active);
+                showActive.addActionListener(new ActionListener(){
 
-                pagePanel.add(ComponentUtils.addToFlowLayout(removeCurrentlyPlaying, FlowLayout.CENTER), BorderLayout.SOUTH);
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        filterPlayers();           
+                    }
+                    
+                });
+
+                JPanel optionPanel = ComponentUtils.addToVerticalBorderLayout(null, removeCurrentlyPlaying, showActive);
+                
+                pagePanel.add(ComponentUtils.addToFlowLayout(optionPanel, FlowLayout.CENTER), BorderLayout.SOUTH);
 
             }
 
             return pagePanel;
+        }
+        
+        private void filterPlayers(){
+            
+            List<Player> inactivePlayers = new ArrayList<Player>();
+            TreeSet<Player> busyPlayers = new TreeSet<Player>();
+            
+            if (removeCurrentlyPlaying.isSelected()) {
+                for (Tournament t : CryodexController.getAllTournaments()) {
+                    busyPlayers.addAll(t.getPlayers());
+                }
+            }
+            
+            if (showActive.isSelected()) {
+                for(Player p : CryodexController.getPlayers()){
+                    if(p.isActive() == false){
+                        inactivePlayers.add(p);
+                    }
+                }
+            }
+            
+            List<Player> filteredPlayers = new ArrayList<Player>();
+            filteredPlayers.addAll(CryodexController.getPlayers());
+            
+            filteredPlayers.removeAll(inactivePlayers);
+            filteredPlayers.removeAll(busyPlayers);
+            filteredPlayers.removeAll(playerList.getList2Values());
+            
+            playerList.setValues(filteredPlayers, playerList.getList2Values());
         }
 
         @Override
@@ -95,7 +117,7 @@ public class PlayerSelectionPage implements Page {
                 xwingPlayerList.add(p);
             }
             TournamentWizard.getInstance().getWizardOptions().setPlayerList(xwingPlayerList);
-            TournamentWizard.getInstance().setCurrentPage(new AdditionalOptionsPage());
+            TournamentWizard.getInstance().setCurrentPage(wizardController.getAdditionalOptionsPage());
         }
 
         @Override

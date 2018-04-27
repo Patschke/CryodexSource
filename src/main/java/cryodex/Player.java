@@ -21,6 +21,7 @@ public class Player implements Comparable<Player>, XMLObject {
 	private String email;
     private boolean firstRoundBye = false;
 	private List<ModulePlayer> moduleInfo;
+	private boolean isActive = true;
 
 	public Player() {
 		this("");
@@ -38,6 +39,7 @@ public class Player implements Comparable<Player>, XMLObject {
 		this.saveId = e.getStringFromChild("SAVEID");
 		this.email = e.getStringFromChild("EMAIL");
         this.firstRoundBye = e.getBooleanFromChild("FIRSTROUNDBYE",false);
+        this.isActive = e.getBooleanFromChild("ISACTIVE", true);
 
 		Element moduleInfoElement = e.getChild("MODULE-INFO");
 
@@ -94,7 +96,15 @@ public class Player implements Comparable<Player>, XMLObject {
 		this.email = email;
 	}
 
-	public List<ModulePlayer> getModuleInfo() {
+	public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public List<ModulePlayer> getModuleInfo() {
 		return moduleInfo;
 	}
 
@@ -201,6 +211,7 @@ public class Player implements Comparable<Player>, XMLObject {
 		XMLUtils.appendObject(sb, "SAVEID", getSaveId());
 		XMLUtils.appendObject(sb, "EMAIL", getEmail());
         XMLUtils.appendObject(sb, "FIRSTROUNDBYE", isFirstRoundBye());
+        XMLUtils.appendObject(sb, "ISACTIVE", isActive());
 		XMLUtils.appendList(sb, "MODULE-INFO", "MODULE-PLAYER", getModuleInfo());
 
 		return sb;

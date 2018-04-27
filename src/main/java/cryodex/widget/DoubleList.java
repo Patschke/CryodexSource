@@ -159,7 +159,7 @@ public class DoubleList<T extends Comparable<T>> extends JPanel {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    List<T> list1 = getList1Values();
+                    List<T> list1 = list1Prefiltered;
                     List<T> list2 = getList2Values();
 
                     List<T> selected = getList1().getSelectedValuesList();
@@ -183,6 +183,8 @@ public class DoubleList<T extends Comparable<T>> extends JPanel {
 
                     updateLabels();
                     list1Prefiltered = getList1Values();
+                    
+                    filterList1(filterList1.getText());
                 }
             });
         }
@@ -196,7 +198,7 @@ public class DoubleList<T extends Comparable<T>> extends JPanel {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    List<T> list1 = getList1Values();
+                    List<T> list1 = list1Prefiltered;
                     List<T> list2 = getList2Values();
 
                     List<T> selected = getList2().getSelectedValuesList();
@@ -220,6 +222,8 @@ public class DoubleList<T extends Comparable<T>> extends JPanel {
 
                     updateLabels();
                     list1Prefiltered = getList1Values();
+                    
+                    filterList1(filterList1.getText());
                 }
             });
         }
@@ -233,7 +237,7 @@ public class DoubleList<T extends Comparable<T>> extends JPanel {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    List<T> list1 = getList1Values();
+                    List<T> list1 = list1Prefiltered;
                     List<T> list2 = getList2Values();
 
                     list2.addAll(list1);
@@ -249,6 +253,8 @@ public class DoubleList<T extends Comparable<T>> extends JPanel {
 
                     updateLabels();
                     list1Prefiltered = getList1Values();
+                    
+                    filterList1(filterList1.getText());
                 }
             });
         }
@@ -262,7 +268,7 @@ public class DoubleList<T extends Comparable<T>> extends JPanel {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    List<T> list1 = getList1Values();
+                    List<T> list1 = list1Prefiltered;
                     List<T> list2 = getList2Values();
 
                     list1.addAll(list2);
@@ -278,6 +284,8 @@ public class DoubleList<T extends Comparable<T>> extends JPanel {
 
                     updateLabels();
                     list1Prefiltered = getList1Values();
+                    
+                    filterList1(filterList1.getText());
                 }
             });
         }

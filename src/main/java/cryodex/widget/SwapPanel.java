@@ -31,7 +31,6 @@ import cryodex.Player;
 import cryodex.modules.Match;
 import cryodex.modules.Round;
 import cryodex.modules.Tournament;
-import cryodex.modules.krayt.KraytTournament;
 
 @SuppressWarnings("serial")
 public class SwapPanel extends JPanel {
@@ -174,10 +173,6 @@ public class SwapPanel extends JPanel {
 	}
 
 	public void update() {
-
-	    if(tournament instanceof KraytTournament){
-	        return;
-	    }
 	    
 		Integer i = null;
 		try {
@@ -373,15 +368,10 @@ public class SwapPanel extends JPanel {
 		List<Player> tempPlayers = new ArrayList<>();
 		tempPlayers.addAll(tournament.getPlayers());
 
-
-        if(tournament instanceof KraytTournament){
-         //don't remove any
-        } else {
 		for (MatchPanel mp : matchPanels) {
 			tempPlayers.remove(mp.getPlayer1Combo().getSelectedItem());
 			tempPlayers.remove(mp.getPlayer2Combo().getSelectedItem());
 		}
-        }
 
 		for (MatchPanel mp : matchPanels) {
 			mp.updateCombos(tempPlayers);

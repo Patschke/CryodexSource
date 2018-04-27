@@ -5,11 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 import cryodex.Player;
-import cryodex.export.ExportUtils;
 import cryodex.modules.ExportController;
 import cryodex.modules.Match;
 import cryodex.modules.Tournament;
-import cryodex.modules.imperialassault.IAComparator;
 import cryodex.modules.imperialassault.IAPlayer;
 import cryodex.modules.imperialassault.IATournament;
 
@@ -20,9 +18,11 @@ public class IAExportController extends ExportController{
 		List<Player> activePlayers = tournament.getPlayers();
 
 		playerList.addAll(tournament.getAllPlayers());
-		Collections.sort(playerList, new IAComparator(tournament, IAComparator.rankingCompare));
+        Collections.sort(playerList, tournament.getRankingComparator());
 
-		String content = "<table border=\"1\"><tr><th>Rank</th><th>Name</th><th>Score</th><th>SoS</th><th>Ext SoS</th></tr>";
+        String content = "<table border=\"1\">";
+
+        content = appendHTMLTableHeader(content, "Rank", "Name", "Score", "SoS", "Ext SoS");
 
 		for (Player p : playerList) {
 
@@ -34,10 +34,8 @@ public class IAExportController extends ExportController{
 				name = "(D#" + xp.getRoundDropped(tournament) + ")" + name;
 			}
 
-			content += "<tr><td>" + xp.getRank(tournament) + "</td><td>" + name + "</td><td>"
-					+ xp.getScore(tournament) + "</td><td>"
-					+ xp.getAverageSoS(tournament) + "</td><td>"
-					+ xp.getExtendedStrengthOfSchedule(tournament) + "</td></tr>";
+			content = appendHTMLTableRow(content, xp.getRank(tournament), name, xp.getScore(tournament),
+                    xp.getAverageSoS(tournament), xp.getExtendedStrengthOfSchedule(tournament));
 		}
 
 		content += "</table>";
@@ -49,74 +47,37 @@ public class IAExportController extends ExportController{
     public String getValueLabel() {
         return "Winner";
     }
-	
-	public void exportTournamentSlipsWithStats(Tournament tournament, List<Match> matches, int roundNumber) {
 
-		int slipsPerPage = 6;
+    @Override
+    public String getMatchStats(Match match, Tournament tournament) {
 
-		String content = "";
+        String matchString = "<table class=\"print-friendly\" border=\"1\">";
 
-		int increment = matches.size() / slipsPerPage;
-		increment = increment + (matches.size() % slipsPerPage > 0 ? 1 : 0);
+        IAPlayer xp1 = (IAPlayer) tournament.getModulePlayer(match.getPlayer1());
+        IAPlayer xp2 = (IAPlayer) tournament.getModulePlayer(match.getPlayer2());
 
-		int pageCounter = 1;
+        matchString += appendHTMLTableHeader("Name", "Rank", "Score", "SoS", "Ext SoS");
 
-		int index = 0;
+        matchString += appendHTMLTableRow(xp1.getName(), xp1.getRank(tournament), xp1.getScore(tournament), xp1.getAverageSoS(tournament),
+                xp1.getExtendedStrengthOfSchedule(tournament));
+        matchString += appendHTMLTableRow(xp2.getName(), xp2.getRank(tournament), xp2.getScore(tournament), xp2.getAverageSoS(tournament),
+                xp2.getExtendedStrengthOfSchedule(tournament));
 
-		while (pageCounter <= increment) {
-			for (; index < matches.size(); index = index + increment) {
+        matchString += "</table>";
 
-				Match m = matches.get(index);
+        matchString.replaceAll("<td>", "<td class=\"smallFont\">");
 
-				String matchString = "";
-				if (m.getPlayer2() != null) {
-
-					IAPlayer xp1 = (IAPlayer) tournament.getModulePlayer(m.getPlayer1());
-					IAPlayer xp2 = (IAPlayer) tournament.getModulePlayer(m.getPlayer2());
-
-					matchString += "<table class=\"print-friendly\" width=100%><tr><th><h4>Round " + roundNumber
-							+ " - Table " + (index + 1) + "</h4></th><th vAlign=bottom align=left><h4>"
-							+ m.getPlayer1().getName() + "</h4></th><th vAlign=bottom align=left><h4>" + xp2.getName()
-							+ "</h4></th></tr><tr><td><table class=\"print-friendly\" border=\"1\"><tr><th>Name</th><th>Rank</td><th>Score</th><th>MoV</th><th>SoS</th></tr><tr>"
-							+ "<td class=\"smallFont\">" + xp1.getName() + "</td><td class=\"smallFont\">"
-							+ xp1.getRank(tournament) + "</td><td class=\"smallFont\">" + xp1.getScore(tournament)
-							+ "</td><td class=\"smallFont\">" + xp1.getAverageSoS(tournament)
-							+ "</td><td class=\"smallFont\">" + xp1.getExtendedStrengthOfSchedule(tournament)
-							+ "</td></tr><tr><td class=\"smallFont\">" + xp2.getName() + "</td><td class=\"smallFont\">"
-							+ xp2.getRank(tournament) + "</td><td class=\"smallFont\">" + xp2.getScore(tournament)
-							+ "</td><td class=\"smallFont\">" + xp2.getAverageSoS(tournament)
-							+ "</td><td class=\"smallFont\">" + xp2.getExtendedStrengthOfSchedule(tournament) + "</td></tr></table>"
-							+ "</td><td class=\"smallFont\">"
-							+ "<div style=\"vertical-align: bottom; height: 100%;\">" + getValueLabel() + " ____________</div>"
-							+ "</br>"
-							+ "<div style=\"vertical-align: top; height: 100%;\"><input type=\"checkbox\">I wish to drop</input></div>"
-							+ "</td><td class=\"smallFont\">"
-							+ "<div style=\"vertical-align: bottom; height: 100%;\">" + getValueLabel() + " ____________</div>"
-							+ "</br>"
-							+ "<div style=\"vertical-align: top; height: 100%;\"><input type=\"checkbox\">I wish to drop</input></div>"
-							+ "</td></tr></table>";
-
-					matchString += "<hr>";
-
-					content += matchString;
-				}
-			}
-			content += "<div class=\"pagebreak\">&nbsp;</div>";
-			index = pageCounter;
-			pageCounter++;
-		}
-
-		ExportUtils.displayHTML(content, "ExportMatchSlips");
-	}
+        return matchString;
+    }
 
 	@Override
 	public void cacReport() {
-		// TODO Auto-generated method stub
+        // Not Supported
 	}
 
 	@Override
 	public void tcxTeamReport(Tournament tournament) {
-		// TODO Auto-generated method stub
+        // Not Supported
 		
 	}
 

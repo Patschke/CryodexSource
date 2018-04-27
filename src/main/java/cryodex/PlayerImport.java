@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 import cryodex.modules.xwing.XWingPlayer;
 import cryodex.modules.xwing.XWingPlayer.Faction;
@@ -24,6 +25,10 @@ public class PlayerImport {
 			int returnVal = fc.showOpenDialog(Main.getInstance());
 
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
+			    
+			    int response = JOptionPane.showConfirmDialog(Main.getInstance(), "Do you wish to import the players as active?", "Import as active?", JOptionPane.YES_NO_OPTION);
+			    boolean active = response == JOptionPane.YES_OPTION;
+			    
 			    File file = fc.getSelectedFile();
 			    
 				reader = new BufferedReader(new FileReader(file));
@@ -69,6 +74,7 @@ public class PlayerImport {
 					
 					p.setEmail(getString(emailAddress, playerLine));
 					p.setGroupName(getString(group, playerLine));
+					p.setActive(active);
 					
 					XWingPlayer xp = new XWingPlayer(p);
 					xp.setSquadId(getString(squad, playerLine));

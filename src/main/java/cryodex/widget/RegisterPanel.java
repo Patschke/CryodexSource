@@ -1,7 +1,19 @@
 package cryodex.widget;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,6 +22,7 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -17,7 +30,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import cryodex.CryodexController;
 import cryodex.Player;
@@ -41,13 +59,15 @@ public class RegisterPanel extends JPanel {
     private JTextField nameField;
     private DefaultListModel<Player> userModel;
     private JLabel counterLabel;
+    private JLabel activePlayerLabel;
     private JLabel donationLabel;
-
+    private JButton activeButton;
     private JTextField groupField;
     private JTextField emailField;
     private JPanel playerInfoPanel;
     private JPanel playerPanel;
     private JCheckBox firstRoundBye;
+    private JCheckBox isActive;
 
     private JTextField playerSearchField;
     private JButton clearFilter;
@@ -78,8 +98,10 @@ public class RegisterPanel extends JPanel {
 
             JScrollPane listScroller = new JScrollPane(getPlayerList());
             listScroller.setPreferredSize(new Dimension(150, 250));
+            
+            JPanel counterPanel = ComponentUtils.addToVerticalBorderLayout(getCounterLabel(), getActivePlayerLabel(), null);
 
-            JPanel labelPanel = ComponentUtils.addToVerticalBorderLayout(getCounterLabel(), getDonationLabel(), null);
+            JPanel labelPanel = ComponentUtils.addToVerticalBorderLayout(counterPanel, getActiveButton(), getDonationLabel());
 
             JPanel southPanel = ComponentUtils.addToVerticalBorderLayout(null, listScroller, labelPanel);
 
@@ -127,6 +149,9 @@ public class RegisterPanel extends JPanel {
             
             gbc.gridy++;
             playerInfoPanel.add(getFirstRoundByeCB(), gbc);
+            
+            gbc.gridy++;
+            playerInfoPanel.add(getIsActiveCB(), gbc);
 
             for (Module m : CryodexController.getModules()) {
             	if(m.getRegistration().getPanel() != null){
@@ -173,6 +198,14 @@ public class RegisterPanel extends JPanel {
     	
     	return firstRoundBye;
     }
+    
+    private JCheckBox getIsActiveCB(){
+        if (isActive == null) {
+            isActive = new JCheckBox("Active");
+        }
+        
+        return isActive;
+    }
 
     private JButton getSaveButton() {
 
@@ -191,6 +224,7 @@ public class RegisterPanel extends JPanel {
                     String groupName = getGroupNameField().getText();
                     String email = getEmailField().getText();
                     boolean isFirstRoundBye = getFirstRoundByeCB().isSelected();
+                    boolean isActive =getIsActiveCB().isSelected();
 
                     if (name == null || name.isEmpty()) {
                         JOptionPane.showMessageDialog((Component) null, "Name is required", "Error", JOptionPane.ERROR_MESSAGE);
@@ -223,6 +257,7 @@ public class RegisterPanel extends JPanel {
                     }
                     player.setEmail(email);
                     player.setFirstRoundBye(isFirstRoundBye);
+                    player.setActive(isActive);
 
                     for (Module m : CryodexController.getModules()) {
                         m.getRegistration().save(player);
@@ -299,6 +334,7 @@ public class RegisterPanel extends JPanel {
         getGroupNameField().setText("");
         getEmailField().setText("");
         getFirstRoundByeCB().setSelected(false);
+        getIsActiveCB().setSelected(true);
 
         for (Module m : CryodexController.getModules()) {
             m.getRegistration().clearFields();
@@ -372,6 +408,7 @@ public class RegisterPanel extends JPanel {
                         getGroupNameField().setText(player.getGroupName());
                         getEmailField().setText(player.getEmail());
                         getFirstRoundByeCB().setSelected(player.isFirstRoundBye());
+                        getIsActiveCB().setSelected(player.isActive());
 
                         for (Module m : CryodexController.getModules()) {
                             m.getRegistration().load(player);
@@ -388,6 +425,7 @@ public class RegisterPanel extends JPanel {
 
     public void updateCounterLabel() {
         getCounterLabel().setText("Player Count: " + getUserModel().getSize());
+        getActivePlayerLabel().setText("Active Players: " + CryodexController.getActivePlayers().size() + "/" + CryodexController.getPlayers().size());
     }
 
     public JLabel getCounterLabel() {
@@ -396,6 +434,14 @@ public class RegisterPanel extends JPanel {
         }
 
         return counterLabel;
+    }
+    
+    public JLabel getActivePlayerLabel() {
+        if (activePlayerLabel == null) {
+            activePlayerLabel = new JLabel();
+        }
+
+        return activePlayerLabel;
     }
 
     public JLabel getDonationLabel() {
@@ -428,6 +474,23 @@ public class RegisterPanel extends JPanel {
             });
         }
         return donationLabel;
+    }
+    
+    private JComponent getActiveButton() {
+        
+        if(activeButton == null){
+        
+            activeButton = new JButton("Update Active Players");
+            
+            activeButton.addActionListener(new ActionListener() {
+                
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    ActivePlayerPanel.showActivePanel();
+                }
+            });
+        }
+        return activeButton;
     }
 
     public void registerButton() {

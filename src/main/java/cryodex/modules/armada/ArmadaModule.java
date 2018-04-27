@@ -8,10 +8,10 @@ import cryodex.modules.Module;
 import cryodex.modules.ModulePlayer;
 import cryodex.modules.RegistrationPanel;
 import cryodex.modules.Tournament;
+import cryodex.modules.WizardController;
 import cryodex.modules.armada.gui.ArmadaRegistrationPanel;
-import cryodex.modules.armada.wizard.MainPage;
+import cryodex.modules.armada.wizard.ArmadaWizardController;
 import cryodex.widget.wizard.WizardOptions;
-import cryodex.widget.wizard.pages.Page;
 import cryodex.xml.XMLUtils;
 import cryodex.xml.XMLUtils.Element;
 
@@ -106,8 +106,8 @@ public class ArmadaModule extends Module {
 		this.viewMenuItem = viewMenuItem;
 	}
 
-	@Override
-	public Page getMainWizardPage() {
-		return new MainPage();
-	}
+    @Override
+    public WizardController getWizardController() {
+        return new ArmadaWizardController();
+    }
 }

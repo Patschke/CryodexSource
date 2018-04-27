@@ -45,7 +45,7 @@ public class Language {
 	public static final String let_me_pick = "Let me pick";
 	public static final String choose_point_type = "Choose Point Type";
 	public static final String choose_pairing_style = "Choose Pairing Style";
-//	public static final String temp = "temp";
+	public static final String show_only_active = "Show only active players";
 //	public static final String temp = "temp";
 //	public static final String temp = "temp";
 //	public static final String temp = "temp";

@@ -1,4 +1,4 @@
-package cryodex.modules.swlcg.wizard;
+package cryodex.widget.wizard.pages;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -16,22 +16,26 @@ import cryodex.CryodexController;
 import cryodex.Language;
 import cryodex.Main;
 import cryodex.modules.Tournament;
+import cryodex.modules.WizardController;
 import cryodex.widget.ComponentUtils;
 import cryodex.widget.wizard.TournamentWizard;
 import cryodex.widget.wizard.WizardOptions;
-import cryodex.widget.wizard.pages.Page;
 
 public class MainPage implements Page {
 
     JTextField nameTextField;
 
-    JCheckBox mergeCB;
-    JCheckBox splitCB;
-    JTextField numSubs;
-    JCheckBox progressionCut;
+    private JCheckBox mergeCB;
+    private JCheckBox splitCB;
+    private JTextField numSubs;
+    private JCheckBox progressionCut;
+    private WizardController wizardController;
+    private JPanel pagePanel;
 
-    JPanel pagePanel;
-
+    public MainPage(WizardController wizardController) {
+        this.wizardController = wizardController;
+    }
+    
     @Override
     public JPanel getPanel() {
 
@@ -132,11 +136,11 @@ public class MainPage implements Page {
         }
 
         if (progressionCut.isSelected()) {
-            TournamentWizard.getInstance().setCurrentPage(new ProgressionCutPage());
+            TournamentWizard.getInstance().setCurrentPage(wizardController.getProgressionCutPage());
         } else if (mergeCB.isSelected()) {
-            TournamentWizard.getInstance().setCurrentPage(new MergeTournamentSelectionPage());
+            TournamentWizard.getInstance().setCurrentPage(wizardController.getMergeTournamentSelectionPage());
         } else {
-            TournamentWizard.getInstance().setCurrentPage(new PlayerSelectionPage());
+            TournamentWizard.getInstance().setCurrentPage(wizardController.getPlayerSelectionPage());
         }
     }
 

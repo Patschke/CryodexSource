@@ -145,6 +145,24 @@ public class TournamentMenu implements Menu {
                     }
                 }
             });
+            
+            JMenuItem massAddPlayer = new JMenuItem("Mass Add Players");
+            massAddPlayer.addActionListener(new ActionListener(){
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+                    if (CryodexController.getActiveTournament() == null) {
+                        JOptionPane.showMessageDialog(Main.getInstance(), "There are no tournaments to do this action.");
+                        return;
+                    }
+
+                    JDialog d = new MassAddPanel();
+                    d.setVisible(true);
+                
+                }
+            });
 
             JMenuItem dropPlayer = new JMenuItem("Drop Player");
             dropPlayer.addActionListener(new ActionListener() {
@@ -186,6 +204,7 @@ public class TournamentMenu implements Menu {
             });
 
             playersMenu.add(addPlayer);
+            playersMenu.add(massAddPlayer);
             playersMenu.add(dropPlayer);
             playersMenu.add(massDropPlayer);
             playersMenu.add(getCutPlayers());

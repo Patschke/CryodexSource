@@ -1,4 +1,4 @@
-package cryodex.modules.destiny.wizard;
+package cryodex.widget.wizard.pages;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -20,24 +20,29 @@ import cryodex.CryodexController;
 import cryodex.Language;
 import cryodex.Player;
 import cryodex.modules.Tournament;
-import cryodex.modules.destiny.DestinyPlayer;
-import cryodex.modules.destiny.DestinyTournament;
+import cryodex.modules.WizardController;
+import cryodex.modules.xwing.XWingPlayer;
+import cryodex.modules.xwing.XWingTournament;
 import cryodex.widget.ComponentUtils;
 import cryodex.widget.SpringUtilities;
 import cryodex.widget.wizard.TournamentWizard;
 import cryodex.widget.wizard.WizardOptions;
 import cryodex.widget.wizard.WizardUtils;
-import cryodex.widget.wizard.pages.Page;
 
 public class ProgressionCutPage implements Page {
 
     private JPanel pagePanel = null;
-    private final Map<DestinyTournament, JCheckBox> checkBoxMap = new HashMap<DestinyTournament, JCheckBox>();
+    private final Map<XWingTournament, JCheckBox> checkBoxMap = new HashMap<XWingTournament, JCheckBox>();
     private JLabel maxPlayersLabel = null;
     private JLabel minPointsLabel = null;
     private JTextField maxPlayersTF = null;
     private JTextField minPointsTF = null;
-
+    private WizardController wizardController;
+    
+    public ProgressionCutPage(WizardController wizardController) {
+        this.wizardController = wizardController;
+    }
+    
     @Override
     public JPanel getPanel() {
 
@@ -54,8 +59,8 @@ public class ProgressionCutPage implements Page {
 
             for (Tournament t : CryodexController.getAllTournaments()) {
                 JCheckBox cb = new JCheckBox(t.getName());
-                if (t instanceof DestinyTournament) {
-                    checkBoxMap.put((DestinyTournament) t, cb);
+                if (t instanceof XWingTournament) {
+                    checkBoxMap.put((XWingTournament) t, cb);
                 }
 
                 listPanel.add(cb);
@@ -103,7 +108,7 @@ public class ProgressionCutPage implements Page {
             // Leave it as null
         }
 
-        for (DestinyTournament t : checkBoxMap.keySet()) {
+        for (XWingTournament t : checkBoxMap.keySet()) {
             if (checkBoxMap.get(t).isSelected()) {
                 tournamentList.add(t);
                 playerList.addAll(t.getPlayers());
@@ -118,13 +123,13 @@ public class ProgressionCutPage implements Page {
         wizardOptions.setSelectedTournaments(tournamentList);
 
         List<Player> rankedPlayers = WizardUtils.rankMergedPlayers(wizardOptions);
-        DestinyTournament mergedTournament = (DestinyTournament) WizardUtils.getMergedTournament(wizardOptions);
+        XWingTournament mergedTournament = (XWingTournament) WizardUtils.getMergedTournament(wizardOptions);
 
         List<Player> playersToAdd = new ArrayList<Player>();
 
         for (Player p : rankedPlayers) {
         	
-        	DestinyPlayer xp = mergedTournament.getModulePlayer(p);
+        	XWingPlayer xp = mergedTournament.getModulePlayer(p);
         	
             if (playerCount != null && playersToAdd.size() >= playerCount) {
                 break;
@@ -139,7 +144,7 @@ public class ProgressionCutPage implements Page {
 
         wizardOptions.setPlayerList(playersToAdd);
 
-        TournamentWizard.getInstance().setCurrentPage(new AdditionalOptionsPage());
+        TournamentWizard.getInstance().setCurrentPage(wizardController.getAdditionalOptionsPage());
     }
 
     @Override

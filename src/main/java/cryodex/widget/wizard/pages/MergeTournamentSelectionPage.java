@@ -1,4 +1,4 @@
-package cryodex.modules.imperialassault.wizard;
+package cryodex.widget.wizard.pages;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -25,20 +25,23 @@ import cryodex.CryodexController;
 import cryodex.Language;
 import cryodex.Player;
 import cryodex.modules.Tournament;
-import cryodex.modules.imperialassault.IAComparator;
-import cryodex.modules.imperialassault.IATournament;
+import cryodex.modules.WizardController;
 import cryodex.widget.ComponentUtils;
 import cryodex.widget.SpringUtilities;
 import cryodex.widget.wizard.TournamentWizard;
-import cryodex.widget.wizard.pages.Page;
 
 public class MergeTournamentSelectionPage implements Page {
 
         private JPanel pagePanel = null;
-        private final Map<IATournament, JCheckBox> checkBoxMap = new HashMap<IATournament, JCheckBox>();
+        private final Map<Tournament, JCheckBox> checkBoxMap = new HashMap<Tournament, JCheckBox>();
         private JRadioButton all;
         private JRadioButton manual;
         private JTextField manualInput;
+        private WizardController wizardController;
+        
+        public MergeTournamentSelectionPage(WizardController wizardController) {
+            this.wizardController = wizardController;
+        }
 
         @Override
         public JPanel getPanel() {
@@ -56,8 +59,8 @@ public class MergeTournamentSelectionPage implements Page {
 
                 for (Tournament t : CryodexController.getAllTournaments()) {
                     JCheckBox cb = new JCheckBox(t.getName());
-                    if (t instanceof IATournament) {
-                        checkBoxMap.put((IATournament) t, cb);
+                    if (t.getModuleName().equals(wizardController.getModuleName())) {
+                        checkBoxMap.put(t, cb);
                     }
 
                     listPanel.add(cb);
@@ -112,7 +115,7 @@ public class MergeTournamentSelectionPage implements Page {
             }
             
 
-            for (IATournament t : checkBoxMap.keySet()) {
+            for (Tournament t : checkBoxMap.keySet()) {
                 if (checkBoxMap.get(t).isSelected()) {
 
                     tournamentList.add(t);
@@ -122,7 +125,7 @@ public class MergeTournamentSelectionPage implements Page {
                     if (playerCount == null || thisTournamentPlayers.size() <= playerCount) {
                         playerList.addAll(thisTournamentPlayers);
                     } else {
-                        Collections.sort(thisTournamentPlayers, new IAComparator(t, IAComparator.rankingCompare));
+                        Collections.sort(thisTournamentPlayers, t.getRankingComparator());
                         playerList.addAll(thisTournamentPlayers.subList(0, playerCount));
                     }
                 }
@@ -134,7 +137,7 @@ public class MergeTournamentSelectionPage implements Page {
             TournamentWizard.getInstance().getWizardOptions().setPlayerList(addingList);
             TournamentWizard.getInstance().getWizardOptions().setSelectedTournaments(tournamentList);
 
-            TournamentWizard.getInstance().setCurrentPage(new AdditionalOptionsPage());
+            TournamentWizard.getInstance().setCurrentPage(wizardController.getAdditionalOptionsPage());
 
         }
 

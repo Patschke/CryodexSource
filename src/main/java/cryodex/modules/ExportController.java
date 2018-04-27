@@ -13,8 +13,8 @@ import cryodex.export.ExportUtils;
 public abstract class ExportController {
 
     public abstract String appendRankings(Tournament tournament);
-
-    public abstract void exportTournamentSlipsWithStats(Tournament tournament, List<Match> matches, int roundNumber);
+    
+    public abstract String getMatchStats(Match match, Tournament tournament);
 
     public abstract void cacReport();
     
@@ -37,48 +37,75 @@ public abstract class ExportController {
 	
 	public void exportTournamentSlips(Tournament tournament, List<Match> matches, int roundNumber) {
 
-		int slipsPerPage = 6;
-
-		String content = "";
-
-		int increment = matches.size() / slipsPerPage;
-		increment = increment + (matches.size() % slipsPerPage > 0 ? 1 : 0);
-
-		int pageCounter = 1;
-
-		int index = 0;
-
-		while (pageCounter <= increment) {
-			for (; index < matches.size(); index = index + increment) {
-
-				Match m = matches.get(index);
-
-				String matchString = "";
-				if (m.getPlayer2() != null) {
-					matchString += "<table class=\"print-friendly\" width=100%><tr><td><h4>" + tournament.getName() + " - Round " + roundNumber
-							+ " - Table " + (index + 1) + "</h4></td><td vAlign=bottom align=left><h4>"
-							+ m.getPlayer1().getName() + "</h4></td><td vAlign=bottom align=left><h4>"
-							+ m.getPlayer2().getName() + "</h4></td></tr><tr><td>" + "</td><td class=\"smallFont\">"
-							+ "<div style=\"vertical-align: bottom; height: 100%;\">" + getValueLabel() + " ____________</div>"
-							+ "</br>"
-							+ "<div style=\"vertical-align: top; height: 100%;\"><input type=\"checkbox\">I wish to drop</input></div>"
-							+ "</td><td class=\"smallFont\">"
-							+ "<div style=\"vertical-align: bottom; height: 100%;\">" + getValueLabel() + " ____________</div>"
-							+ "</br>"
-							+ "<div style=\"vertical-align: top; height: 100%;\"><input type=\"checkbox\">I wish to drop</input></div>"
-							+ "</td></tr></table>";
-
-					matchString += "<br><br><br><hr>";
-
-					content += matchString;
-				}
-			}
-			content += "<div class=\"pagebreak\">&nbsp;</div>";
-			index = pageCounter;
-			pageCounter++;
-		}
+        String content = getMatchSlipHTML(tournament, matches, roundNumber, false);
 
 		ExportUtils.displayHTML(content, "ExportMatchSlips");
+	}
+	
+	public void exportTournamentSlipsWithStats(Tournament tournament, List<Match> matches, int roundNumber) {
+
+	    String content = getMatchSlipHTML(tournament, matches, roundNumber, true);
+
+        ExportUtils.displayHTML(content, "ExportMatchSlips");
+    }
+	
+	private String getMatchSlipHTML(Tournament tournament, List<Match> matches, int roundNumber, boolean includeMatchStats){
+
+        int slipsPerPage = 6;
+
+        String content = "";
+
+        int increment = matches.size() / slipsPerPage;
+        increment = increment + (matches.size() % slipsPerPage > 0 ? 1 : 0);
+
+        int pageCounter = 1;
+
+        int index = 0;
+
+        while (pageCounter <= increment) {
+            for (; index < matches.size(); index = index + increment) {
+
+                Match match = matches.get(index);
+
+                String matchString = "";
+                if (match.getPlayer2() != null) {
+
+                    String slipHeader = "<table class=\"print-friendly\" width=100%><tr><td><h4>" + tournament.getName() + " - Round " + roundNumber
+                            + " - Table " + (index+1) + "</h4></td><td vAlign=bottom align=left><h4>"
+                            + match.getPlayer1().getName() + "</h4></td><td vAlign=bottom align=left><h4>"
+                            + match.getPlayer2().getName() + "</h4></td></tr>";
+                    
+                    String valueElement = "<div style=\"vertical-align: bottom; height: 100%;\">" + getValueLabel() + " ____________</div>";
+                    String dropElement = "<div style=\"vertical-align: top; height: 100%;\"><input type=\"checkbox\">I wish to drop</input></div>";
+                    
+                    String matchStats = "";
+                    if(includeMatchStats){
+                        matchStats = getMatchStats(match, tournament);
+                    }
+                    
+                    matchString += slipHeader 
+                            + "<tr><td>" 
+                            + matchStats 
+                            + "</td><td class=\"smallFont\">"
+                            + valueElement
+                            + "</br>"
+                            + dropElement
+                            + "</td><td class=\"smallFont\">"
+                            + valueElement
+                            + "</br>"
+                            + dropElement
+                            + "</td></tr></table>"
+                            + "<br><br><hr>";
+
+                    content += matchString;
+                }
+            }
+            content += "<div class=\"pagebreak\">&nbsp;</div>";
+            index = pageCounter;
+            pageCounter++;
+        }
+	    
+        return content;
 	}
 	
 	public void exportTournamentReport(Tournament tournament) {
@@ -211,4 +238,36 @@ public abstract class ExportController {
 
 		return content;
 	}
+	
+	public String appendHTMLTableHeader(Object ... headers){
+	    if(headers == null || headers.length == 0){
+	        return "";
+	    }
+	    
+	    String content = "<tr>";
+	    
+	    for(Object header : headers){
+	        content += "<th>" + header + "</th>";
+	    }
+	    
+	    content += "</tr>";
+	    
+	    return content;
+	}
+	
+	public String appendHTMLTableRow(Object ... values){
+	    if(values == null || values.length == 0){
+            return "";
+        }
+        
+        String content = "<tr>";
+        
+        for(Object value : values){
+            content += "<td>" + value + "</td>";
+        }
+        
+        content += "</tr>";
+        
+        return content;
+    }
 }

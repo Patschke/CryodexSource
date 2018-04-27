@@ -627,6 +627,9 @@ public abstract class Tournament implements XMLObject {
     }
 
     public void addPlayer(Player p) {
+        if(players.contains(p)){
+            return;
+        }
         getPlayers().add(p);
         triggerDeepChange();
     }
@@ -634,6 +637,15 @@ public abstract class Tournament implements XMLObject {
     public void dropPlayer(Player p) {
 
         getPlayers().remove(p);
+        triggerDeepChange();
+    }
+
+    public void massAddPlayers(List<Player> playersToAdd) {
+
+        for (Player p : playersToAdd) {
+            addPlayer(p);
+        }
+
         triggerDeepChange();
     }
 
@@ -736,9 +748,15 @@ public abstract class Tournament implements XMLObject {
 
     public boolean isMatchComplete(Match m) {
 
-        boolean winnerChosen = m.getWinner(1) != null;
-
-        return m.isBye() || winnerChosen;
+        boolean isComplete = false;
+        
+        if(m.isBye()){
+            isComplete = true;
+        } else if (m.getWinner(1) != null && m.getPlayer1Points() != null && m.getPlayer2Points() != null){
+            isComplete = true;
+        }
+        
+        return isComplete;
     }
 
     public boolean isValidResult(Match m) {

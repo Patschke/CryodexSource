@@ -6,7 +6,6 @@ import cryodex.CryodexController;
 import cryodex.MenuBar;
 import cryodex.Player;
 import cryodex.widget.wizard.WizardOptions;
-import cryodex.widget.wizard.pages.Page;
 import cryodex.xml.XMLObject;
 import cryodex.xml.XMLUtils.Element;
 
@@ -45,5 +44,5 @@ public abstract class Module implements XMLObject {
         CryodexController.saveData();
     }
 	
-	public abstract Page getMainWizardPage();
+	public abstract WizardController getWizardController();
 }
