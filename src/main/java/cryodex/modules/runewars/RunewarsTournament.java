@@ -109,4 +109,39 @@ public class RunewarsTournament extends Tournament implements XMLObject {
 		}
 		return exportController;
 	}
+	
+    @Override
+    public boolean isMatchComplete(Match m) {
+
+        boolean isComplete = false;
+
+        if (m.isBye()) {
+            isComplete = true;
+        } else if (m.getWinner(1) != null && m.getPlayer1Points() != null && m.getPlayer2Points() != null) {
+            isComplete = true;
+        }
+
+        return isComplete;
+    }
+
+    @Override
+    public boolean isValidResult(Match m) {
+        Integer player1Points = m.getPlayer1Points() == null ? 0 : m.getPlayer1Points();
+        Integer player2Points = m.getPlayer2Points() == null ? 0 : m.getPlayer2Points();
+
+        // If there is no second player, it must be a bye
+        if (m.getPlayer2() == null && m.isBye()) {
+            return true;
+        }
+
+        // For single elimination we just look to make sure the correct
+        // player is the winner according to points
+        if ((m.getWinner(1) == m.getPlayer1() && player1Points >= player2Points)
+                || (m.getWinner(1) == m.getPlayer2() && player2Points >= player1Points)
+                || (player1Points == player2Points && m.getWinner(1) != null)) {
+            return true;
+        }
+
+        return false;
+    }
 }

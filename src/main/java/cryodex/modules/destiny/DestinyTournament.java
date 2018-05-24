@@ -110,4 +110,23 @@ public class DestinyTournament extends Tournament implements XMLObject {
 		}
 		return exportController;
 	}
+	
+    @Override
+    public boolean isMatchComplete(Match m) {
+
+        boolean isComplete = false;
+
+        if (m.isBye()) {
+            isComplete = true;
+        } else if (m.getWinner(1) != null) {
+            isComplete = true;
+        }
+
+        return isComplete;
+    }
+
+    @Override
+    public boolean isValidResult(Match m) {
+        return isMatchComplete(m);
+    }
 }

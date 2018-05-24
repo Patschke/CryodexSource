@@ -24,88 +24,123 @@ import cryodex.xml.XMLUtils.Element;
 
 public class XWingTournament extends Tournament implements XMLObject {
 
-	XWingExportController exportController;
-	
-	public XWingTournament(Element tournamentElement) {
-		super();
-		setupTournamentGUI(new XWingRankingTable(this));
-		loadXML(tournamentElement);
-	}
+    XWingExportController exportController;
 
-	public XWingTournament(WizardOptions wizardOptions) {
-		super(wizardOptions);
-		setupTournamentGUI(new XWingRankingTable(this));
-	}
+    public XWingTournament(Element tournamentElement) {
+        super();
+        setupTournamentGUI(new XWingRankingTable(this));
+        loadXML(tournamentElement);
+    }
 
-	@Override
-	public Icon getIcon() {
-		URL imgURL = XWingTournament.class.getResource("x.png");
-		if (imgURL == null) {
-			System.out.println("Failed to retrieve X-Wing Icon");
-		}
-		ImageIcon icon = new ImageIcon(imgURL);
-		return icon;
-	}
+    public XWingTournament(WizardOptions wizardOptions) {
+        super(wizardOptions);
+        setupTournamentGUI(new XWingRankingTable(this));
+    }
 
-	@Override
-	public String getModuleName() {
-		return Modules.XWING.getName();
-	}
+    @Override
+    public Icon getIcon() {
+        URL imgURL = XWingTournament.class.getResource("x.png");
+        if (imgURL == null) {
+            System.out.println("Failed to retrieve X-Wing Icon");
+        }
+        ImageIcon icon = new ImageIcon(imgURL);
+        return icon;
+    }
 
-	@Override
-	public RoundPanel getRoundPanel(List<Match> matches) {
-		return new XWingRoundPanel(this, matches);
-	}
+    @Override
+    public String getModuleName() {
+        return Modules.XWING.getName();
+    }
 
-	public XWingPlayer getModulePlayer(Player p) {
-		return (XWingPlayer) p.getModuleInfoByModule(getModule());
-	}
+    @Override
+    public RoundPanel getRoundPanel(List<Match> matches) {
+        return new XWingRoundPanel(this, matches);
+    }
 
-	public void massDropPlayers(int minScore, int maxCount) {
+    public XWingPlayer getModulePlayer(Player p) {
+        return (XWingPlayer) p.getModuleInfoByModule(getModule());
+    }
 
-		List<Player> playerList = new ArrayList<Player>();
-		playerList.addAll(getPlayers());
+    public void massDropPlayers(int minScore, int maxCount) {
 
-		Collections.sort(playerList, getRankingComparator());
+        List<Player> playerList = new ArrayList<Player>();
+        playerList.addAll(getPlayers());
 
-		int count = 0;
-		for (Player p : playerList) {
-			XWingPlayer xp = getModulePlayer(p);
-			if (xp.getScore(this) < minScore || count >= maxCount) {
-				getPlayers().remove(p);
-			} else {
-				count++;
-			}
-		}
+        Collections.sort(playerList, getRankingComparator());
 
-		triggerDeepChange();
-	}
+        int count = 0;
+        for (Player p : playerList) {
+            XWingPlayer xp = getModulePlayer(p);
+            if (xp.getScore(this) < minScore || count >= maxCount) {
+                getPlayers().remove(p);
+            } else {
+                count++;
+            }
+        }
 
-	@Override
-	public TournamentComparator<Player> getRankingComparator() {
-		return new XWingComparator(this, XWingComparator.rankingCompare);
-	}
+        triggerDeepChange();
+    }
 
-	@Override
-	public TournamentComparator<Player> getRankingNoHeadToHeadComparator() {
-		return new XWingComparator(this, XWingComparator.rankingCompareNoHeadToHead);
-	}
+    @Override
+    public TournamentComparator<Player> getRankingComparator() {
+        return new XWingComparator(this, XWingComparator.rankingCompare);
+    }
 
-	@Override
-	public TournamentComparator<Player> getPairingComparator() {
-		return new XWingComparator(this, XWingComparator.pairingCompare);
-	}
+    @Override
+    public TournamentComparator<Player> getRankingNoHeadToHeadComparator() {
+        return new XWingComparator(this, XWingComparator.rankingCompareNoHeadToHead);
+    }
 
-	@Override
-	public int getPointsDefault() {
-		return 100;
-	}
+    @Override
+    public TournamentComparator<Player> getPairingComparator() {
+        return new XWingComparator(this, XWingComparator.pairingCompare);
+    }
 
-	@Override
-	public ExportController getExportController() {
-		if(exportController == null){
-			exportController = new XWingExportController();
-		}
-		return exportController;
-	}
+    @Override
+    public int getPointsDefault() {
+        return 100;
+    }
+
+    @Override
+    public ExportController getExportController() {
+        if (exportController == null) {
+            exportController = new XWingExportController();
+        }
+        return exportController;
+    }
+
+    @Override
+    public boolean isMatchComplete(Match m) {
+
+        boolean isComplete = false;
+
+        if (m.isBye()) {
+            isComplete = true;
+        } else if (m.getWinner(1) != null && m.getPlayer1Points() != null && m.getPlayer2Points() != null) {
+            isComplete = true;
+        }
+
+        return isComplete;
+    }
+
+    @Override
+    public boolean isValidResult(Match m) {
+        Integer player1Points = m.getPlayer1Points() == null ? 0 : m.getPlayer1Points();
+        Integer player2Points = m.getPlayer2Points() == null ? 0 : m.getPlayer2Points();
+
+        // If there is no second player, it must be a bye
+        if (m.getPlayer2() == null && m.isBye()) {
+            return true;
+        }
+
+        // For single elimination we just look to make sure the correct
+        // player is the winner according to points
+        if ((m.getWinner(1) == m.getPlayer1() && player1Points >= player2Points)
+                || (m.getWinner(1) == m.getPlayer2() && player2Points >= player1Points)
+                || (player1Points == player2Points && m.getWinner(1) != null)) {
+            return true;
+        }
+
+        return false;
+    }
 }
