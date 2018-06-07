@@ -34,32 +34,45 @@ public class ArmadaRoundPanel extends RoundPanel {
         GamePanel gp = (GamePanel) gamePanel;
 
         gbc.gridy++;
-        gbc.gridwidth = 1;
-        gbc.fill = GridBagConstraints.NONE;
-
-        gbc.gridx = 1;
-        panel.add(gp.getPlayer1ScoreLabel(), gbc);
-
-        gbc.gridx = 2;
-        panel.add(gp.getPlayer1ScoreField(), gbc);
-
-        gbc.gridx = 3;
-        gbc.anchor = GridBagConstraints.WEST;
-        panel.add(gp.getPlayer1ScoreField().getIndicator(), gbc);
-
-        gbc.gridy++;
-        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.EAST;
-
-        gbc.gridx = 1;
-        panel.add(gp.getPlayer2ScoreLabel(), gbc);
+        panel.add(gp.getPlayerTitle(), gbc);
 
         gbc.gridx = 2;
-        panel.add(gp.getPlayer2ScoreField(), gbc);
+        gbc.gridwidth = 3;
+        gbc.fill = GridBagConstraints.BOTH;
+        panel.add(gp.getResultCombo(), gbc);
 
-        gbc.gridx = 3;
-        gbc.anchor = GridBagConstraints.WEST;
-        panel.add(gp.getPlayer2ScoreField().getIndicator(), gbc);
+        if (gp.getMatch().getPlayer2() != null) {
+            gbc.gridy++;
+            gbc.gridwidth = 1;
+            gbc.fill = GridBagConstraints.NONE;
+
+            gbc.gridx = 1;
+            panel.add(gp.getPlayer1ScoreLabel(), gbc);
+
+            gbc.gridx = 2;
+            panel.add(gp.getPlayer1ScoreField(), gbc);
+
+            gbc.gridx = 3;
+            gbc.anchor = GridBagConstraints.WEST;
+            panel.add(gp.getPlayer1ScoreField().getIndicator(), gbc);
+
+            gbc.gridy++;
+            gbc.gridwidth = 1;
+            gbc.anchor = GridBagConstraints.EAST;
+
+            gbc.gridx = 1;
+            panel.add(gp.getPlayer2ScoreLabel(), gbc);
+
+            gbc.gridx = 2;
+            panel.add(gp.getPlayer2ScoreField(), gbc);
+
+            gbc.gridx = 3;
+            gbc.anchor = GridBagConstraints.WEST;
+            panel.add(gp.getPlayer2ScoreField().getIndicator(), gbc);
+        }
     }
 
     @Override

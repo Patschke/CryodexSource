@@ -171,7 +171,7 @@ public class AdditionalOptionsPage implements Page {
             pointsPanel.add(
                     ComponentUtils.addToHorizontalBorderLayout(null, ComponentUtils.addToFlowLayout(customPointsTF, FlowLayout.LEFT), new JPanel()));
 
-            SpringUtilities.makeCompactGrid(pointsPanel, 6, 1, 0, 0, 0, 0);
+            SpringUtilities.makeCompactGrid(pointsPanel, 4, 1, 0, 0, 0, 0);
 
             centerPanel.add(ComponentUtils.addToFlowLayout(pointsPanel, FlowLayout.LEFT), BorderLayout.CENTER);
 
