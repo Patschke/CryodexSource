@@ -24,6 +24,7 @@ import cryodex.modules.destiny.DestinyModule;
 import cryodex.modules.etc.EtcModule;
 import cryodex.modules.imperialassault.IAModule;
 import cryodex.modules.l5r.L5RModule;
+import cryodex.modules.legion.LegionModule;
 import cryodex.modules.runewars.RunewarsModule;
 import cryodex.modules.swlcg.SWLCGModule;
 import cryodex.modules.xwing.XWingModule;
@@ -36,7 +37,7 @@ public class CryodexController {
 	public static enum Modules {
 
 		XWING("X-Wing", XWingModule.getInstance()), IA("Imperial Assault", IAModule.getInstance()), ARMADA("Armada",
-				ArmadaModule.getInstance()), DESTINY("Destiny", DestinyModule.getInstance()), SWLCG("Star Wars LCG",
+				ArmadaModule.getInstance()), DESTINY("Destiny", DestinyModule.getInstance()), LEGION("Legion", LegionModule.getInstance()), SWLCG("Star Wars LCG",
 						SWLCGModule.getInstance()), RUNEWARS("RuneWars", RunewarsModule.getInstance()), L5R("Legends of the Five Rings", L5RModule.getInstance()), ETC(
 								"Special Event: X-Wing ETC", EtcModule.getInstance());
 
