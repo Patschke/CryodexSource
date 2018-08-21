@@ -37,6 +37,7 @@ public class AdditionalOptionsPage implements Page {
 
     private JTextField customPointsTF;
     private JRadioButton standardRB;
+    private JRadioButton standardSecondEditionRB;
     private JRadioButton escalationRB;
     private JRadioButton epicRB;
     private JRadioButton customRB;
@@ -114,9 +115,10 @@ public class AdditionalOptionsPage implements Page {
 
             ButtonGroup pointsBG = new ButtonGroup();
 
-            standardRB = new JRadioButton(Language.standard_points);
-            escalationRB = new JRadioButton(Language.escalation_points);
-            epicRB = new JRadioButton(Language.epic_points);
+            standardRB = new JRadioButton(Language.standard_xwing_points);
+            standardSecondEditionRB = new JRadioButton(Language.standard_xwing_points_second_edition);
+            escalationRB = new JRadioButton(Language.escalation_xwing_points);
+            epicRB = new JRadioButton(Language.epic_xwing_points);
             customRB = new JRadioButton(Language.custom_points);
 
             final JLabel customPointsInfo = new JLabel(Language.comma_separated);
@@ -154,6 +156,7 @@ public class AdditionalOptionsPage implements Page {
             };
 
             standardRB.addActionListener(customListener);
+            standardSecondEditionRB.addActionListener(customListener);
             escalationRB.addActionListener(customListener);
             epicRB.addActionListener(customListener);
             customRB.addActionListener(customListener);
@@ -165,13 +168,15 @@ public class AdditionalOptionsPage implements Page {
             customPointsTF.setColumns(12);
             customPointsTF.setEnabled(false);
 
+            pointsBG.add(standardSecondEditionRB);
             pointsBG.add(standardRB);
             pointsBG.add(escalationRB);
             pointsBG.add(epicRB);
             pointsBG.add(customRB);
 
-            standardRB.setSelected(true);
+            standardSecondEditionRB.setSelected(true);
 
+            pointsPanel.add(standardSecondEditionRB);
             pointsPanel.add(standardRB);
             pointsPanel.add(escalationRB);
             pointsPanel.add(epicRB);
@@ -181,7 +186,7 @@ public class AdditionalOptionsPage implements Page {
             pointsPanel.add(
                     ComponentUtils.addToHorizontalBorderLayout(null, ComponentUtils.addToFlowLayout(customPointsTF, FlowLayout.LEFT), new JPanel()));
 
-            SpringUtilities.makeCompactGrid(pointsPanel, 6, 1, 0, 0, 0, 0);
+            SpringUtilities.makeCompactGrid(pointsPanel, 7, 1, 0, 0, 0, 0);
 
             centerPanel.add(ComponentUtils.addToFlowLayout(pointsPanel, FlowLayout.LEFT), BorderLayout.CENTER);
 
@@ -238,7 +243,9 @@ public class AdditionalOptionsPage implements Page {
 
         WizardOptions wizardOptions = TournamentWizard.getInstance().getWizardOptions();
 
-        if (standardRB.isSelected()) {
+        if (standardSecondEditionRB.isSelected()){
+            wizardOptions.setPoints(200);
+        } else if (standardRB.isSelected()) {
             wizardOptions.setPoints(100);
         } else if (escalationRB.isSelected()) {
             List<Integer> points = new ArrayList<Integer>();

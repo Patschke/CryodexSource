@@ -30,6 +30,7 @@ public class AdditionalOptionsPage implements Page {
 	private JComboBox<String> playersPerTeamCombo;
 
 	private JTextField customPointsTF;
+	private JRadioButton standardSecondEditionRB;
 	private JRadioButton standardRB;
 	private JRadioButton escalationRB;
 	private JRadioButton epicRB;
@@ -80,9 +81,10 @@ public class AdditionalOptionsPage implements Page {
 
 			ButtonGroup pointsBG = new ButtonGroup();
 
-			standardRB = new JRadioButton(Language.standard_points);
-			escalationRB = new JRadioButton(Language.escalation_points);
-			epicRB = new JRadioButton(Language.epic_points);
+			standardSecondEditionRB = new JRadioButton(Language.standard_xwing_points_second_edition);
+			standardRB = new JRadioButton(Language.standard_xwing_points);
+			escalationRB = new JRadioButton(Language.escalation_xwing_points);
+			epicRB = new JRadioButton(Language.epic_xwing_points);
 			customRB = new JRadioButton(Language.custom_points);
 
 			ButtonGroup pairingBG = new ButtonGroup();
@@ -105,6 +107,7 @@ public class AdditionalOptionsPage implements Page {
 				}
 			};
 
+			standardSecondEditionRB.addActionListener(customListener);
 			standardRB.addActionListener(customListener);
 			escalationRB.addActionListener(customListener);
 			epicRB.addActionListener(customListener);
@@ -114,6 +117,7 @@ public class AdditionalOptionsPage implements Page {
 			customPointsTF.setColumns(12);
 			customPointsTF.setEnabled(false);
 
+			pointsBG.add(standardSecondEditionRB);
 			pointsBG.add(standardRB);
 			pointsBG.add(escalationRB);
 			pointsBG.add(epicRB);
@@ -122,10 +126,11 @@ public class AdditionalOptionsPage implements Page {
 			pairingBG.add(randomPairingRB);
 			pairingBG.add(orderedPairingRB);
 
-			standardRB.setSelected(true);
+			standardSecondEditionRB.setSelected(true);
 			
 			randomPairingRB.setSelected(true);
 
+			pointsPanel.add(standardSecondEditionRB);
 			pointsPanel.add(standardRB);
 			pointsPanel.add(escalationRB);
 			pointsPanel.add(epicRB);
@@ -135,7 +140,7 @@ public class AdditionalOptionsPage implements Page {
 			pointsPanel.add(ComponentUtils.addToHorizontalBorderLayout(null,
 					ComponentUtils.addToFlowLayout(customPointsTF, FlowLayout.LEFT), new JPanel()));
 
-			SpringUtilities.makeCompactGrid(pointsPanel, 6, 1, 0, 0, 0, 0);
+			SpringUtilities.makeCompactGrid(pointsPanel, 7, 1, 0, 0, 0, 0);
 			
             pairingPanel.add(randomPairingRB);
             pairingPanel.add(orderedPairingRB);
@@ -169,7 +174,9 @@ public class AdditionalOptionsPage implements Page {
 
 		WizardOptions wizardOptions = TournamentWizard.getInstance().getWizardOptions();
 
-		if (standardRB.isSelected()) {
+		if (standardSecondEditionRB.isSelected()) {
+		    wizardOptions.setPoints(200);
+		} else if (standardRB.isSelected()) {
 			wizardOptions.setPoints(100);
 		} else if (escalationRB.isSelected()) {
 			List<Integer> points = new ArrayList<Integer>();

@@ -29,11 +29,12 @@ public class Language {
 	public static final String seperate_by_group_name = "Seperate By Group Name";
 	public static final String by_ranking = "By Ranking";
 	public static final String start_as_single_elimination = "Start event as single elimination<br>(only for 2/4/8/16/32 players)";
-	public static final String standard_points = "Standard - 100 Point Match";
+	public static final String standard_xwing_points_second_edition = "Standard 2.0 - 200 Point Match";
+	public static final String standard_xwing_points = "Standard 1.0 - 100 Point Match";
 	public static final String armada_standard_points = "Standard - 400 Point Match";
 	public static final String runewars_standard_points = "Standard - 200 Point Match";
-	public static final String escalation_points = "Escalation - 60,90,120,150 Points";
-	public static final String epic_points = "Epic - 300 Point Match";
+	public static final String escalation_xwing_points = "Escalation - 60,90,120,150 Points";
+	public static final String epic_xwing_points = "Epic - 300 Point Match";
 	public static final String custom_points = "Custom - You define the points per match";
 	public static final String comma_separated = "A single number or comma separated values.";
 	public static final String how_to_split_tournament = "How To Split Tournament";

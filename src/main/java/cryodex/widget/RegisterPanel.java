@@ -50,8 +50,10 @@ import cryodex.modules.Module;
 public class RegisterPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private static final String filterHint = "Filter Player List";
-
+    
+    private static final String FILTER_HINT_DEFAULT = "Filter Player List";
+    private static final boolean IS_ACTIVE_DEFAULT = true;
+    
     private JButton saveButton;
     private JButton deleteButton;
     private JButton cancelButton;
@@ -202,6 +204,7 @@ public class RegisterPanel extends JPanel {
     private JCheckBox getIsActiveCB(){
         if (isActive == null) {
             isActive = new JCheckBox("Active");
+            isActive.setSelected(IS_ACTIVE_DEFAULT);
         }
         
         return isActive;
@@ -508,11 +511,11 @@ public class RegisterPanel extends JPanel {
 
     public JTextField getPlayerFilterTextField() {
         if (playerSearchField == null) {
-            playerSearchField = new JTextField(filterHint, 10);
+            playerSearchField = new JTextField(FILTER_HINT_DEFAULT, 10);
             playerSearchField.addFocusListener(new FocusListener() {
                 @Override
                 public void focusGained(FocusEvent e) {
-                    if (playerSearchField.getText().equals(filterHint)) {
+                    if (playerSearchField.getText().equals(FILTER_HINT_DEFAULT)) {
                         playerSearchField.setText("");
                     }
                 }
@@ -520,7 +523,7 @@ public class RegisterPanel extends JPanel {
                 @Override
                 public void focusLost(FocusEvent e) {
                     if (playerSearchField.getText().trim().equals("")) {
-                        playerSearchField.setText(filterHint);
+                        playerSearchField.setText(FILTER_HINT_DEFAULT);
                     }
                 }
             });
@@ -562,7 +565,7 @@ public class RegisterPanel extends JPanel {
             getUserModel().removeAllElements();
 
             // Reset list for blank filter
-            if (filterText.equals("") || filterText.equalsIgnoreCase(filterHint)) {
+            if (filterText.equals("") || filterText.equalsIgnoreCase(FILTER_HINT_DEFAULT)) {
                 for (Player element : preFilteredPlayerList) {
                     getUserModel().addElement(element);
                 }
@@ -608,8 +611,8 @@ public class RegisterPanel extends JPanel {
             clearFilter.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent arg0) {
-                    playerSearchField.setText(filterHint);
-                    filterPlayerList(filterHint);
+                    playerSearchField.setText(FILTER_HINT_DEFAULT);
+                    filterPlayerList(FILTER_HINT_DEFAULT);
                 }
             });
         }

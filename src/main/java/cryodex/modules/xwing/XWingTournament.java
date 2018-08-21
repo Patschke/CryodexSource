@@ -24,7 +24,7 @@ import cryodex.xml.XMLUtils.Element;
 
 public class XWingTournament extends Tournament implements XMLObject {
 
-    XWingExportController exportController;
+    private XWingExportController exportController;
 
     public XWingTournament(Element tournamentElement) {
         super();
