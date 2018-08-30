@@ -34,7 +34,7 @@ public class PlayerImport {
 				reader = new BufferedReader(new FileReader(file));
 				
 				String line = reader.readLine();
-				
+				line = line.replace((char)8221, '"');
 				Map<String, Integer> headerMap = new HashMap<String, Integer>();
 				
 				String[] headers = line.split(",");
@@ -57,7 +57,7 @@ public class PlayerImport {
 				line = reader.readLine();
 				
 				while(line != null){
-					
+				    line = line.replace((char)8221, '"');
 					String[] playerLine = line.split(",");
 					
 					String playerName = null;
@@ -108,7 +108,7 @@ public class PlayerImport {
 	private static String getString(Integer column, String[] playerLine) {
 	    String returnString = null;
 	    
-	    if(column != null){
+	    if(column != null && column < playerLine.length){
             returnString = playerLine[column];
             returnString = returnString.replace("\"", "");
         }
