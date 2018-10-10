@@ -40,17 +40,17 @@ public class PlayerImport {
 				String[] headers = line.split(",");
 				int i = 0;
 				for(String s : headers){
-					headerMap.put(s, i);
+					headerMap.put(s.replace("\"", ""), i);
 					i++;
 				}
 				
-				Integer firstName = headerMap.get("\"First Name\"");
-				Integer lastName = headerMap.get("\"Last Name\"");
-				Integer name = headerMap.get("\"Name\"");
-				Integer emailAddress = headerMap.get("\"Email Address\"");
-                Integer group = headerMap.get("\"Group\"");
-                Integer squad = headerMap.get("\"Squad\"");
-                Integer factionColummn = headerMap.get("\"Faction\"");
+				Integer firstName = headerMap.get("First Name");
+				Integer lastName = headerMap.get("Last Name");
+				Integer name = headerMap.get("Name");
+				Integer emailAddress = headerMap.get("Email Address");
+                Integer group = headerMap.get("Group");
+                Integer squad = headerMap.get("Squad");
+                Integer factionColummn = headerMap.get("Faction");
 				
 				List<Player> players = new ArrayList<Player>();
 
@@ -66,6 +66,11 @@ public class PlayerImport {
 						playerName = playerLine[firstName] + " " + playerLine[lastName];
 					} else if(name != null){
 						playerName = playerLine[name];
+					}
+					
+					if(playerName == null || playerName.isEmpty()){
+					    
+					    JOptionPane.showMessageDialog(Main.getInstance(), "Could not find a name field. Make sure you have a header titled Name, First Name, or Last Name.", "Name not found!", JOptionPane.ERROR_MESSAGE);
 					}
 					
 					playerName = playerName.replace("\"", "");

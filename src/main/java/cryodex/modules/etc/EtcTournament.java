@@ -119,7 +119,7 @@ public class EtcTournament extends Tournament implements XMLObject {
 
     @Override
     public int getPointsDefault() {
-        return 100;
+        return 200;
     }
 
     @Override

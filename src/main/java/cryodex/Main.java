@@ -26,7 +26,7 @@ import cryodex.widget.WelcomePage;
  */
 public class Main extends JFrame {
 
-    public static final String version = "5.3.2 we get rules right, unlike Mynock Squadron Podcast.";
+    public static final String version = "5.3.3";
     
 	public static final long delay = 3000;
 
