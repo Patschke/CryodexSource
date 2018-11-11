@@ -82,11 +82,12 @@ public class EtcPlayer extends ModulePlayer {
         for (Match m : r.getMatches()) {
             if (this.getPlayer().equals(m.getPlayer1()) || this.getPlayer().equals(m.getPlayer2())) {
                 if (m.isBye()) {
-                    if (etcT.getPlayerCount() == 6) {
-                        score += 3;
-                    } else if (etcT.getPlayerCount() == 3) {
-                        score += 2;
-                    }
+//                    if (etcT.getPlayerCount() == 6) {
+//                        score += 3;
+//                    } else if (etcT.getPlayerCount() == 3) {
+//                        score += 2;
+//                    }
+                       score += etcT.getPlayerCount();
                     continue;
                 } else if (m.getWinner(1) != null) {
                     completeGameCount++;
@@ -134,11 +135,12 @@ public class EtcPlayer extends ModulePlayer {
             Integer tournamentPoints = t.getRoundPoints(roundNumber);
 
             if (match.isBye()) {
-                if (etcT.getPlayerCount() == 6) {
-                    movPoints += 600;
-                } else if (etcT.getPlayerCount() == 3) {
-                    movPoints += 150 + 150 + 50;
-                }
+//                if (etcT.getPlayerCount() == 6) {
+//                    movPoints += 600;
+//                } else if (etcT.getPlayerCount() == 3) {
+//                    movPoints += 150 + 150 + 50;
+//                }
+                movPoints += etcT.getPlayerCount() * 300;
                 continue;
             } else if (match.getWinner(1) == null) {
                 continue;
