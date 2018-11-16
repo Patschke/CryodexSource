@@ -56,7 +56,7 @@ public class AdditionalOptionsPage implements Page {
 
 			initialPairingPanel.add(ComponentUtils.addToFlowLayout(header, FlowLayout.LEFT), BorderLayout.NORTH);
 
-			String[] optionsArray = { Language.three, Language.six };
+			String[] optionsArray = { Language.two,Language.three, Language.four, Language.five, Language.six, Language.seven, Language.eight, Language.nine, Language.ten };
 
 			playersPerTeamCombo = new JComboBox<String>(optionsArray);
 

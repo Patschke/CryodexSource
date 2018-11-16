@@ -1,8 +1,16 @@
 package cryodex;
 
 public class Language {
-	public static final String six = "6";
-	public static final String three = "3";
+
+    public static final String two = "2";
+    public static final String three = "3";
+    public static final String four = "4";
+    public static final String five = "5";
+    public static final String six = "6";
+    public static final String seven = "7";
+    public static final String eight = "8";
+    public static final String nine = "9";
+    public static final String ten = "10";
 	public static final String number_of_players_per_team = "Number of players per team";
 	public static final String choose_game = "Choose Game System";
 	public static final String name_event = "Name Event";
