@@ -106,9 +106,17 @@ public class EtcPlayer extends ModulePlayer {
             }
 
         }
-
-        if (score == 6) {
-            score = 5;
+        
+        // Limit score of teams 5 or more to one less than number of players
+        // In that case, the minimum score is 1
+        int playersPerTeam = ((EtcTournament)t).getPlayerCount();
+        if(playersPerTeam > 4){
+        	if(score >= playersPerTeam){
+        		score = playersPerTeam - 1;
+        	}
+        	if(score == 0){
+        		score = 1;
+        	}
         }
 
         return score;
