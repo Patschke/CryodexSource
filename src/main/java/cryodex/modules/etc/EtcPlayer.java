@@ -12,7 +12,7 @@ import cryodex.xml.XMLUtils.Element;
 public class EtcPlayer extends ModulePlayer {
 
     public static enum Faction {
-        IMPERIAL, REBEL, SCUM;
+        IMPERIAL, REBEL, SCUM, RESISTANCE, FIRST_ORDER, SEPARATISTS, REPUBLIC;
     }
 
     private String squadId;

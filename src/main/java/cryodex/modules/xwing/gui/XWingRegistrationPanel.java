@@ -57,6 +57,10 @@ public class XWingRegistrationPanel implements RegistrationPanel {
 			factionCombo.addItem(Faction.IMPERIAL);
 			factionCombo.addItem(Faction.REBEL);
 			factionCombo.addItem(Faction.SCUM);
+			factionCombo.addItem(Faction.RESISTANCE);
+			factionCombo.addItem(Faction.FIRST_ORDER);
+			factionCombo.addItem(Faction.SEPARATISTS);
+			factionCombo.addItem(Faction.REPUBLIC);
 			factionCombo.setSelectedIndex(-1);
 		}
 		
