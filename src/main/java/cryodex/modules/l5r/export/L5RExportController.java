@@ -81,4 +81,10 @@ public class L5RExportController extends ExportController {
 		
 	}
 
+	@Override
+	public void exportMultiTournamentReport(List<Tournament> tournaments) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

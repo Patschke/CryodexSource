@@ -691,6 +691,14 @@ public abstract class Tournament implements XMLObject {
             dependentTournaments.add(t.getName());
         }
     }
+    
+    public void addDependentTournament(Tournament tournament){
+    	dependentTournaments.add(tournament.getName());
+    }
+    
+    public void clearDependentTournaments(){
+    	dependentTournaments.clear();
+    }
 
     public abstract int getPointsDefault();
 

@@ -23,8 +23,10 @@ public class WizardUtils {
         WizardOptions wizardOptions = TournamentWizard.getInstance().getWizardOptions();
         
         if (wizardOptions.getSplit() > 1) {
+        	
             Integer splitNum = wizardOptions.getSplit();
 
+            // Create new wizard option objects for each new tournament
             List<WizardOptions> wizardOptionsList = new ArrayList<WizardOptions>();
 
             for (int i = 1; i <= splitNum; i++) {
@@ -37,10 +39,30 @@ public class WizardUtils {
                 newWizardOption.setPlayerList(new ArrayList<Player>());
             }
 
-            if (splitOption == SplitOptions.GROUP) {
-                Map<String, List<Player>> playerMap = new HashMap<String, List<Player>>();
+            // Both random and ranked just pop off a list
+            if (splitOption == SplitOptions.RANDOM || splitOption == SplitOptions.RANKING) {
+            	
+            	List<Player> tempPlayers = WizardUtils.rankMergedPlayers(wizardOptions);
+            	
+            	// only difference is random being randomized
+            	if(splitOption == SplitOptions.RANDOM){
+            		Collections.shuffle(tempPlayers);
+            	}
+            	
+            	for(int index = 0 ; index < wizardOptions.getSplitCountPerTournament().size() ; index++){
+            		// Number of players for the tournament
+            		int playersForTournament = wizardOptions.getSplitCountPerTournament().get(index);
+            		
+            		WizardOptions wizardOptionsForSplit = wizardOptionsList.get(index);
+            		
+            		// Pop X players off list
+            		wizardOptionsForSplit.getPlayerList().addAll(tempPlayers.subList(0, playersForTournament));
+            		tempPlayers = tempPlayers.subList(playersForTournament, tempPlayers.size());
+            	}
+            } else if (splitOption == SplitOptions.GROUP){
+            	Map<String, List<Player>> playerMap = new HashMap<String, List<Player>>();
 
-                // Add players to map
+                // Add players to map of players by group
                 for (Player p : wizardOptions.getPlayerList()) {
                     List<Player> playerList = playerMap.get(p.getGroupName());
 
@@ -52,7 +74,7 @@ public class WizardUtils {
 
                     playerList.add(p);
                 }
-
+                
                 int j = 0;
                 for (String groupValue : playerMap.keySet()) {
 
@@ -60,98 +82,22 @@ public class WizardUtils {
 
                     while (playerList.isEmpty() == false) {
 
+                    	// Check for full sub tournament
+                    	int tournamentPlayerMax = wizardOptions.getSplitCountPerTournament().get(j);
+                    	int tournamentPlayerCurrentSize = wizardOptionsList.get(j).getPlayerList().size();
+                    	if (tournamentPlayerCurrentSize == tournamentPlayerMax){
+                    		j = j == splitNum - 1 ? 0 : j + 1;
+                    		continue;
+                    	}
+                    	
                         wizardOptionsList.get(j).getPlayerList().add(playerList.get(0));
                         j = j == splitNum - 1 ? 0 : j + 1;
                         playerList.remove(0);
                     }
                 }
-
-                //
-                int first = 0;
-                int last = wizardOptionsList.size() - 1;
-                
-                    while (first < last) {
-
-                        if (wizardOptionsList.get(last).getPlayerList().size() % 2 == 0) {
-                            last--;
-                        } else {
-                            if (wizardOptionsList.get(first).getPlayerList().size() % 2 == 1
-                                    && wizardOptionsList.get(last).getPlayerList().size() % 2 == 1) {
-                                Player p = wizardOptionsList.get(first).getPlayerList()
-                                        .get(wizardOptionsList.get(first).getPlayerList().size() - 1);
-
-                                wizardOptionsList.get(first).getPlayerList().remove(p);
-
-                                wizardOptionsList.get(last).getPlayerList().add(p);
-                            }
-                            first++;
-                        }
-                    }
-                
-            } else if (splitOption == SplitOptions.RANKING) {
-                List<Player> tempPlayers = WizardUtils.rankMergedPlayers(wizardOptions);
-
-                int ppt = tempPlayers.size() / splitNum;
-                int overage = tempPlayers.size() % splitNum;
-                for (int j = 0; j < splitNum; j++) {
-                    int count = j >= splitNum - overage ? ppt + 1 : ppt;
-                    wizardOptionsList.get(j).getPlayerList().addAll(tempPlayers.subList(0, count));
-                    tempPlayers = tempPlayers.subList(count, tempPlayers.size());
-                }
-
-                for (int i = 0; i < wizardOptionsList.size(); i++) {
-                    // if (wizardOptionsList.get(i).getPlayerList().size() %
-                    // 2 == 0) {
-                    // continue;
-                    // }
-
-                    while (i + 1 < wizardOptionsList.size() && (wizardOptionsList.get(i).getPlayerList().size() % 2 == 1
-                            || wizardOptionsList.get(i).getPlayerList().size() > wizardOptionsList.get(i + 1).getPlayerList().size())) {
-                        Player t1 = wizardOptionsList.get(i).getPlayerList().get(wizardOptionsList.get(i).getPlayerList().size() - 1);
-                        wizardOptionsList.get(i).getPlayerList().remove(t1);
-                        List<Player> temp = new ArrayList<Player>();
-                        temp.addAll(wizardOptionsList.get(i + 1).getPlayerList());
-                        wizardOptionsList.get(i + 1).getPlayerList().clear();
-                        wizardOptionsList.get(i + 1).getPlayerList().add(t1);
-                        wizardOptionsList.get(i + 1).getPlayerList().addAll(temp);
-                    }
-
-                }
-            } else if(splitOption == SplitOptions.RANDOM){
-                List<Player> playerList = wizardOptions.getPlayerList();
-                Collections.shuffle(playerList);
-                int j = 0;
-                while (playerList.isEmpty() == false) {
-
-                    wizardOptionsList.get(j).getPlayerList().add(playerList.get(0));
-                    j = j == splitNum - 1 ? 0 : j + 1;
-                    playerList.remove(0);
-                }
-
-                //
-                int first = 0;
-                int last = wizardOptionsList.size() - 1;
-                
-                    while (first < last) {
-
-                        if (wizardOptionsList.get(last).getPlayerList().size() % 2 == 0) {
-                            last--;
-                        } else {
-                            if (wizardOptionsList.get(first).getPlayerList().size() % 2 == 1
-                                    && wizardOptionsList.get(last).getPlayerList().size() % 2 == 1) {
-                                Player p = wizardOptionsList.get(first).getPlayerList()
-                                        .get(wizardOptionsList.get(first).getPlayerList().size() - 1);
-
-                                wizardOptionsList.get(first).getPlayerList().remove(p);
-
-                                wizardOptionsList.get(last).getPlayerList().add(p);
-                            }
-                            first++;
-                        }
-                    }
-                
             }
-
+            
+            //Close wizard and go!
             TournamentWizard.getInstance().setVisible(false);
 
             for (WizardOptions wo : wizardOptionsList) {

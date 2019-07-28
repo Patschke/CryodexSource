@@ -131,7 +131,14 @@ public class MainPage implements Page {
         }
 
         if (splitCB.isSelected()) {
-            int subs = Integer.parseInt(numSubs.getText());
+            int subs;
+			try {
+				subs = Integer.parseInt(numSubs.getText());
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(Main.getInstance(),
+                        "Must give the number of subtournaments.");
+				return;
+			}
             wizardOptions.setSplit(subs);
         }
 
@@ -139,6 +146,8 @@ public class MainPage implements Page {
             TournamentWizard.getInstance().setCurrentPage(wizardController.getProgressionCutPage());
         } else if (mergeCB.isSelected()) {
             TournamentWizard.getInstance().setCurrentPage(wizardController.getMergeTournamentSelectionPage());
+        } else if (splitCB.isSelected()) {
+        	TournamentWizard.getInstance().setCurrentPage(wizardController.getSplitTournamentPage());
         } else {
             TournamentWizard.getInstance().setCurrentPage(wizardController.getPlayerSelectionPage());
         }

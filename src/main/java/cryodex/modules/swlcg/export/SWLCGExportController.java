@@ -133,4 +133,10 @@ public class SWLCGExportController extends ExportController {
     public void tcxTeamReport(Tournament tournament) {
         // Not supported
     }
+
+	@Override
+	public void exportMultiTournamentReport(List<Tournament> tournaments) {
+		// TODO Auto-generated method stub
+		
+	}
 }

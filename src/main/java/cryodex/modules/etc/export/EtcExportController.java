@@ -79,4 +79,10 @@ public class EtcExportController extends ExportController {
     public void tcxTeamReport(Tournament tournament) {
         // Not Supported
     }
+
+	@Override
+	public void exportMultiTournamentReport(List<Tournament> tournaments) {
+		// TODO Auto-generated method stub
+		
+	}
 }

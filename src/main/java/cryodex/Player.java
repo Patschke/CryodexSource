@@ -19,6 +19,7 @@ public class Player implements Comparable<Player>, XMLObject {
 	private String groupName;
 	private String saveId;
 	private String email;
+	private String penaltyPoints;
     private boolean firstRoundBye = false;
 	private List<ModulePlayer> moduleInfo;
 	private boolean isActive = true;
@@ -38,6 +39,7 @@ public class Player implements Comparable<Player>, XMLObject {
 		this.groupName = e.getStringFromChild("GROUPNAME");
 		this.saveId = e.getStringFromChild("SAVEID");
 		this.email = e.getStringFromChild("EMAIL");
+		this.penaltyPoints = e.getStringFromChild("PENALTYPOINTS");
         this.firstRoundBye = e.getBooleanFromChild("FIRSTROUNDBYE",false);
         this.isActive = e.getBooleanFromChild("ISACTIVE", true);
 
@@ -94,6 +96,14 @@ public class Player implements Comparable<Player>, XMLObject {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public String getPenaltyPoints() {
+		return penaltyPoints;
+	}
+	
+	public void setPenaltyPoints(String penaltyPoints) {
+		this.penaltyPoints = penaltyPoints;
 	}
 
 	public boolean isActive() {
@@ -210,6 +220,7 @@ public class Player implements Comparable<Player>, XMLObject {
 		XMLUtils.appendObject(sb, "GROUPNAME", getGroupName());
 		XMLUtils.appendObject(sb, "SAVEID", getSaveId());
 		XMLUtils.appendObject(sb, "EMAIL", getEmail());
+		XMLUtils.appendObject(sb, "PENALTYPOINTS", getPenaltyPoints());
         XMLUtils.appendObject(sb, "FIRSTROUNDBYE", isFirstRoundBye());
         XMLUtils.appendObject(sb, "ISACTIVE", isActive());
 		XMLUtils.appendList(sb, "MODULE-INFO", "MODULE-PLAYER", getModuleInfo());

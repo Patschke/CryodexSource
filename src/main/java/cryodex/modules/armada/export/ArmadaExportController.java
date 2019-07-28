@@ -81,4 +81,10 @@ public class ArmadaExportController extends ExportController {
         // Not Supported
     }
 
+	@Override
+	public void exportMultiTournamentReport(List<Tournament> tournaments) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

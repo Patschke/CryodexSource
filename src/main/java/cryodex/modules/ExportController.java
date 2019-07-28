@@ -22,6 +22,8 @@ public abstract class ExportController {
     
     public abstract String getValueLabel();
     
+    public abstract void exportMultiTournamentReport(List<Tournament> tournaments);
+    
 	public void playerList(List<Player> players) {
 		Set<Player> sortedPlayers = new TreeSet<Player>();
 		sortedPlayers.addAll(players);

@@ -17,6 +17,7 @@ public class WizardOptions {
     private List<Player> playerList;
     private List<Integer> points;
     private int split = 1;
+    private List<Integer> splitCountPerTournament;
     private boolean isMerge = false;
     private List<Tournament> selectedTournaments;
     private boolean isSingleElimination = false;
@@ -97,6 +98,14 @@ public class WizardOptions {
     public void setSplit(int split) {
         this.split = split;
     }
+    
+    public List<Integer> getSplitCountPerTournament() {
+		return splitCountPerTournament;
+	}
+    
+    public void setSplitCountPerTournament(List<Integer> splitCountPerTournament) {
+		this.splitCountPerTournament = splitCountPerTournament;
+	}
 
     public boolean isMerge() {
         return isMerge;

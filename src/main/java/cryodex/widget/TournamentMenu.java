@@ -366,6 +366,22 @@ public class TournamentMenu implements Menu {
                     t.getExportController().playerList(CryodexController.getActiveTournament().getPlayers());
                 }
             });
+            
+            JMenuItem exportAllTournamentRankings= new JMenuItem("Export Multi Tournament Summary");
+            exportAllTournamentRankings.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent arg0) {
+                    Tournament t = CryodexController.getActiveTournament();
+
+                    if (t == null || t instanceof XWingTournament == false) {
+                        JOptionPane.showMessageDialog(Main.getInstance(), "No X-Wing tournament available for this operation. Coder is lazy, message him that you totally would have used this.");
+                        return;
+                    }
+
+                    t.getExportController().exportMultiTournamentReport(CryodexController.getAllTournaments());
+                }
+            });
 
             JMenuItem exportMatches = new JMenuItem("Export Matches");
             exportMatches.addActionListener(new ActionListener() {
@@ -510,6 +526,7 @@ public class TournamentMenu implements Menu {
             exportMenu.add(exportMatchSlipsWithStats);
             exportMenu.add(exportRankings);
             exportMenu.add(exportTournamentReport);
+            exportMenu.add(exportAllTournamentRankings);
             exportMenu.add(saveJSON);
             exportMenu.add(cacReport);
             exportMenu.add(tcxReport);

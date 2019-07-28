@@ -49,6 +49,7 @@ public class Language {
 	public static final String separate_by_group_name = "Separate By Group Name";
 	public static final String split_by_ranking = "Split by ranking";
 	public static final String select_tournaments = "Select Tournaments";
+	public static final String split_tournaments = "Split Tournaments";
 	public static final String how_many_players_from_each_event = "How many players From Each Event?";
 	public static final String all_players = "All Players";
 	public static final String let_me_pick = "Let me pick";

@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -48,7 +49,7 @@ public class MergeTournamentSelectionPage implements Page {
 
             TournamentWizard.getInstance().setButtonVisibility(true, true, false);
 
-            TournamentWizard.getInstance().setMinimumSize(new Dimension(450, 500));
+            TournamentWizard.getInstance().setMinimumSize(new Dimension(450, 550));
 
             if (pagePanel == null) {
                 pagePanel = new JPanel(new BorderLayout());
@@ -65,6 +66,18 @@ public class MergeTournamentSelectionPage implements Page {
 
                     listPanel.add(cb);
                 }
+                
+                JButton selectAll = new JButton("Select All");
+                selectAll.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						for(JCheckBox cb : checkBoxMap.values()){
+							cb.setSelected(true);
+						}
+					}
+				});
+                listPanel.add(selectAll);
 
                 SpringUtilities.makeCompactGrid(listPanel, listPanel.getComponentCount(), 1, 0, 0, 0, 0);
 
@@ -137,8 +150,11 @@ public class MergeTournamentSelectionPage implements Page {
             TournamentWizard.getInstance().getWizardOptions().setPlayerList(addingList);
             TournamentWizard.getInstance().getWizardOptions().setSelectedTournaments(tournamentList);
 
-            TournamentWizard.getInstance().setCurrentPage(wizardController.getAdditionalOptionsPage());
-
+            if(TournamentWizard.getInstance().getWizardOptions().getSplit() != 0){
+            	TournamentWizard.getInstance().setCurrentPage(wizardController.getSplitTournamentPage());
+            } else {
+            	TournamentWizard.getInstance().setCurrentPage(wizardController.getAdditionalOptionsPage());
+            }
         }
 
         @Override

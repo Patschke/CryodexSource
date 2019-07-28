@@ -66,6 +66,7 @@ public class RegisterPanel extends JPanel {
     private JButton activeButton;
     private JTextField groupField;
     private JTextField emailField;
+    private JTextField penaltyPointsField;
     private JPanel playerInfoPanel;
     private JPanel playerPanel;
     private JCheckBox firstRoundBye;
@@ -150,6 +151,12 @@ public class RegisterPanel extends JPanel {
             playerInfoPanel.add(getEmailField(), gbc);
             
             gbc.gridy++;
+            playerInfoPanel.add(new JLabel("Penalty Points"), gbc);
+            
+            gbc.gridy++;
+            playerInfoPanel.add(getPenaltyPointsField(), gbc);
+            
+            gbc.gridy++;
             playerInfoPanel.add(getFirstRoundByeCB(), gbc);
             
             gbc.gridy++;
@@ -193,6 +200,13 @@ public class RegisterPanel extends JPanel {
         return emailField;
     }
     
+    private JTextField getPenaltyPointsField() {
+    	if (penaltyPointsField == null) {
+    		penaltyPointsField = new JTextField();
+    	}
+    	return penaltyPointsField;
+    }
+    
     private JCheckBox getFirstRoundByeCB(){
     	if (firstRoundBye == null) {
     		firstRoundBye = new JCheckBox("First Round Bye");
@@ -226,8 +240,9 @@ public class RegisterPanel extends JPanel {
                     String name = getNameField().getText();
                     String groupName = getGroupNameField().getText();
                     String email = getEmailField().getText();
+                    String penaltyPoints = getPenaltyPointsField().getText();
                     boolean isFirstRoundBye = getFirstRoundByeCB().isSelected();
-                    boolean isActive =getIsActiveCB().isSelected();
+                    boolean isActive = getIsActiveCB().isSelected();
 
                     if (name == null || name.isEmpty()) {
                         JOptionPane.showMessageDialog((Component) null, "Name is required", "Error", JOptionPane.ERROR_MESSAGE);
@@ -259,6 +274,7 @@ public class RegisterPanel extends JPanel {
                         player.setGroupName(groupName);
                     }
                     player.setEmail(email);
+                    player.setPenaltyPoints(penaltyPoints);
                     player.setFirstRoundBye(isFirstRoundBye);
                     player.setActive(isActive);
 
@@ -336,6 +352,7 @@ public class RegisterPanel extends JPanel {
         getNameField().setRequestFocusEnabled(true);
         getGroupNameField().setText("");
         getEmailField().setText("");
+        getPenaltyPointsField().setText("");
         getFirstRoundByeCB().setSelected(false);
         getIsActiveCB().setSelected(true);
 
@@ -410,6 +427,7 @@ public class RegisterPanel extends JPanel {
                         getNameField().setText(player.getName());
                         getGroupNameField().setText(player.getGroupName());
                         getEmailField().setText(player.getEmail());
+                        getPenaltyPointsField().setText(player.getPenaltyPoints());
                         getFirstRoundByeCB().setSelected(player.isFirstRoundBye());
                         getIsActiveCB().setSelected(player.isActive());
 

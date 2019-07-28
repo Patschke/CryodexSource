@@ -5,6 +5,7 @@ import cryodex.widget.wizard.pages.MergeTournamentSelectionPage;
 import cryodex.widget.wizard.pages.Page;
 import cryodex.widget.wizard.pages.PlayerSelectionPage;
 import cryodex.widget.wizard.pages.ProgressionCutPage;
+import cryodex.widget.wizard.pages.SplitTournamentPage;
 
 public abstract class WizardController {
 
@@ -20,6 +21,10 @@ public abstract class WizardController {
     
     public Page getMergeTournamentSelectionPage() {
         return new MergeTournamentSelectionPage(this);
+    }
+    
+    public Page getSplitTournamentPage() {
+    	return new SplitTournamentPage(this);
     }
     
     public Page getMainPage() {

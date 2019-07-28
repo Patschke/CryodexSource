@@ -26,6 +26,9 @@ public class OrderedMatchGeneration {
 
 	private Integer lowScore = null;
 	private List<Match> matchSetAtLowScore = null;
+	
+	private Long timeLimitMillis = (long) 100000;
+	private Long startTime;
 
 	public OrderedMatchGeneration(Tournament tournament,
 			List<Player> players) {
@@ -36,6 +39,8 @@ public class OrderedMatchGeneration {
 
 	public List<Match> generateMatches() {
 
+		startTime = System.currentTimeMillis();
+		
 	    Collections.sort(players, tournament.getPairingComparator());
 	    
 		List<Player> tempList = new ArrayList<>();
@@ -83,7 +88,7 @@ public class OrderedMatchGeneration {
 
 			getPlayer2(xp, matches, player2List);
 
-			if (lowScore != null && lowScore <= 2) {
+			if ((lowScore != null && lowScore <= 2) || isTimeUp()) {
 				return;
 			}
 		}
@@ -108,7 +113,7 @@ public class OrderedMatchGeneration {
 
 			matches.remove(match);
 
-			if (lowScore != null && lowScore <= 2) {
+			if ((lowScore != null && lowScore <= 2) || isTimeUp()) {
 				return;
 			}
 		}
@@ -150,5 +155,13 @@ public class OrderedMatchGeneration {
 		}
 
 		return score;
+	}
+	
+	private boolean isTimeUp() {
+
+		Long currentTime = System.currentTimeMillis();
+		Long diff = currentTime - startTime;
+		
+		return diff > timeLimitMillis;
 	}
 }
