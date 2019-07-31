@@ -542,7 +542,7 @@ public abstract class Tournament implements XMLObject {
     			if(m.getPlayer1().getStaticTable().equals(index + 1) == false){
     				destinationTable = m.getPlayer1().getStaticTable();
     			}
-    		} else if(m.getPlayer2().getStaticTable() != null){
+    		} else if(m.getPlayer2() != null && m.getPlayer2().getStaticTable() != null){
     			if(m.getPlayer2().getStaticTable().equals(index + 1) == false){
     				destinationTable = m.getPlayer2().getStaticTable();
     			}
