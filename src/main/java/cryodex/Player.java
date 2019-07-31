@@ -20,6 +20,7 @@ public class Player implements Comparable<Player>, XMLObject {
 	private String saveId;
 	private String email;
 	private String penaltyPoints;
+	private Integer staticTable;
     private boolean firstRoundBye = false;
 	private List<ModulePlayer> moduleInfo;
 	private boolean isActive = true;
@@ -40,6 +41,7 @@ public class Player implements Comparable<Player>, XMLObject {
 		this.saveId = e.getStringFromChild("SAVEID");
 		this.email = e.getStringFromChild("EMAIL");
 		this.penaltyPoints = e.getStringFromChild("PENALTYPOINTS");
+		this.staticTable = e.getIntegerFromChild("STATICTABLE");
         this.firstRoundBye = e.getBooleanFromChild("FIRSTROUNDBYE",false);
         this.isActive = e.getBooleanFromChild("ISACTIVE", true);
 
@@ -113,6 +115,14 @@ public class Player implements Comparable<Player>, XMLObject {
     public void setActive(boolean isActive) {
         this.isActive = isActive;
     }
+
+    public Integer getStaticTable() {
+    	return staticTable;
+    }
+    
+	public void setStaticTable(Integer staticTable) {
+		this.staticTable = staticTable;	
+	}
 
     public List<ModulePlayer> getModuleInfo() {
 		return moduleInfo;
@@ -221,6 +231,7 @@ public class Player implements Comparable<Player>, XMLObject {
 		XMLUtils.appendObject(sb, "SAVEID", getSaveId());
 		XMLUtils.appendObject(sb, "EMAIL", getEmail());
 		XMLUtils.appendObject(sb, "PENALTYPOINTS", getPenaltyPoints());
+		XMLUtils.appendObject(sb, "STATICTABLE", getStaticTable());
         XMLUtils.appendObject(sb, "FIRSTROUNDBYE", isFirstRoundBye());
         XMLUtils.appendObject(sb, "ISACTIVE", isActive());
 		XMLUtils.appendList(sb, "MODULE-INFO", "MODULE-PLAYER", getModuleInfo());

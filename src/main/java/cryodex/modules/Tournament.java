@@ -355,6 +355,9 @@ public abstract class Tournament implements XMLObject {
         for (Player p : firstRoundByePlayers) {
             matches.add(getMatch(p, null));
         }
+        
+        checkStaticTables(matches);
+        
         return matches;
     }
 
@@ -507,6 +510,8 @@ public abstract class Tournament implements XMLObject {
         } else {
             matches = getOrderedMatches(tempList);
         }
+        
+        checkStaticTables(matches);
 
         if (Match.hasDuplicate(matches)) {
             JOptionPane.showMessageDialog(Main.getInstance(), "Unable to resolve duplicate matches. Please review for best course of action.");
@@ -520,7 +525,46 @@ public abstract class Tournament implements XMLObject {
         return matches;
     }
 
-    public List<Match> getOrderedMatches(List<Player> playerList) {
+    private void checkStaticTables(List<Match> matches) {
+		
+    	int count = 50;
+    	
+    	for(int index = 0 ; index < matches.size() ; index++) {
+    		Match m = matches.get(index);
+    		Integer destinationTable = null;
+    		
+    		// If we've looped through 50 times, something went wrong, so stop.
+    		if(count == 0){
+    			break;
+    		}
+    		
+    		if(m.getPlayer1().getStaticTable() != null){
+    			if(m.getPlayer1().getStaticTable().equals(index + 1) == false){
+    				destinationTable = m.getPlayer1().getStaticTable();
+    			}
+    		} else if(m.getPlayer2().getStaticTable() != null){
+    			if(m.getPlayer2().getStaticTable().equals(index + 1) == false){
+    				destinationTable = m.getPlayer2().getStaticTable();
+    			}
+    		}
+    		
+    		if(destinationTable != null){
+    			matches.remove(m);
+    			if(destinationTable < 1){
+    				matches.add(0, m);
+    			} else if(destinationTable > matches.size()){
+    				matches.add(m);
+    			} else {
+    				matches.add(destinationTable-1, m);
+    			}
+    			
+    			index = 0;
+    			count--;
+    		}
+    	}
+	}
+
+	public List<Match> getOrderedMatches(List<Player> playerList) {
         OrderedMatchGeneration generator = new OrderedMatchGeneration(this, playerList);
         return generator.generateMatches();
     }

@@ -67,6 +67,7 @@ public class RegisterPanel extends JPanel {
     private JTextField groupField;
     private JTextField emailField;
     private JTextField penaltyPointsField;
+    private JTextField staticTable;
     private JPanel playerInfoPanel;
     private JPanel playerPanel;
     private JCheckBox firstRoundBye;
@@ -157,6 +158,12 @@ public class RegisterPanel extends JPanel {
             playerInfoPanel.add(getPenaltyPointsField(), gbc);
             
             gbc.gridy++;
+            playerInfoPanel.add(new JLabel("Static Table Number"), gbc);
+            
+            gbc.gridy++;
+            playerInfoPanel.add(getStaticTableField(), gbc);
+            
+            gbc.gridy++;
             playerInfoPanel.add(getFirstRoundByeCB(), gbc);
             
             gbc.gridy++;
@@ -207,6 +214,13 @@ public class RegisterPanel extends JPanel {
     	return penaltyPointsField;
     }
     
+    private JTextField getStaticTableField() {
+    	if (staticTable == null){
+    		staticTable = new JTextField();
+    	}
+    	return staticTable;
+    }
+    
     private JCheckBox getFirstRoundByeCB(){
     	if (firstRoundBye == null) {
     		firstRoundBye = new JCheckBox("First Round Bye");
@@ -241,12 +255,22 @@ public class RegisterPanel extends JPanel {
                     String groupName = getGroupNameField().getText();
                     String email = getEmailField().getText();
                     String penaltyPoints = getPenaltyPointsField().getText();
+                    String staticTableString = getStaticTableField().getText();
                     boolean isFirstRoundBye = getFirstRoundByeCB().isSelected();
                     boolean isActive = getIsActiveCB().isSelected();
 
                     if (name == null || name.isEmpty()) {
                         JOptionPane.showMessageDialog((Component) null, "Name is required", "Error", JOptionPane.ERROR_MESSAGE);
                         return;
+                    }
+                    
+                    Integer staticTable = null;
+                    if (staticTableString != null && staticTableString.trim().isEmpty() == false){
+                    	try {
+							staticTable = Integer.valueOf(staticTableString);
+						} catch (NumberFormatException e) {
+							JOptionPane.showMessageDialog((Component) null, "Table number must be a number.", "Error", JOptionPane.ERROR_MESSAGE);
+						}
                     }
 
                     // Create new player or get previous player instance
@@ -275,6 +299,7 @@ public class RegisterPanel extends JPanel {
                     }
                     player.setEmail(email);
                     player.setPenaltyPoints(penaltyPoints);
+                    player.setStaticTable(staticTable);
                     player.setFirstRoundBye(isFirstRoundBye);
                     player.setActive(isActive);
 
@@ -353,6 +378,7 @@ public class RegisterPanel extends JPanel {
         getGroupNameField().setText("");
         getEmailField().setText("");
         getPenaltyPointsField().setText("");
+        getStaticTableField().setText("");
         getFirstRoundByeCB().setSelected(false);
         getIsActiveCB().setSelected(true);
 
@@ -407,7 +433,7 @@ public class RegisterPanel extends JPanel {
 
         return userModel;
     }
-
+    
     private JList<Player> getPlayerList() {
         if (playerList == null) {
             playerList = new JList<Player>(getUserModel());
@@ -428,6 +454,7 @@ public class RegisterPanel extends JPanel {
                         getGroupNameField().setText(player.getGroupName());
                         getEmailField().setText(player.getEmail());
                         getPenaltyPointsField().setText(player.getPenaltyPoints());
+                        getStaticTableField().setText(player.getStaticTable() == null ? "" : player.getStaticTable().toString());
                         getFirstRoundByeCB().setSelected(player.isFirstRoundBye());
                         getIsActiveCB().setSelected(player.isActive());
 
