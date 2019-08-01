@@ -161,6 +161,17 @@ public abstract class Tournament implements XMLObject {
             return getAllRounds().get(getTournamentGUI().getRoundTabbedPane().getSelectedIndex());
         }
     }
+    
+    public Round getRoundOfMatch(Match m){
+    	if (rounds != null) {
+            for(Round r : getAllRounds()){
+            	if(r.getMatches().contains(m)){
+            		return r;
+            	}
+            }
+        }
+    	return null;
+    }
 
     public List<Round> getAllRounds() {
         return rounds;
@@ -256,7 +267,7 @@ public abstract class Tournament implements XMLObject {
             String invalidMatches = getLatestRound().isValid(this);
             if (invalidMatches != null) {
                 JOptionPane.showMessageDialog(Main.getInstance(),
-                        "<HTML>At least one tournamnt result is not correct.\n" + "-Check if points are backwards or a draw has been set.\n"
+                        "<HTML>At least one tournament result is not correct.\n" + "-Check if points are backwards, too high, or a draw has been set.\n"
                                 + "-Draws are not allowed in single elimination rounds.\n" + "--If a draw occurs, the player with initiative wins.\n"
                                 + "--This can be set by going to the view menu and deselect 'Enter Only Points'<br>" + invalidMatches);
                 return false;
@@ -268,7 +279,7 @@ public abstract class Tournament implements XMLObject {
             String invalidMatches = getLatestRound().isValid(this);
             if (invalidMatches != null) {
                 JOptionPane.showMessageDialog(Main.getInstance(),
-                        "<HTML>At least one tournamnt result is not correct. Check if points are backwards or a result should be a modified win or tie.<br>"
+                        "<HTML>At least one tournament result is not correct. Check if points are backwards, too high, or a result should be a modified win or tie.<br>"
                                 + invalidMatches);
                 return false;
             }
@@ -804,41 +815,8 @@ public abstract class Tournament implements XMLObject {
     }
 
     public abstract boolean isMatchComplete(Match m);
-    
-//    public boolean isMatchComplete(Match m) {
-//
-//        boolean isComplete = false;
-//        
-//        if(m.isBye()){
-//            isComplete = true;
-//        } else if (m.getWinner(1) != null && m.getPlayer1Points() != null && m.getPlayer2Points() != null){
-//            isComplete = true;
-//        }
-//        
-//        return isComplete;
-//    }
 
     public abstract boolean isValidResult(Match m);
-    
-//    public boolean isValidResult(Match m) {
-//        Integer player1Points = m.getPlayer1Points() == null ? 0 : m.getPlayer1Points();
-//        Integer player2Points = m.getPlayer2Points() == null ? 0 : m.getPlayer2Points();
-//
-//        // If there is no second player, it must be a bye
-//        if (m.getPlayer2() == null && m.isBye()) {
-//            return true;
-//        }
-//
-//        // For single elimination we just look to make sure the correct
-//        // player is the winner according to points
-//        if ((m.getWinner(1) == m.getPlayer1() && player1Points >= player2Points)
-//                || (m.getWinner(1) == m.getPlayer2() && player2Points >= player1Points)
-//                || (player1Points == player2Points && m.getWinner(1) != null)) {
-//            return true;
-//        }
-//
-//        return false;
-//    }
 
     public Match getMatch(Player player1, Player player2) {
         return new Match(player1, player2);

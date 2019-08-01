@@ -3,7 +3,9 @@ package cryodex.modules.xwing.export;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 
 import javax.swing.JOptionPane;
@@ -13,19 +15,26 @@ import cryodex.export.ExportUtils;
 import cryodex.modules.ExportController;
 import cryodex.modules.Match;
 import cryodex.modules.Tournament;
+import cryodex.modules.xwing.XWingModule;
 import cryodex.modules.xwing.XWingPlayer;
+import cryodex.modules.xwing.XWingPlayer.Faction;
 import cryodex.modules.xwing.XWingTournament;
 
 public class XWingExportController extends ExportController {
 
     public String appendRankings(Tournament tournament) {
         List<Player> playerList = new ArrayList<Player>();
+        playerList.addAll(tournament.getAllPlayers());
+        
+        return appendRanking(playerList, tournament);
+    }
+    
+    public String appendRanking(List<Player> playerList, Tournament tournament){
         List<Player> activePlayers = tournament.getPlayers();
 
-        playerList.addAll(tournament.getAllPlayers());
         Collections.sort(playerList, tournament.getRankingComparator());
-
-        String content = "<table border=\"1\">";
+    	
+    	String content = "<table border=\"1\">";
 
         content = appendHTMLTableHeader(content, "Rank", "Name", "Faction", "Score", "MoV", "SoS");
 
@@ -45,7 +54,7 @@ public class XWingExportController extends ExportController {
         }
 
         content += "</table>";
-
+        
         return content;
     }
 
@@ -155,5 +164,36 @@ public class XWingExportController extends ExportController {
         
 		ExportUtils.displayHTML(content, "ExportRankings");
 	
+	}
+
+	@Override
+	public void exportByFaction(Tournament tournament) {
+		String content = "";
+		
+		Map<Faction, List<Player>> factionMap = new HashMap<Faction, List<Player>>();
+		
+		for(Player p : tournament.getAllPlayers()){
+			XWingPlayer xwp = (XWingPlayer) p.getModuleInfoByModule(XWingModule.getInstance());
+			
+			List<Player> factionList = factionMap.get(xwp.getFaction());
+			
+			if(factionList == null){
+				factionList = new ArrayList<Player>();
+				factionMap.put(xwp.getFaction(), factionList);
+			}
+			
+			factionList.add(p);
+		}
+		
+		for(Faction f : factionMap.keySet()){
+			
+			content += "<h1>" + f.toString() + "</h1><br>";
+			
+			List<Player> players = factionMap.get(f);
+			
+			content += appendRanking(players, tournament);
+		}
+		
+		ExportUtils.displayHTML(content, "ExportFactionRankings");
 	}
 }

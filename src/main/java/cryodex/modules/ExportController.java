@@ -20,6 +20,8 @@ public abstract class ExportController {
     
     public abstract void tcxTeamReport(Tournament tournament);
     
+    public abstract void exportByFaction(Tournament tournament);
+    
     public abstract String getValueLabel();
     
     public abstract void exportMultiTournamentReport(List<Tournament> tournaments);

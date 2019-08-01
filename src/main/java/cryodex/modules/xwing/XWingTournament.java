@@ -12,6 +12,7 @@ import cryodex.CryodexController.Modules;
 import cryodex.Player;
 import cryodex.modules.ExportController;
 import cryodex.modules.Match;
+import cryodex.modules.Round;
 import cryodex.modules.RoundPanel;
 import cryodex.modules.Tournament;
 import cryodex.modules.TournamentComparator;
@@ -128,6 +129,14 @@ public class XWingTournament extends Tournament implements XMLObject {
         Integer player1Points = m.getPlayer1Points() == null ? 0 : m.getPlayer1Points();
         Integer player2Points = m.getPlayer2Points() == null ? 0 : m.getPlayer2Points();
 
+        if(player1Points > this.getRoundPoints(this.getRoundNumber(this.getRoundOfMatch(m)))){
+        	return false;
+        }
+        
+        if(player2Points > this.getRoundPoints(this.getRoundNumber(this.getRoundOfMatch(m)))){
+        	return false;
+        }
+        
         // If there is no second player, it must be a bye
         if (m.getPlayer2() == null && m.isBye()) {
             return true;
