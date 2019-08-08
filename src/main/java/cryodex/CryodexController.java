@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import cryodex.modules.Module;
 import cryodex.modules.Tournament;
 import cryodex.modules.armada.ArmadaModule;
+import cryodex.modules.battletech.BTModule;
 import cryodex.modules.destiny.DestinyModule;
 import cryodex.modules.etc.EtcModule;
 import cryodex.modules.imperialassault.IAModule;
@@ -39,7 +40,7 @@ public class CryodexController {
 		XWING("X-Wing", XWingModule.getInstance()), IA("Imperial Assault", IAModule.getInstance()), ARMADA("Armada",
 				ArmadaModule.getInstance()), DESTINY("Destiny", DestinyModule.getInstance()), LEGION("Legion", LegionModule.getInstance()), SWLCG("Star Wars LCG",
 						SWLCGModule.getInstance()), RUNEWARS("RuneWars", RunewarsModule.getInstance()), L5R("Legends of the Five Rings", L5RModule.getInstance()), ETC(
-								"Special Event: X-Wing ETC", EtcModule.getInstance());
+								"Special Event: X-Wing ETC", EtcModule.getInstance()), BETTLETECH("BattleTech", BTModule.getInstance());
 
 		Module module;
 		String name;
