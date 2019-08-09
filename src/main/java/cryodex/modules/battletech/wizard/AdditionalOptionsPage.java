@@ -5,15 +5,12 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
 import cryodex.Language;
@@ -98,17 +95,6 @@ public class AdditionalOptionsPage implements Page {
 
             initialPairingPanel.add(ComponentUtils.addToFlowLayout(tournamentTypesPanel, FlowLayout.LEFT), BorderLayout.CENTER);
 
-            JPanel centerPanel = new JPanel(new BorderLayout());
-
-            JLabel pointHeader = new JLabel("<HTML><H3>" + Language.choose_point_type + "</H3></HTML>");
-
-            centerPanel.add(ComponentUtils.addToFlowLayout(pointHeader, FlowLayout.LEFT), BorderLayout.NORTH);
-
-            JPanel pointsPanel = new JPanel(new SpringLayout());
-
-            
-
-            
             ActionListener customListener = new ActionListener() {
 
                 @Override
@@ -171,8 +157,8 @@ public class AdditionalOptionsPage implements Page {
 
             pagePanel = new JPanel(new FlowLayout());
 
-            pagePanel.add(ComponentUtils.addToVerticalBorderLayout(initialPairingPanel, centerPanel,
-                    wizardOptions.getSplit() > 1 ? splitOptionsPanel : null));
+            pagePanel.add(ComponentUtils.addToVerticalBorderLayout(initialPairingPanel, 
+                    wizardOptions.getSplit() > 1 ? splitOptionsPanel : null, null));
         }
 
         return pagePanel;

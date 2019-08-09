@@ -7,7 +7,7 @@ import cryodex.modules.TournamentComparator;
 public class BTComparator extends TournamentComparator<Player> {
 
 	public static enum CompareOptions {
-		HEAD_TO_HEAD, MARGIN_OF_VICTORY, KILL_POINTS, STRENGH_OF_SCHEDULE, AVERAGE_STRENGTH_OF_SCHEDULE, SCORE, RANDOM, NAME;
+		HEAD_TO_HEAD, KILL_POINTS, STRENGH_OF_SCHEDULE, AVERAGE_STRENGTH_OF_SCHEDULE, SCORE, RANDOM, NAME;
 	}
 
 	public static final CompareOptions[] uniqueCompare = { CompareOptions.NAME };
@@ -69,10 +69,6 @@ public class BTComparator extends TournamentComparator<Player> {
 			break;
 		case AVERAGE_STRENGTH_OF_SCHEDULE:
 			result = compareDouble(o1.getAverageSoS(t), o2.getAverageSoS(t));
-			break;
-		case MARGIN_OF_VICTORY:
-			result = compareInt(o1.getMarginOfVictory(t),
-					o2.getMarginOfVictory(t));
 			break;
 		case KILL_POINTS:
 			result = compareInt(o1.getKillPoints(t),o2.getKillPoints(t));

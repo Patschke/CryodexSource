@@ -85,7 +85,7 @@ public class BTPlayer extends ModulePlayer {
         for (Match match : getPlayer().getMatches(t)) {
 
             if (match.isBye()) {
-                killPoints += 200;
+                killPoints += 100;
                 continue;
             } else if (match.getWinner(1) == null) {
                 continue;
@@ -110,45 +110,6 @@ public class BTPlayer extends ModulePlayer {
     }
 
 
-    public int getMarginOfVictory(Tournament t) {
-
-        Integer movPoints = getPlayerStatisticInteger(t, "MOV");
-
-        if (movPoints != null) {
-            return movPoints;
-        }
-
-        int roundNumber = 0;
-
-        movPoints = 0;
-
-        for (Match match : getPlayer().getMatches(t)) {
-
-            roundNumber++;
-
-            Integer tournamentPoints = t.getRoundPoints(roundNumber);
-
-            if (match.isBye()) {
-                movPoints += tournamentPoints + (tournamentPoints / 2);
-                continue;
-            } else if (match.getWinner(1) == null) {
-                continue;
-            }
-
-            boolean isPlayer1 = match.getPlayer1() == this.getPlayer();
-
-            int player1Points = match.getPlayer1Points() == null ? 0 : match.getPlayer1Points();
-            int player2Points = match.getPlayer2Points() == null ? 0 : match.getPlayer2Points();
-
-            int diff = player1Points - player2Points;
-
-            movPoints += isPlayer1 ? tournamentPoints + diff : tournamentPoints - diff;
-        }
-
-        putPlayerStatisticInteger(t, "MOV", movPoints);
-
-        return movPoints;
-    }
 
     @Override
     public String getModuleName() {

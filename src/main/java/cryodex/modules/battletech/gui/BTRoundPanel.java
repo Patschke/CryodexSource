@@ -133,7 +133,7 @@ public class BTRoundPanel extends RoundPanel {
                 String[] values = { "Select a result", "BYE" };
                 return values;
             } else {
-                String generic = CryodexController.getOptions().isEnterOnlyPoints() ? "Enter results" : "Select a result";
+                String generic = "Select a result";
                 String[] values = { generic, "WIN - " + getMatch().getPlayer1().getName(), "WIN - " + getMatch().getPlayer2().getName() };
                 return values;
             }
@@ -246,10 +246,6 @@ public class BTRoundPanel extends RoundPanel {
                 }
             }
 
-            // Special exception for bye matches
-            if (getMatch().isBye() && CryodexController.getOptions().isEnterOnlyPoints()) {
-                getResultCombo().setSelectedIndex(1);
-            }
 
             updateGUI();
         }
@@ -258,7 +254,6 @@ public class BTRoundPanel extends RoundPanel {
             String titleText = null;
 
             boolean showKillPoints = CryodexController.getOptions().isShowKillPoints();
-            boolean enterOnlyPoints = CryodexController.getOptions().isEnterOnlyPoints();
             boolean hideCompletedMatches = CryodexController.getOptions().isHideCompleted();
 
             boolean visible = hideCompletedMatches == false || getTournament().isMatchComplete(getMatch()) == false;
@@ -290,21 +285,6 @@ public class BTRoundPanel extends RoundPanel {
 
             getPlayerTitle().setText(titleText);
 
-            if (enterOnlyPoints) {
-
-                getResultCombo().setEnabled(false);
-
-                if (getMatch().getPlayer1Points() != null && getMatch().getPlayer2Points() != null) {
-                    Integer p1points = getMatch().getPlayer1Points();
-                    Integer p2points = getMatch().getPlayer2Points();
-
-                    if (p1points.equals(p2points)) {
-                        getResultCombo().setEnabled(true);
-                    }
-                }
-            } else {
-                getResultCombo().setEnabled(true);
-            }
         }
 
         @Override

@@ -128,14 +128,6 @@ public class BTTournament extends Tournament implements XMLObject {
         Integer player1Points = m.getPlayer1Points() == null ? 0 : m.getPlayer1Points();
         Integer player2Points = m.getPlayer2Points() == null ? 0 : m.getPlayer2Points();
 
-        if(player1Points > this.getRoundPoints(this.getRoundNumber(this.getRoundOfMatch(m)))){
-        	return false;
-        }
-        
-        if(player2Points > this.getRoundPoints(this.getRoundNumber(this.getRoundOfMatch(m)))){
-        	return false;
-        }
-        
         // If there is no second player, it must be a bye
         if (m.getPlayer2() == null && m.isBye()) {
             return true;
@@ -143,9 +135,7 @@ public class BTTournament extends Tournament implements XMLObject {
 
         // For single elimination we just look to make sure the correct
         // player is the winner according to points
-        if ((m.getWinner(1) == m.getPlayer1() && player1Points >= player2Points)
-                || (m.getWinner(1) == m.getPlayer2() && player2Points >= player1Points)
-                || (player1Points == player2Points && m.getWinner(1) != null)) {
+        if (m.getWinner(1) != null && player1Points != null && player2Points != null) {
             return true;
         }
 
