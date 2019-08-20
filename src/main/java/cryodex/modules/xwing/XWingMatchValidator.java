@@ -17,22 +17,26 @@ public class XWingMatchValidator implements MatchValidator {
 	}
 
 	private boolean validateMatchPoints(Match m) {
-		
+
 		boolean result = true;
-		
-		if(m.getPlayer1() != null && m.getPlayer2() != null){
-			if(m.getPlayer1Points() != null){
+
+		if (m.getPlayer1() != null && m.getPlayer2() != null) {
+			if (m.getPlayer1Points() != null) {
 				XWingPlayer p = (XWingPlayer) m.getPlayer2().getModuleInfoByModule(Modules.XWING.getModule());
 				List<Integer> ships = p.getShips();
-				result = result && calculateScore(ships, m.getPlayer1Points());
+				if (ships != null && ships.isEmpty() == false) {
+					result = result && calculateScore(ships, m.getPlayer1Points());
+				}
 			}
-			if(m.getPlayer2Points() != null){
+			if (m.getPlayer2Points() != null) {
 				XWingPlayer p = (XWingPlayer) m.getPlayer1().getModuleInfoByModule(Modules.XWING.getModule());
 				List<Integer> ships = p.getShips();
-				result = result && calculateScore(ships, m.getPlayer2Points());
+				if (ships != null && ships.isEmpty() == false) {
+					result = result && calculateScore(ships, m.getPlayer2Points());
+				}
 			}
 		}
-		
+
 		return result;
 	}
 
@@ -43,10 +47,10 @@ public class XWingMatchValidator implements MatchValidator {
 		}
 
 		// Scoring all or none is always a valid score
-		if (expectedScore == 0 || expectedScore == 200){
+		if (expectedScore == 0 || expectedScore == 200) {
 			return true;
 		}
-		
+
 		List<Integer> newShipList = new ArrayList<Integer>();
 		newShipList.addAll(ships);
 		newShipList.remove(0);
