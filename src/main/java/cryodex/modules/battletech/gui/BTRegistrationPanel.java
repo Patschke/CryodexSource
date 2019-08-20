@@ -32,7 +32,7 @@ public class BTRegistrationPanel implements RegistrationPanel {
 			gbc.fill = GridBagConstraints.BOTH;
 			gbc.weightx = 1;
 			gbc.anchor = GridBagConstraints.EAST;
-			panel.add(new JLabel("<html><b>X-Wing</b></html>"), gbc);
+			panel.add(new JLabel("<html><b>Battle Tech</b></html>"), gbc);
 
 			gbc.gridy++;
 			panel.add(new JLabel("Squadron Builder ID"), gbc);
@@ -47,7 +47,7 @@ public class BTRegistrationPanel implements RegistrationPanel {
 			panel.add(getFactionCombo(), gbc);
 		}
 
-		return panel;
+		return null;
 	}
 
 	private JComboBox<Faction> getFactionCombo() {

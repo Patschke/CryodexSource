@@ -7,8 +7,10 @@ import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 import cryodex.CryodexController.Modules;
+import cryodex.Main;
 import cryodex.Player;
 import cryodex.modules.ExportController;
 import cryodex.modules.Match;
@@ -152,4 +154,29 @@ public class XWingTournament extends Tournament implements XMLObject {
 
         return false;
     }
+
+	public void validateMatches() {
+		
+		XWingMatchValidator validator = new XWingMatchValidator();
+		String invalidMatches = "";
+		
+		int roundCount = 0;
+		for(Round r : getAllRounds()){
+			roundCount++;
+			for(Match m : r.getMatches()){
+				if(validator.isMatchValid(this, m) == false){
+					invalidMatches += "<br>Round " + roundCount + ": " + m.toString();
+				}
+			}
+		}
+		
+		if(invalidMatches.isEmpty() == false){
+		JOptionPane.showMessageDialog(Main.getInstance(),
+                "<HTML>This function determines if match scores are possible based on provided ship point values.<br>"
+                + "Add ship points to the Squad ID textbox as comma separated numbers.<br>"
+                + "The following have a score that is not possible.<br>" + invalidMatches);
+		} else {
+			JOptionPane.showMessageDialog(Main.getInstance(),"All matches appear to be valid.");	
+		}
+	}
 }

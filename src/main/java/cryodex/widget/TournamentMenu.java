@@ -310,9 +310,29 @@ public class TournamentMenu implements Menu {
                 }
             });
 
+            JMenuItem validateScores = new JMenuItem("Validate Scores");
+            validateScores.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                    Tournament t = CryodexController.getActiveTournament();
+
+                    if (t == null || t instanceof XWingTournament == false) {
+                        JOptionPane.showMessageDialog(Main.getInstance(), "No X-Wing tournament available for this operation. Coder is lazy, message him that you totally would have used this.");
+                        return;
+                    }
+
+                    XWingTournament xwt = (XWingTournament) t;
+                    
+                    xwt.validateMatches();
+                }
+            });
+            
             roundMenu.add(generateNextRound);
             roundMenu.add(cancelRound);
             roundMenu.add(swapPlayers);
+            roundMenu.add(validateScores);
         }
         return roundMenu;
     }

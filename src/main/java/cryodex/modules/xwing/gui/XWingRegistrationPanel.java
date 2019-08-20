@@ -35,7 +35,7 @@ public class XWingRegistrationPanel implements RegistrationPanel {
 			panel.add(new JLabel("<html><b>X-Wing</b></html>"), gbc);
 
 			gbc.gridy++;
-			panel.add(new JLabel("Squadron Builder ID"), gbc);
+			panel.add(new JLabel("Squad Points(e.g. 56,75,62)"), gbc);
 
 			gbc.gridy++;
 			panel.add(getSquadField(), gbc);

@@ -1,5 +1,8 @@
 package cryodex.modules.xwing;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cryodex.CryodexController.Modules;
 import cryodex.Player;
 import cryodex.modules.Match;
@@ -129,5 +132,19 @@ public class XWingPlayer extends ModulePlayer {
 
         return sb;
     }
+
+	public List<Integer> getShips() {
+		String squadId = getSquadId();
+		List<Integer> shipList = new ArrayList<Integer>();
+		try{
+			String[] splitSquad = squadId.split(",");
+			for(String s : splitSquad){
+				shipList.add(Integer.valueOf(s));
+			}
+		} catch (Exception e){
+			return null;
+		}
+		return shipList;
+	}
 
 }
