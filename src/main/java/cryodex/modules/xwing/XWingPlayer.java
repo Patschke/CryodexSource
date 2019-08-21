@@ -139,7 +139,7 @@ public class XWingPlayer extends ModulePlayer {
 		try{
 			String[] splitSquad = squadId.split(",");
 			for(String s : splitSquad){
-				shipList.add(Integer.valueOf(s));
+				shipList.add(Integer.valueOf(s.trim()));
 			}
 		} catch (Exception e){
 			return null;
