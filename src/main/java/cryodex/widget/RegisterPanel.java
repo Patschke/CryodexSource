@@ -440,6 +440,7 @@ public class RegisterPanel extends JPanel {
             playerList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             playerList.setLayoutOrientation(JList.VERTICAL);
             playerList.setVisibleRowCount(-1);
+            playerList.setFixedCellHeight(20);
             playerList.addListSelectionListener(new ListSelectionListener() {
 
                 @Override
