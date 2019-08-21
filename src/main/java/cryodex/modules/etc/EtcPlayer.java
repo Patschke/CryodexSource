@@ -64,7 +64,7 @@ public class EtcPlayer extends ModulePlayer {
             score += getRoundScore(i, t);
         }
         
-        putPlayerStatisticInteger(t, "Score", score);
+        putPlayerStatisticInteger(t, "TeamScore", score);
 
         
         return score;
@@ -100,7 +100,7 @@ public class EtcPlayer extends ModulePlayer {
 
     public int getIndividualScore(Tournament t) {
 
-        Integer score = getPlayerStatisticInteger(t, "Score");
+        Integer score = getPlayerStatisticInteger(t, "IndividualScore");
 
         if (score != null) {
             return score;
@@ -109,10 +109,10 @@ public class EtcPlayer extends ModulePlayer {
         score = 0;
 
         for (int i = 0; i < t.getRoundCount(); i++) {
-            score += getRoundScore(i, t);
+            score += getRoundIndividualScore(i, t);
         }
 
-        putPlayerStatisticInteger(t, "Score", score);
+        putPlayerStatisticInteger(t, "IndividualScore", score);
 
         return score;
     }

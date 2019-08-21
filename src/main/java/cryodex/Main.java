@@ -26,7 +26,7 @@ import cryodex.widget.WelcomePage;
  */
 public class Main extends JFrame {
 
-    public static final String version = "5.4.10";
+    public static final String version = "5.4.11";
     
 	public static final long delay = 3000;
 
