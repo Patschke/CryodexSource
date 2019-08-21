@@ -50,8 +50,55 @@ public class EtcPlayer extends ModulePlayer {
     public void setFaction(Faction faction) {
         this.faction = faction;
     }
-
+    
     public int getScore(Tournament t) {
+        Integer score = getPlayerStatisticInteger(t, "TeamScore");
+
+        if (score != null) {
+            return score;
+        }
+
+        score = 0;
+
+        for (int i = 0; i < t.getRoundCount(); i++) {
+            score += getRoundScore(i, t);
+        }
+        
+        putPlayerStatisticInteger(t, "Score", score);
+
+        
+        return score;
+    }
+    
+    public int getRoundScore(int zeroBasedRound, Tournament t) {
+
+        EtcTournament etcT = (EtcTournament) t;
+
+        Round r = t.getRound(zeroBasedRound);
+
+        int score = 0;
+
+        for (Match m : r.getMatches()) {
+            if (this.getPlayer().equals(m.getPlayer1()) || this.getPlayer().equals(m.getPlayer2())) {
+                if (m.isBye()) {
+                       score += etcT.getPlayerCount();
+                    continue;
+                } else if (m.getWinner(1) != null) {
+                    if (this.getPlayer().equals(m.getWinner(1))) {
+                        score++;
+                    }
+                }
+            }
+        }
+
+        if(score >= 3) {
+        	return 1;
+        } else {
+        	return 0;
+        }
+    }
+
+    public int getIndividualScore(Tournament t) {
 
         Integer score = getPlayerStatisticInteger(t, "Score");
 
@@ -70,53 +117,27 @@ public class EtcPlayer extends ModulePlayer {
         return score;
     }
 
-    public int getRoundScore(int zeroBasedRound, Tournament t) {
+    public int getRoundIndividualScore(int zeroBasedRound, Tournament t) {
 
         EtcTournament etcT = (EtcTournament) t;
 
         Round r = t.getRound(zeroBasedRound);
 
         int score = 0;
-        int completeGameCount = 0;
 
         for (Match m : r.getMatches()) {
             if (this.getPlayer().equals(m.getPlayer1()) || this.getPlayer().equals(m.getPlayer2())) {
                 if (m.isBye()) {
-//                    if (etcT.getPlayerCount() == 6) {
-//                        score += 3;
-//                    } else if (etcT.getPlayerCount() == 3) {
-//                        score += 2;
-//                    }
+
                        score += etcT.getPlayerCount();
                     continue;
                 } else if (m.getWinner(1) != null) {
-                    completeGameCount++;
+
                     if (this.getPlayer().equals(m.getWinner(1))) {
                         score++;
                     }
                 }
             }
-        }
-
-        if (score == 0 && completeGameCount != 0) {
-            if (completeGameCount == 6) {
-                score = 1;
-            } else if (completeGameCount == 3) {
-                score = 0;
-            }
-
-        }
-        
-        // Limit score of teams 5 or more to one less than number of players
-        // In that case, the minimum score is 1
-        int playersPerTeam = ((EtcTournament)t).getPlayerCount();
-        if(playersPerTeam > 4){
-        	if(score >= playersPerTeam){
-        		score = playersPerTeam - 1;
-        	}
-        	if(score == 0){
-        		score = 1;
-        	}
         }
 
         return score;

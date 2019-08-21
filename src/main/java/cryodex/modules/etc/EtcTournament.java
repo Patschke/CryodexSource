@@ -109,7 +109,7 @@ public class EtcTournament extends Tournament implements XMLObject {
 
     @Override
     public TournamentComparator<Player> getRankingNoHeadToHeadComparator() {
-        return new EtcComparator(this, EtcComparator.rankingCompareNoHeadToHead);
+        return new EtcComparator(this, EtcComparator.rankingCompare);
     }
 
     @Override

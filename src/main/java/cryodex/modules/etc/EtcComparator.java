@@ -7,19 +7,18 @@ import cryodex.modules.TournamentComparator;
 public class EtcComparator extends TournamentComparator<Player> {
 
 	public static enum CompareOptions {
-		HEAD_TO_HEAD, MARGIN_OF_VICTORY, STRENGH_OF_SCHEDULE, AVERAGE_STRENGTH_OF_SCHEDULE, SCORE, RANDOM, NAME;
+		HEAD_TO_HEAD, MARGIN_OF_VICTORY, STRENGH_OF_SCHEDULE, AVERAGE_STRENGTH_OF_SCHEDULE, SCORE, RANDOM, NAME, INDIVIDUAL_SCORE;
 	}
 
 	public static final CompareOptions[] uniqueCompare = { CompareOptions.NAME };
 	public static final CompareOptions[] pairingCompare = {
-			CompareOptions.SCORE, CompareOptions.MARGIN_OF_VICTORY };
+			CompareOptions.SCORE, CompareOptions.INDIVIDUAL_SCORE, CompareOptions.MARGIN_OF_VICTORY };
 	public static final CompareOptions[] rankingCompare = {
 			CompareOptions.SCORE,
+			CompareOptions.INDIVIDUAL_SCORE,
 			CompareOptions.MARGIN_OF_VICTORY,
 			CompareOptions.AVERAGE_STRENGTH_OF_SCHEDULE, CompareOptions.RANDOM };
-	public static final CompareOptions[] rankingCompareNoHeadToHead = {
-			CompareOptions.SCORE, CompareOptions.MARGIN_OF_VICTORY,
-			CompareOptions.AVERAGE_STRENGTH_OF_SCHEDULE, CompareOptions.RANDOM };
+	
 
 	private final Tournament t;
 	private final CompareOptions[] sortOrder;
@@ -54,6 +53,9 @@ public class EtcComparator extends TournamentComparator<Player> {
 		switch (option) {
 		case SCORE:
 			result = compareInt(o1.getScore(t), o2.getScore(t));
+			break;
+		case INDIVIDUAL_SCORE:
+			result = compareInt(o1.getIndividualScore(t), o2.getIndividualScore(t));
 			break;
 		case HEAD_TO_HEAD:
 			if (o1.getName().equals(o2.getName())) {
