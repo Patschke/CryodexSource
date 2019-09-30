@@ -3,11 +3,15 @@ package cryodex;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -120,4 +124,43 @@ public class PlayerImport {
 	    
 	    return returnString;
     }
+
+	public static boolean importPlayersT3(int tournamentID){
+		List<Player> players = new ArrayList<Player>();
+
+		URL tournamentURL = null;
+		try {
+			tournamentURL = new URL("https://www.tabletoptournaments.net/t3_tournament_list.php?tid=" + String.valueOf(tournamentID));
+		} catch (java.net.MalformedURLException ex) {
+			return false;
+		}
+		try {
+	        BufferedReader in = new BufferedReader(
+		        new InputStreamReader(tournamentURL.openStream()));
+
+		Pattern p = Pattern.compile("<tr><td>[0-9]*\\. <\\/td><td>(?<name>.*)<\\/td><td>.*<\\/td><td class=\"ctr\">.*<\\/td><td>(?<faction>.*)<\\/td><td class=\"ctr\">(?<verein>.*)<\\/td><td class=\"ctr\">(?<bezahlt>.*)<\\/td><\\/tr>");
+
+        	String inputLine;
+        	while ((inputLine = in.readLine()) != null){
+			Matcher m = p.matcher(inputLine);
+			if (m.matches()){
+				Player player = getPlayer(m);
+				players.add(player);
+			}
+		}
+     		in.close();	
+		} catch (java.io.IOException ex) {
+			return false;
+		}
+		Main.getInstance().getRegisterPanel().importPlayers(players);
+		return true;
+	}
+
+	private static Player getPlayer(Matcher m){
+		Player p =  new Player(m.group("name").replaceAll("<.*;(?<a>.*)&.*>","$1"));
+					
+		p.setGroupName(m.group("verein"));
+		p.setActive(m.group("bezahlt").equals("yes"));
+		return p;
+	}
 }

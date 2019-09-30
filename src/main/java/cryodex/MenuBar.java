@@ -95,6 +95,32 @@ public class MenuBar extends JMenuBar {
                 }
             });
 
+	    // Import option for tabletoptournaments.net
+            JMenuItem importPlayersT3 = new JMenuItem("Import Players from T³");
+            importPlayersT3.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String tournamentIDstring = JOptionPane.showInputDialog(Main.getInstance(),
+				    "You may find the Tournament ID in the adress bar of your browser, \n" + 
+				    "when opening any page related to your tournament. \n" + 
+				    "It is a 5-digit number",
+				    "Please Input T³ Tournament ID",
+				    JOptionPane.QUESTION_MESSAGE);
+
+		    boolean success = true;
+		    try {
+			    int tournamentID = Integer.parseInt(tournamentIDstring);
+			    success &= PlayerImport.importPlayersT3(tournamentID);
+		    } catch (NumberFormatException ex) { 
+			    // Most commonly NumberFormatException if something that is not an integer is entered. 
+		    	success = false;
+		    } catch (Exception ex){} // Maybe also some Connection issues to T³
+
+		    JOptionPane.showMessageDialog(Main.getInstance(), "Import " + (success?"successfull":"failed"));
+                }
+            });
+
             JMenuItem exportPlayers = new JMenuItem("Export Players");
             exportPlayers.addActionListener(new ActionListener() {
 
@@ -116,6 +142,7 @@ public class MenuBar extends JMenuBar {
             fileMenu.add(loadSaveFile);
             fileMenu.add(chooseSaveLocation);
             fileMenu.add(importPlayers);
+            fileMenu.add(importPlayersT3);
             fileMenu.add(exportPlayers);
             fileMenu.add(exit);
         }
